@@ -1,0 +1,72 @@
+<h2>Add a horse</h2>
+{{ model | json }}
+<form (ngSubmit)="onSubmit()" #horseForm="ngForm">
+  <label for="name">Name</label>
+  <input
+    type="text"
+    class="form-control"
+    id="name"
+    required
+    [(ngModel)]="model.name"
+    name="name"
+    #name="ngModel"
+  />
+  <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+    Name is required
+  </div>
+
+  <div class="form-group">
+    <label for="description">Description</label>
+    <input
+      type="text"
+      class="form-control"
+      id="description"
+      [(ngModel)]="model.description"
+      name="description"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="birthdate">Birthdate</label>
+    <input
+      type="date"
+      class="form-control"
+      id="birthdate"
+      name="birthdate"
+      value="2022-01-01"
+      min="1970-01-01"
+      max="2023-01-01"
+      required
+      [(ngModel)]="model.birthdate"
+    />
+  </div>
+
+  <label for="horse-sex">Horse Sex</label>
+  <select class="form-control" id="horse-sex" required>
+    <option *ngFor="let sex of sexes" [value]="sex">{{ sex }}</option>
+  </select>
+
+  <div class="form-group">
+    <label for="description">Owner</label>
+    <input
+      type="text"
+      class="form-control"
+      id="description"
+      [(ngModel)]="model.owner"
+      name="description"
+    />
+  </div>
+
+  <button
+    type="submit"
+    class="btn btn-success"
+    [disabled]="!horseForm.form.valid"
+    (click)="horseForm.reset()"
+  >
+    Add Horse
+  </button>
+</form>
+
+<div [hidden]="!(submitted && name.pristine)" class="alert alert-success">
+  Horse submitted!
+</div>

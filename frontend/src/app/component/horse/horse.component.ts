@@ -21,7 +21,7 @@ export class HorseComponent implements OnInit {
   }
 
   reloadHorses() {
-    this.service.getAll().subscribe({
+    this.service.getAllHorses().subscribe({
       next: data => {
         console.log('received horses', data);
         this.horses = data;
