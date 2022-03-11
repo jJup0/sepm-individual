@@ -1,11 +1,15 @@
 package at.ac.tuwien.sepm.assignment.individual.entity;
 
+import at.ac.tuwien.sepm.assignment.individual.enums.HorseBiologicalGender;
+
+import java.time.LocalDate;
+
 public class Horse {
     private Long id;
     private String name;
     private String description;
-    private String birthdate;
-    private String sex;
+    private LocalDate birthdate;
+    private HorseBiologicalGender sex;
     private String owner;
 
     public Long getId() {
