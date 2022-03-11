@@ -28,29 +28,6 @@ public class Horse {
         this.name = name;
     }
 
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public String getBirthdate() {
-        return birthdate;
-    }
-
-    public void setBirthdate(String birthdate) {
-        this.birthdate = birthdate;
-    }
 
     public String getDescription() {
         return description;
@@ -58,5 +35,29 @@ public class Horse {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LocalDate getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(LocalDate birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public HorseBiologicalGender getSex() {
+        return sex;
+    }
+
+    public void setSex(HorseBiologicalGender sex) {
+        this.sex = sex;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }
