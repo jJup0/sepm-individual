@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.assignment.individual.entity;
 public class Horse {
     private Long id;
     private String name;
+    private
 
     public Long getId() {
         return id;
