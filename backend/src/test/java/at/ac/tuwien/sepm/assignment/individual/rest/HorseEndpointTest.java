@@ -61,4 +61,6 @@ public class HorseEndpointTest {
             .get("/asdf123")
         ).andExpect(status().isNotFound());
   }
+
+  // TODO all endpoint tests
 }

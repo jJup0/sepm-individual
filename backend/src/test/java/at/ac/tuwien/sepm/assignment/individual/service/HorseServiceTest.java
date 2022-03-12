@@ -64,4 +64,9 @@ public class HorseServiceTest {
 
     }
 
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void editHorse() {
+        // TODO
+    }
 }
