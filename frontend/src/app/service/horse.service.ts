@@ -26,6 +26,10 @@ export class HorseService {
     return this.http.get<Horse[]>(baseUri);
   }
 
+  getHorse(id: number): Observable<Horse> {
+    return this.http.get<Horse>(baseUri + "/" + id);
+  }
+
   addHorse(horse: Horse): Observable<Horse> {
     console.log("horse service about to post horse:" + JSON.stringify(horse));
     return this.http.post<Horse>(baseUri, horse, this.httpOptions);

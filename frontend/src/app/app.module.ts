@@ -9,6 +9,7 @@ import { HeaderComponent } from "./component/header/header.component";
 import { HorseComponent } from "./component/horse/horse.component";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { AddHorseComponent } from "./component/add-horse/add-horse.component";
+import { EditHorseComponent } from './component/edit-horse/edit-horse.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { AddHorseComponent } from "./component/add-horse/add-horse.component";
     HeaderComponent,
     HorseComponent,
     AddHorseComponent,
+    EditHorseComponent,
   ],
   imports: [
     BrowserModule,
