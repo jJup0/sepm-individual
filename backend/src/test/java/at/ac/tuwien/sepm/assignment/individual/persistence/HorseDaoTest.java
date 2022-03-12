@@ -65,6 +65,15 @@ public class HorseDaoTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void editHorse() {
         // TODO
+        HorseDto newWendy = new HorseDto(-1l, "not wendy", "test description 1", LocalDate.now(), HorseBiologicalGender.female, "");
+        horseDao.editHorse(newWendy);
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void deleteHorse() {
+        // TODO
+        horseDao.deleteHorse(-1l);
     }
 }
 

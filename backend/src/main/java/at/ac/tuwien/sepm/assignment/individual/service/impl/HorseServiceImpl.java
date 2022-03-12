@@ -38,4 +38,10 @@ public class HorseServiceImpl implements HorseService {
         return dao.editHorse(horseDto);
     }
 
+    @Override
+    public void deleteHorse(long id) {
+        dao.deleteHorse(id);
+        return;
+    }
+
 }

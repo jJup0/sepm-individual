@@ -26,6 +26,7 @@ public class HorseJdbcDao implements HorseDao {
     private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, description, birthdate, sex, owner) VALUES (?, ?, ?, ?, ?);";
     private static final String SQL_SELECT_ONE = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?;";
     private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, description = ?, birthdate = ?, sex = ?, owner = ? WHERE id = ?";
+    private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final HorseMapper mapper;
@@ -90,6 +91,16 @@ public class HorseJdbcDao implements HorseDao {
 
         return mapper.dtoToEntity(horseDto);
 
+    }
+
+    // TODO key not present error
+    @Override
+    public void deleteHorse(long id) {
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(SQL_DELETE);
+            ps.setLong(1, id);
+            return ps;
+        });
     }
 
     private Horse mapRow(ResultSet result, int rownum) throws SQLException {

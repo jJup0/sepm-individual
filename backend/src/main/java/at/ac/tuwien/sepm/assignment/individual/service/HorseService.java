@@ -20,4 +20,6 @@ public interface HorseService {
     Horse getHorse(long id);
 
     Horse editHorse(HorseDto horseDto);
+
+    void deleteHorse(long id);
 }
