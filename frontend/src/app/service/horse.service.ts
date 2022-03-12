@@ -27,6 +27,7 @@ export class HorseService {
   }
 
   addHorse(horse: Horse): Observable<Horse> {
+    console.log("horse service about to post horse:" + JSON.stringify(horse));
     return this.http.post<Horse>(baseUri, horse, this.httpOptions);
   }
 }

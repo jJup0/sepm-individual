@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.assignment.individual.service.impl;
 
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.persistence.HorseDao;
 import at.ac.tuwien.sepm.assignment.individual.service.HorseService;
@@ -19,4 +20,12 @@ public class HorseServiceImpl implements HorseService {
     public List<Horse> allHorses() {
         return dao.getAll();
     }
+
+    @Override
+    public Horse addHorse(HorseDto horseDto) {
+        // TODO check for null date
+        return dao.addHorse(horseDto);
+    }
+
+
 }

@@ -12,24 +12,24 @@ import { HorseService } from "src/app/service/horse.service";
 export class AddHorseComponent implements OnInit {
   sexes: HorseSex[] = ["male", "female"];
 
+  submitted = false;
+
   // Bug: birth input still buggy with display
   model: Horse = {
-    name: "",
+    name: "Horse",
     description: "",
     birthdate: new Date("01-01-2000"),
-    sex: "male",
+    sex: "female",
     owner: "",
   };
 
-  submitted = false;
-
   constructor(private service: HorseService) {}
 
-  onSubmit() {
+  onSubmit(): void {
     this.submitted = true;
-
+    this.postHorse();
     this.model = {
-      name: "",
+      name: "Horse2",
       description: "",
       birthdate: new Date("1970-01-01"),
       sex: "female",
@@ -37,7 +37,7 @@ export class AddHorseComponent implements OnInit {
     };
   }
 
-  postHorse() {
+  postHorse(): void {
     this.service.addHorse(this.model).subscribe({
       next: (data) => {
         console.log("added horse", data);

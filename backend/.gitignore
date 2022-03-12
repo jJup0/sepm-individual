@@ -35,3 +35,5 @@ build/
 ### Own ###
 wendydb.lock.db
 wendydb.mv.db
+wendydb.trace.db
+/log/

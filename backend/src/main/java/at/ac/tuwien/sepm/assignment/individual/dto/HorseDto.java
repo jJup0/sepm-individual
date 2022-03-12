@@ -9,5 +9,15 @@ import java.time.LocalDate;
  * Contains all common properties
  */
 public record HorseDto(Long id, String name, String description, LocalDate birthdate, HorseBiologicalGender sex, String owner) {
-
+    @Override
+    public String toString() {
+        return "HorseDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", birthdate=" + birthdate +
+                ", sex=" + sex +
+                ", owner='" + owner + '\'' +
+                '}';
+    }
 }

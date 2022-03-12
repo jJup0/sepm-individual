@@ -1,6 +1,7 @@
 <h2>Add a horse</h2>
 {{ model | json }}
-<form (ngSubmit)="onSubmit()" #horseForm="ngForm">
+<!-- (ngSubmit)="onSubmit()" -->
+<form #horseForm="ngForm">
   <label for="name">Name</label>
   <input
     type="text"
@@ -61,7 +62,7 @@
     type="submit"
     class="btn btn-success"
     [disabled]="!horseForm.form.valid"
-    (click)="horseForm.reset()"
+    (click)="onSubmit(); horseForm.reset()"
   >
     Add Horse
   </button>

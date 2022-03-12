@@ -3,9 +3,7 @@ package at.ac.tuwien.sepm.assignment.individual.rest;
 import at.ac.tuwien.sepm.assignment.individual.mapper.HorseMapper;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
 import at.ac.tuwien.sepm.assignment.individual.service.HorseService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.stream.Stream;
 
@@ -24,5 +22,11 @@ public class HorseEndpoint {
     public Stream<HorseDto> allHorses() {
         return service.allHorses().stream()
                 .map(mapper::entityToDto);
+    }
+
+    @PostMapping
+    public HorseDto addHorse(@RequestBody HorseDto horseDto) {
+        System.out.println("horseDto: " + horseDto);
+        return mapper.entityToDto(service.addHorse(horseDto));
     }
 }
