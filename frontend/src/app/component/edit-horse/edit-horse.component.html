@@ -1,4 +1,81 @@
-<p>edit-horse works!</p>
-<span>Should say name: ** </span>
-<span>: {{ this.horse.name }}</span>
-<span> **</span>
+<h2>Edit Horse</h2>
+{{ horse | json }}
+<!-- (ngSubmit)="onSubmit()" -->
+<form #horseForm="ngForm">
+  <label for="name">Name</label>
+  <input
+    type="text"
+    class="form-control"
+    id="name"
+    required
+    [(ngModel)]="horse.name"
+    name="name"
+    #name="ngModel"
+  />
+  <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+    Name is required
+  </div>
+
+  <div class="form-group">
+    <label for="description">Description</label>
+    <input
+      type="text"
+      class="form-control"
+      id="description"
+      [(ngModel)]="horse.description"
+      name="description"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="birthdate">Birthdate</label>
+    <input
+      type="date"
+      class="form-control"
+      id="birthdate"
+      name="birthdate"
+      value="2022-01-01"
+      min="1970-01-01"
+      max="2023-01-01"
+      required
+      [(ngModel)]="horse.birthdate"
+    />
+  </div>
+
+  <div class="form-group">
+    <div *ngFor="let sex of SEXES">
+      <input
+        id="sex"
+        type="radio"
+        name="sexesradio"
+        [value]="sex"
+        [(ngModel)]="horse.sex"
+      />
+      <label for="sex">{{ sex | titlecase }}</label>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="description">Owner</label>
+    <input
+      type="text"
+      class="form-control"
+      id="description"
+      [(ngModel)]="horse.owner"
+      name="description"
+    />
+  </div>
+
+  <button
+    type="submit"
+    class="btn btn-success"
+    [disabled]="!horseForm.form.valid"
+    (click)="onSave()"
+  >
+    Add Horse
+  </button>
+</form>
+
+<div [hidden]="!(saved && name.pristine)" class="alert alert-success">
+  Horse submitted!
+</div>

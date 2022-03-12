@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 
 import { Horse } from "../../dto/horse";
-import { HorseSex } from "../../dto/horseSex";
+import { sexes } from "../../dto/horseSex";
 import { HorseService } from "src/app/service/horse.service";
 
 @Component({
@@ -10,9 +10,8 @@ import { HorseService } from "src/app/service/horse.service";
   styleUrls: ["./add-horse.component.scss"],
 })
 export class AddHorseComponent implements OnInit {
-  sexes: HorseSex[] = ["male", "female"];
-
   submitted = false;
+  SEXES = sexes;
 
   // Bug: birth input still buggy with display
   model: Horse = {

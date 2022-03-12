@@ -4,6 +4,7 @@ import { Location } from "@angular/common";
 
 import { Horse } from "src/app/dto/horse";
 import { HorseService } from "src/app/service/horse.service";
+import { sexes as HORSESEXES } from "src/app/dto/horseSex";
 
 @Component({
   selector: "app-edit-horse",
@@ -12,6 +13,7 @@ import { HorseService } from "src/app/service/horse.service";
 })
 export class EditHorseComponent implements OnInit {
   @Input() horse?: Horse;
+  SEXES = HORSESEXES;
 
   constructor(
     private route: ActivatedRoute,
@@ -25,6 +27,7 @@ export class EditHorseComponent implements OnInit {
   getHorse(): void {
     const id = Number(this.route.snapshot.paramMap.get("id"));
     this.horseService.getHorse(id).subscribe((horse) => (this.horse = horse));
+    console.log("got horse");
   }
 
   // goBack(): void {

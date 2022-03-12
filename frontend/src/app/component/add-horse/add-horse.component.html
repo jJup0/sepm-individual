@@ -42,10 +42,18 @@
     />
   </div>
 
-  <label for="horse-sex">Horse Sex</label>
-  <select class="form-control" id="horse-sex" required>
-    <option *ngFor="let sex of sexes" [value]="sex">{{ sex }}</option>
-  </select>
+  <div class="form-group">
+    <div *ngFor="let sex of SEXES">
+      <input
+        id="sex"
+        type="radio"
+        name="sexesradio"
+        [value]="sex"
+        [(ngModel)]="model.sex"
+      />
+      <label for="sex">{{ sex | titlecase }}</label>
+    </div>
+  </div>
 
   <div class="form-group">
     <label for="description">Owner</label>
