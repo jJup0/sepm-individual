@@ -12,10 +12,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 
 @Repository
@@ -100,8 +97,16 @@ public class HorseJdbcDao implements HorseDao {
         ps.setDate(3, java.sql.Date.valueOf(horseDto.birthdate()));
         ps.setString(4, horseDto.sex().toString());
         ps.setString(5, horseDto.owner());
-        ps.setLong(6, horseDto.motherId());
-        ps.setLong(7, horseDto.fatherId());
+        if (horseDto.motherId() == null){
+            ps.setNull(6, Types.BIGINT);
+        }else{
+            ps.setLong(6, horseDto.motherId());
+        }
+        if (horseDto.motherId() == null){
+            ps.setNull(7, Types.BIGINT);
+        }else{
+            ps.setLong(7, horseDto.fatherId());
+        }
     }
 
     private Horse mapRow(ResultSet result, int rowNum) throws SQLException {
@@ -112,8 +117,11 @@ public class HorseJdbcDao implements HorseDao {
         horse.setBirthdate(result.getDate("birthdate").toLocalDate());
         horse.setSex(HorseBiologicalGender.valueOf(result.getString("sex")));
         horse.setOwner(result.getString("owner"));
-        horse.setMotherId(result.getLong("mother"));
-        horse.setFatherId(result.getLong("father"));
+
+        Long motherId = result.getLong("mother");
+        horse.setMotherId(result.wasNull() ? null : motherId);
+        Long fatherId = result.getLong("father");
+        horse.setFatherId(result.wasNull() ? null : fatherId);
         return horse;
     }
 }

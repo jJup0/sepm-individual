@@ -1,3 +1,4 @@
+-- TODO on delete cascade?
 CREATE TABLE IF NOT EXISTS horse
 (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -5,7 +6,9 @@ CREATE TABLE IF NOT EXISTS horse
     description     VARCHAR(255) NULL,
     birthdate       DATE NOT NULL,
     sex             VARCHAR(6) NOT NULL CHECK (sex in ('male', 'female')),
-    owner           VARCHAR(255) NULL
-    mother        BIGINT NULL FOREIGN REFERENCES horses(id),
-    father        BIGINT NULL FOREIGN REFERENCES horses(id)
+    owner           VARCHAR(255) NULL,
+    mother          BIGINT NULL,
+    father          BIGINT NULL,
+    FOREIGN KEY (mother) REFERENCES horse(id),
+    FOREIGN KEY (father) REFERENCES horse(id)
 );

@@ -35,7 +35,7 @@ public class HorseServiceTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void addOneHorseValid() {
 
-        HorseDto newHorseDto = new HorseDto(null, "test horse 1", "test description 1", LocalDate.now(), HorseBiologicalGender.male, "");
+        HorseDto newHorseDto = new HorseDto(null, "test horse 1", "test description 1", LocalDate.now(), HorseBiologicalGender.male, "", null, null);
         Horse addedHorse = horseService.addHorse(newHorseDto);
         assertThat(addedHorse.getId()).isNotNull();
 
@@ -47,9 +47,9 @@ public class HorseServiceTest {
     public void addOneHorseInvalid() {
 
         HorseDto badHorses[] = {
-                new HorseDto(null, null, "test description 1", LocalDate.now(), HorseBiologicalGender.male, ""),
-                new HorseDto(null, null, "test description 1", null, HorseBiologicalGender.male, ""),
-                new HorseDto(null, null, "test description 1", LocalDate.now(), null, "")};
+                new HorseDto(null, null, "test description 1", LocalDate.now(), HorseBiologicalGender.male, "", null, null),
+                new HorseDto(null, null, "test description 1", null, HorseBiologicalGender.male, "", null, null),
+                new HorseDto(null, null, "test description 1", LocalDate.now(), null, "", null, null)};
 
         boolean failed;
         for (int i = 0; i < badHorses.length; i++) {
@@ -68,7 +68,7 @@ public class HorseServiceTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void editHorse() {
         // TODO
-        HorseDto newWendy = new HorseDto(-1l, "not wendy", "test description 1", LocalDate.now(), HorseBiologicalGender.female, "");
+        HorseDto newWendy = new HorseDto(-1l, "not wendy", "test description 1", LocalDate.now(), HorseBiologicalGender.female, "",null, null);
         horseService.editHorse(newWendy);
     }
 
