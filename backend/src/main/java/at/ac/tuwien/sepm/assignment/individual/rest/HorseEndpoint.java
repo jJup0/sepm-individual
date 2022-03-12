@@ -39,4 +39,10 @@ public class HorseEndpoint {
     public HorseDto editHorse(@RequestBody HorseDto horseDto) {
         return mapper.entityToDto(service.editHorse(horseDto));
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteHorse(@PathVariable long id) {
+        service.deleteHorse(id);
+        return;
+    }
 }
