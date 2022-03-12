@@ -16,16 +16,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.List;
 
 @Repository
 public class HorseJdbcDao implements HorseDao {
     private static final String TABLE_NAME = "horse";
     private static final String SQL_SELECT_ALL = "SELECT * FROM " + TABLE_NAME;
-    private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, description, birthdate, sex, owner) VALUES (?, ?, ?, ?, ?);";
+    private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, description, birthdate, sex, owner, mother, father) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private static final String SQL_SELECT_ONE = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?;";
-    private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, description = ?, birthdate = ?, sex = ?, owner = ? WHERE id = ?";
+    private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, description = ?, birthdate = ?, sex = ?, owner = ?, mother = ?, father = ? WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
 
     private final JdbcTemplate jdbcTemplate;
@@ -51,11 +50,7 @@ public class HorseJdbcDao implements HorseDao {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(SQL_INSERT,
                     Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, horseDto.name());
-            ps.setString(2, horseDto.description());
-            ps.setDate(3, java.sql.Date.valueOf(horseDto.birthdate()));
-            ps.setString(4, horseDto.sex().toString());
-            ps.setString(5, horseDto.owner());
+            fillStandardPreparedStatement(horseDto, ps);
             return ps;
         }, keyHolder);
 
@@ -80,12 +75,8 @@ public class HorseJdbcDao implements HorseDao {
     public Horse editHorse(HorseDto horseDto) {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(SQL_UPDATE);
-            ps.setString(1, horseDto.name());
-            ps.setString(2, horseDto.description());
-            ps.setDate(3, java.sql.Date.valueOf(horseDto.birthdate()));
-            ps.setString(4, horseDto.sex().toString());
-            ps.setString(5, horseDto.owner());
-            ps.setLong(6, horseDto.id());
+            fillStandardPreparedStatement(horseDto, ps);
+            ps.setLong(8, horseDto.id());
             return ps;
         });
 
@@ -103,7 +94,17 @@ public class HorseJdbcDao implements HorseDao {
         });
     }
 
-    private Horse mapRow(ResultSet result, int rownum) throws SQLException {
+    private void fillStandardPreparedStatement(HorseDto horseDto, PreparedStatement ps) throws SQLException {
+        ps.setString(1, horseDto.name());
+        ps.setString(2, horseDto.description());
+        ps.setDate(3, java.sql.Date.valueOf(horseDto.birthdate()));
+        ps.setString(4, horseDto.sex().toString());
+        ps.setString(5, horseDto.owner());
+        ps.setLong(6, horseDto.motherId());
+        ps.setLong(7, horseDto.fatherId());
+    }
+
+    private Horse mapRow(ResultSet result, int rowNum) throws SQLException {
         Horse horse = new Horse();
         horse.setId(result.getLong("id"));
         horse.setName(result.getString("name"));
@@ -111,6 +112,8 @@ public class HorseJdbcDao implements HorseDao {
         horse.setBirthdate(result.getDate("birthdate").toLocalDate());
         horse.setSex(HorseBiologicalGender.valueOf(result.getString("sex")));
         horse.setOwner(result.getString("owner"));
+        horse.setMotherId(result.getLong("mother"));
+        horse.setFatherId(result.getLong("father"));
         return horse;
     }
 }

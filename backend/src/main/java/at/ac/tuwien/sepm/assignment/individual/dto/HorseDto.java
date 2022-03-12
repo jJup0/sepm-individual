@@ -8,7 +8,7 @@ import java.time.LocalDate;
  * Class for Horse DTOs
  * Contains all common properties
  */
-public record HorseDto(Long id, String name, String description, LocalDate birthdate, HorseBiologicalGender sex, String owner, HorseDto mother, HorseDto father) {
+public record HorseDto(Long id, String name, String description, LocalDate birthdate, HorseBiologicalGender sex, String owner, Long motherId, Long fatherId) {
     @Override
     public String toString() {
         return "HorseDto{" +
@@ -18,6 +18,8 @@ public record HorseDto(Long id, String name, String description, LocalDate birth
                 ", birthdate=" + birthdate +
                 ", sex=" + sex +
                 ", owner='" + owner + '\'' +
+                ", mother='" + motherId + '\'' +
+                ", father='" + fatherId + '\'' +
                 '}';
     }
 }
