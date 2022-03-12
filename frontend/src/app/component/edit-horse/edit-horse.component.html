@@ -70,12 +70,12 @@
     type="submit"
     class="btn btn-success"
     [disabled]="!horseForm.form.valid"
-    (click)="save()"
+    (click)="save(); horseForm.form.markAsPristine()"
   >
     Save Horse
   </button>
 </form>
 
-<!-- <div [hidden]="!(saved && name.pristine)" class="alert alert-success">
+<div [hidden]="!(saved && horseForm.form.pristine)" class="alert alert-success">
   Horse submitted!
-</div> -->
+</div>

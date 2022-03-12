@@ -14,6 +14,7 @@ import { sexes as HORSESEXES } from "src/app/dto/horseSex";
 export class EditHorseComponent implements OnInit {
   @Input() horse?: Horse;
   SEXES = HORSESEXES;
+  saved = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,13 +32,15 @@ export class EditHorseComponent implements OnInit {
     console.log(`got horse: ${this.horse.id}`);
   }
 
-  goBack(): void {
-    this.location.back();
-  }
+  // TODO add back button
+  // goBack(): void {
+  //   this.location.back();
+  // }
 
   save(): void {
     if (this.horse) {
-      this.horseService.updateHorse(this.horse).subscribe(() => this.goBack());
+      this.horseService.updateHorse(this.horse).subscribe();
     }
+    this.saved = true;
   }
 }
