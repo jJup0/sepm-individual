@@ -27,5 +27,10 @@ public class HorseServiceImpl implements HorseService {
         return dao.addHorse(horseDto);
     }
 
+    // TODO not found error
+    @Override
+    public Horse getHorse(long id) {
+        return dao.getHorse(id);
+    }
 
 }

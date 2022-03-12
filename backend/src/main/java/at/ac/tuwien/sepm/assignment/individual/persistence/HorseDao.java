@@ -17,4 +17,6 @@ public interface HorseDao {
     List<Horse> getAll();
 
     Horse addHorse(HorseDto horseDto);
+
+    Horse getHorse(long id);
 }

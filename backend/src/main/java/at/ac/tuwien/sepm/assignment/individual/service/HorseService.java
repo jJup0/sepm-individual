@@ -16,4 +16,6 @@ public interface HorseService {
     List<Horse> allHorses();
 
     Horse addHorse(HorseDto horseDto);
+
+    Horse getHorse(long id);
 }

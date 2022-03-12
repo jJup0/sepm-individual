@@ -22,6 +22,7 @@ public class HorseJdbcDao implements HorseDao {
     private static final String TABLE_NAME = "horse";
     private static final String SQL_SELECT_ALL = "SELECT * FROM " + TABLE_NAME;
     private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, description, birthdate, sex, owner) VALUES (?, ?, ?, ?, ?);";
+    private static final String SQL_SELECT_ONE = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?;";
 
     private final JdbcTemplate jdbcTemplate;
     private final HorseMapper mapper;
@@ -55,8 +56,19 @@ public class HorseJdbcDao implements HorseDao {
         }, keyHolder);
 
         Horse addedHorse = mapper.dtoToEntity(horseDto);
-        addedHorse.setId((long)keyHolder.getKeys().get("id"));
+        addedHorse.setId((long) keyHolder.getKeys().get("id"));
         return addedHorse;
+    }
+
+    @Override
+    public Horse getHorse(long id) {
+        List<Horse> horses = jdbcTemplate.query(connection -> {
+            PreparedStatement ps = connection.prepareStatement(SQL_SELECT_ONE);
+            ps.setLong(1, id);
+            return ps;
+        }, this::mapRow);
+        return horses.get(0);
+
     }
 
     private Horse mapRow(ResultSet result, int rownum) throws SQLException {

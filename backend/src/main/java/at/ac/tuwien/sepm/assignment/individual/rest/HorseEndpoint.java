@@ -24,6 +24,11 @@ public class HorseEndpoint {
                 .map(mapper::entityToDto);
     }
 
+    @GetMapping("/{id}")
+    public HorseDto getHorse(@PathVariable long id) {
+        return mapper.entityToDto(service.getHorse(id));
+    }
+
     @PostMapping
     public HorseDto addHorse(@RequestBody HorseDto horseDto) {
         System.out.println("horseDto: " + horseDto);
