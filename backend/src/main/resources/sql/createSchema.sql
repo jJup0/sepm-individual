@@ -7,3 +7,9 @@ CREATE TABLE IF NOT EXISTS horse
     sex             VARCHAR(6) NOT NULL CHECK (sex in ('male', 'female')),
     owner           VARCHAR(255) NULL
 );
+
+CREATE TABLE IF NOT EXISTS parents(
+    child         BIGINT PRIMARY KEY FOREIGN REFERENCES horses(id),
+    mother        BIGINT PRIMARY KEY FOREIGN REFERENCES horses(id),
+    father        BIGINT PRIMARY KEY FOREIGN REFERENCES horses(id)
+);
