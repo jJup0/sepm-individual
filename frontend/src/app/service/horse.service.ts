@@ -27,7 +27,15 @@ export class HorseService {
   }
 
   getHorse(id: number): Observable<Horse> {
-    return this.http.get<Horse>(baseUri + "/" + id);
+    return this.http.get<Horse>(baseUri + `/${id}`);
+  }
+
+  updateHorse(horse: Horse): Observable<Horse> {
+    return this.http.put<Horse>(
+      baseUri + `/${horse.id}`,
+      horse,
+      this.httpOptions
+    );
   }
 
   addHorse(horse: Horse): Observable<Horse> {
