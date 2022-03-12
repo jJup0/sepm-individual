@@ -27,7 +27,8 @@ export class EditHorseComponent implements OnInit {
   getHorse(): void {
     const id = Number(this.route.snapshot.paramMap.get("id"));
     this.horseService.getHorse(id).subscribe((horse) => (this.horse = horse));
-    console.log("got horse");
+    // console.log(`got horse: ${JSON.stringify(this.horse)}`);
+    console.log(`got horse: ${this.horse.id}`);
   }
 
   goBack(): void {
