@@ -34,4 +34,9 @@ public class HorseEndpoint {
         System.out.println("horseDto: " + horseDto);
         return mapper.entityToDto(service.addHorse(horseDto));
     }
+
+    @PutMapping()
+    public HorseDto editHorse(@RequestBody HorseDto horseDto) {
+        return mapper.entityToDto(service.editHorse(horseDto));
+    }
 }

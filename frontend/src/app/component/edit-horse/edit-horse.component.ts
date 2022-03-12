@@ -30,13 +30,13 @@ export class EditHorseComponent implements OnInit {
     console.log("got horse");
   }
 
-
   goBack(): void {
     this.location.back();
   }
-  
+
   save(): void {
     if (this.horse) {
       this.horseService.updateHorse(this.horse).subscribe(() => this.goBack());
     }
+  }
 }

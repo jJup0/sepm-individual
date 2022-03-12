@@ -19,4 +19,6 @@ public interface HorseDao {
     Horse addHorse(HorseDto horseDto);
 
     Horse getHorse(long id);
+
+    Horse editHorse(HorseDto horseDto);
 }

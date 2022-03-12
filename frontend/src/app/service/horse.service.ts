@@ -31,11 +31,7 @@ export class HorseService {
   }
 
   updateHorse(horse: Horse): Observable<Horse> {
-    return this.http.put<Horse>(
-      baseUri + `/${horse.id}`,
-      horse,
-      this.httpOptions
-    );
+    return this.http.put<Horse>(baseUri, horse, this.httpOptions);
   }
 
   addHorse(horse: Horse): Observable<Horse> {
