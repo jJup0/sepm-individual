@@ -38,4 +38,8 @@ export class HorseService {
     console.log("horse service about to post horse:" + JSON.stringify(horse));
     return this.http.post<Horse>(baseUri, horse, this.httpOptions);
   }
+
+  deleteHorse(id: number): Observable<Horse> {
+    return this.http.delete<Horse>(baseUri + `/${id}`);
+  }
 }

@@ -11,6 +11,7 @@
       <tr *ngFor="let horse of horses">
         <td>{{ horse.name }}</td>
         <a routerLink="/edit/{{ horse.id }}">edit</a>
+        <button (click)="deleteHorse(horse.id)">delete</button>
       </tr>
     </tbody>
   </table>
