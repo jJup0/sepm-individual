@@ -1,8 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 
 import { Horse } from "../../dto/horse";
-import { sexes } from "../../dto/horseSex";
+import { sexes } from "../../dto/horseSexEnum";
 import { HorseService } from "src/app/service/horse.service";
+import { HorseFormType } from "src/app/dto/horseFormTypeEnum";
 
 @Component({
   selector: "app-add-horse",
@@ -10,6 +11,7 @@ import { HorseService } from "src/app/service/horse.service";
   styleUrls: ["./add-horse.component.scss"],
 })
 export class AddHorseComponent implements OnInit {
+  FORMTYPE: HorseFormType = "add";
   submitted = false;
   SEXES = sexes;
 
@@ -19,18 +21,20 @@ export class AddHorseComponent implements OnInit {
     description: "",
     birthdate: new Date("01-01-2000"),
     sex: "female",
-    owner: "",
+    owner: null,
+    motherId: null,
+    fatherId: null,
   };
 
   constructor(private service: HorseService) {}
 
-  onSubmit(): void {
+  submit(): void {
     this.submitted = true;
     this.postHorse();
     this.model = {
       name: "Horse2",
       description: "",
-      birthdate: new Date("1970-01-01"),
+      birthdate: new Date("1971-01-01"),
       sex: "female",
       owner: "",
     };

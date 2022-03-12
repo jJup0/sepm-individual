@@ -4,7 +4,8 @@ import { Location } from "@angular/common";
 
 import { Horse } from "src/app/dto/horse";
 import { HorseService } from "src/app/service/horse.service";
-import { sexes as HORSESEXES } from "src/app/dto/horseSex";
+import { sexes as HORSESEXES } from "src/app/dto/horseSexEnum";
+import { HorseFormType } from "src/app/dto/horseFormTypeEnum";
 
 @Component({
   selector: "app-edit-horse",
@@ -12,7 +13,17 @@ import { sexes as HORSESEXES } from "src/app/dto/horseSex";
   styleUrls: ["./edit-horse.component.scss"],
 })
 export class EditHorseComponent implements OnInit {
-  @Input() horse?: Horse;
+  // @Input() horse?: Horse;
+  horse?: Horse = {
+    name: null,
+    description: null,
+    birthdate: null,
+    sex: null,
+    owner: null,
+    motherId: null,
+    fatherId: null,
+  };
+  FORMTYPE: HorseFormType = "edit";
   SEXES = HORSESEXES;
   saved = false;
 
@@ -29,7 +40,7 @@ export class EditHorseComponent implements OnInit {
     const id = Number(this.route.snapshot.paramMap.get("id"));
     this.horseService.getHorse(id).subscribe((horse) => (this.horse = horse));
     // console.log(`got horse: ${JSON.stringify(this.horse)}`);
-    console.log(`got horse: ${this.horse.id}`);
+    // console.log(`got horse: ${this.horse.id}`);
   }
 
   // TODO add back button
@@ -42,5 +53,6 @@ export class EditHorseComponent implements OnInit {
       this.horseService.updateHorse(this.horse).subscribe();
     }
     this.saved = true;
+    console.log(`saved horse: ${JSON.stringify(this.horse)}`);
   }
 }
