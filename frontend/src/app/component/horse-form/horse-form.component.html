@@ -1,4 +1,5 @@
-<form #horseForm="ngForm">
+<p *ngIf="!horse">loading horse...</p>
+<form #horseForm="ngForm" *ngIf="horse">
   <label for="name">Name</label>
   <input
     type="text"
@@ -72,11 +73,12 @@
     <!-- {{ SUBMIT_BUTTON_TEXT }} -->
     {{ this.formType === "add" ? "Add Horse" : "Update Horse" }}
   </button>
-</form>
 
-<div
-  [hidden]="!(submitted && horseForm.form.pristine)"
-  class="alert alert-success"
->
-  Horse {{ this.formType === "add" ? "added" : "saved" }}!
-</div>
+  <div
+    *ngIf="horse"
+    [hidden]="!(submitted && horseForm.form.pristine)"
+    class="alert alert-success"
+  >
+    Horse {{ this.formType === "add" ? "added" : "saved" }}!
+  </div>
+</form>

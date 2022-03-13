@@ -26,16 +26,7 @@ export class HorseFormComponent implements OnInit {
 
   constructor(private route: ActivatedRoute) {}
 
-  ngOnInit(): void {
-    const addFormType: HorseFormType = "add";
-    this.SUBMIT_BUTTON_TEXT =
-      this.formType === addFormType ? "Add Horse" : "Update Horse";
-    console.log("submit button text: " + this.SUBMIT_BUTTON_TEXT);
-    // console.log("form type: " + this.formType);
-    // console.log(
-    //   `horse form is at id: ${JSON.stringify(this.route.snapshot.toString())}`
-    // );
-  }
+  ngOnInit(): void {}
 
   submit() {
     this.submitPressed.emit(this.horse);
