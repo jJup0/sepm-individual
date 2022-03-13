@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { Horse } from "../dto/horse";
+import { HorseSearchDto } from "../dto/horseSearchDto";
 
 const baseUri = environment.backendUrl + "/horses";
 
@@ -41,5 +42,12 @@ export class HorseService {
 
   deleteHorse(id: number): Observable<Horse> {
     return this.http.delete<Horse>(baseUri + `/${id}`);
+  }
+  search(searchParameters: HorseSearchDto): Observable<Horse[]> {
+    console.log(`sending http request to `);
+    return this.http.get<Horse[]>(
+      baseUri +
+        `/search?st=${searchParameters.searchTerm}&s=${searchParameters.sex}`
+    );
   }
 }

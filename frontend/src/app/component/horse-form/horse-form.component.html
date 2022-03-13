@@ -65,14 +65,21 @@
   </div>
 
   <div class="form-group">
-    <label for="mother">Mother</label>
+    <label for="mother-input-search-box">Mother</label>
     <input
+      #mySearchBox
       type="text"
       class="form-control"
-      id="mother"
-      [(ngModel)]="horse.motherId"
-      name="mother"
+      list="mothers"
+      name="mother-input"
+      id="mother-input-search-box"
+      (input)="search({ searchTerm: mySearchBox.value, sex: 'female' })"
     />
+    <select id="mothers" name="mother-select" [(ngModel)]="horse.motherId">
+      <option *ngFor="let mother of loadedParents$ | async" [value]="mother.id">
+        {{ mother.name }}
+      </option>
+    </select>
   </div>
 
   <button
@@ -81,7 +88,6 @@
     [disabled]="!horseForm.form.valid"
     (click)="submit(); horseForm.form.markAsPristine()"
   >
-    <!-- {{ SUBMIT_BUTTON_TEXT }} -->
     {{ this.formType === "add" ? "Add Horse" : "Update Horse" }}
   </button>
 
