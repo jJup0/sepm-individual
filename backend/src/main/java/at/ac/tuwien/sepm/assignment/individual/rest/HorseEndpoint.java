@@ -33,8 +33,8 @@ public class HorseEndpoint {
     }
 
     @GetMapping("/search")
-    public Stream<HorseDto> searchHorses(@RequestParam(name = "st") String searchTerm, @RequestParam(name = "s") HorseBiologicalGender sex, @RequestParam(name = "ba") LocalDate bornAfter) {
-        HorseSearchDto horseSearchDto = new HorseSearchDto(searchTerm, sex, bornAfter);
+    public Stream<HorseDto> searchHorses(@RequestParam(name = "st") String searchTerm, @RequestParam(name = "s") HorseBiologicalGender sex, @RequestParam(name = "bb") String bornBefore) {
+        HorseSearchDto horseSearchDto = new HorseSearchDto(searchTerm, sex, LocalDate.parse(bornBefore));
         return service.searchHorses(horseSearchDto).stream()
                 .map(mapper::entityToDto);
     }

@@ -100,7 +100,7 @@ public class HorseJdbcDao implements HorseDao {
     @Override
     public List<Horse> searchHorses(HorseSearchDto horseSearchDto) {
         // TODO no search parameter given error
-        
+
         List<String> sqlSearchParams = new ArrayList<>();
         if (horseSearchDto.searchTerm() != null) {
             sqlSearchParams.add("LOWER(name) LIKE ? ESCAPE '!'");
@@ -109,7 +109,7 @@ public class HorseJdbcDao implements HorseDao {
             sqlSearchParams.add("sex = ?");
         }
         if (horseSearchDto.bornBefore() != null) {
-            sqlSearchParams.add("birthdate > ?");
+            sqlSearchParams.add("birthdate < ?");
         }
 
         String SQL_SEARCH_QUERY = SQL_SEARCH_BASE + String.join(" AND ", sqlSearchParams) + " LIMIT + " + MAX_SEARCH_RESULTS + ";";

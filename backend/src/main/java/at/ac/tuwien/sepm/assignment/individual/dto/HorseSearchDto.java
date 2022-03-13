@@ -10,7 +10,7 @@ public record HorseSearchDto(String searchTerm, HorseBiologicalGender sex, Local
         return "HorseSearchDto{" +
                 "searchTerm='" + searchTerm + '\'' +
                 ", sex=" + sex +
-                ", bornBefore=" + bornAfter +
+                ", bornBefore=" + bornBefore +
                 '}';
     }
 }
