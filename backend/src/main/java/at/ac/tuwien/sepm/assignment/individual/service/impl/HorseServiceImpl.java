@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.assignment.individual.service.impl;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.persistence.HorseDao;
 import at.ac.tuwien.sepm.assignment.individual.service.HorseService;
@@ -42,6 +43,11 @@ public class HorseServiceImpl implements HorseService {
     public void deleteHorse(long id) {
         dao.deleteHorse(id);
         return;
+    }
+
+    @Override
+    public List<Horse> searchHorses(HorseSearchDto horseSearchDto) {
+        return dao.searchHorses(horseSearchDto);
     }
 
 }

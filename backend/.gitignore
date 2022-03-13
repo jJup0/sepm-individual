@@ -36,5 +36,4 @@ build/
 wendydb.lock.db
 wendydb.mv.db
 wendydb.trace.db
-log
-/log/
+log/

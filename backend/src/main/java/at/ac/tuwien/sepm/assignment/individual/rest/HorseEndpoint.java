@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.assignment.individual.rest;
 
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.mapper.HorseMapper;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
 import at.ac.tuwien.sepm.assignment.individual.service.HorseService;
@@ -29,6 +30,12 @@ public class HorseEndpoint {
         return mapper.entityToDto(service.getHorse(id));
     }
 
+    @GetMapping("/search")
+    public Stream<HorseDto> searchHorses(@RequestBody HorseSearchDto horseSearchDto) {
+        return service.searchHorses(horseSearchDto).stream()
+                .map(mapper::entityToDto);
+    }
+
     @PostMapping
     public HorseDto addHorse(@RequestBody HorseDto horseDto) {
         System.out.println("horseDto: " + horseDto);
@@ -43,6 +50,5 @@ public class HorseEndpoint {
     @DeleteMapping("/{id}")
     public void deleteHorse(@PathVariable long id) {
         service.deleteHorse(id);
-        return;
     }
 }

@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.assignment.individual.service;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface HorseService {
     Horse editHorse(HorseDto horseDto);
 
     void deleteHorse(long id);
+
+    List<Horse> searchHorses(HorseSearchDto horseSearchDto);
 }

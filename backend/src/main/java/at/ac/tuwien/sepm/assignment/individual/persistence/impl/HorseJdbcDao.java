@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.assignment.individual.persistence.impl;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.enums.HorseBiologicalGender;
 import at.ac.tuwien.sepm.assignment.individual.exception.PersistenceException;
@@ -18,11 +19,15 @@ import java.util.List;
 @Repository
 public class HorseJdbcDao implements HorseDao {
     private static final String TABLE_NAME = "horse";
+    private static final String MAX_SEARCH_RESULTS = "5";
     private static final String SQL_SELECT_ALL = "SELECT * FROM " + TABLE_NAME;
     private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, description, birthdate, sex, owner, mother, father) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private static final String SQL_SELECT_ONE = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?;";
     private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, description = ?, birthdate = ?, sex = ?, owner = ?, mother = ?, father = ? WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
+    private static final String SQL_SEARCH_WITHOUT_SEX = "SELECT * FROM " + TABLE_NAME + " WHERE LOWER(name) LIKE ? ESCAPE '!' LIMIT + " + MAX_SEARCH_RESULTS + ";";
+    private static final String SQL_SEARCH_WITH_SEX = "SELECT * FROM " + TABLE_NAME + " WHERE LOWER(name) LIKE ? ESCAPE '!' AND sex = ? LIMIT + " + MAX_SEARCH_RESULTS + ";";
+
 
     private final JdbcTemplate jdbcTemplate;
     private final HorseMapper mapper;
@@ -91,20 +96,47 @@ public class HorseJdbcDao implements HorseDao {
         });
     }
 
+    @Override
+    public List<Horse> searchHorses(HorseSearchDto horseSearchDto) {
+        // %-signs in SQL_SEARCH_WITHOUT_SEX break prepareStatement, escape special signs
+        String searchTerm = "%" + horseSearchDto.searchTerm()
+                .replace("!", "!!")
+                .replace("%", "!%")
+                .replace("_", "!_")
+                .replace("[", "![")
+                .toLowerCase() + "%";
+        if (horseSearchDto.sex() == null) {
+            return jdbcTemplate.query(connection -> {
+                PreparedStatement ps = connection.prepareStatement(SQL_SEARCH_WITHOUT_SEX);
+                ps.setString(1, searchTerm);
+
+                return ps;
+            }, this::mapRow);
+        } else {
+            return jdbcTemplate.query(connection -> {
+                PreparedStatement ps = connection.prepareStatement(SQL_SEARCH_WITH_SEX);
+                ps.setString(1, searchTerm);
+                ps.setString(2, horseSearchDto.sex().toString());
+                return ps;
+            }, this::mapRow);
+        }
+
+    }
+
     private void fillStandardPreparedStatement(HorseDto horseDto, PreparedStatement ps) throws SQLException {
         ps.setString(1, horseDto.name());
         ps.setString(2, horseDto.description());
         ps.setDate(3, java.sql.Date.valueOf(horseDto.birthdate()));
         ps.setString(4, horseDto.sex().toString());
         ps.setString(5, horseDto.owner());
-        if (horseDto.motherId() == null){
+        if (horseDto.motherId() == null) {
             ps.setNull(6, Types.BIGINT);
-        }else{
+        } else {
             ps.setLong(6, horseDto.motherId());
         }
-        if (horseDto.motherId() == null){
+        if (horseDto.motherId() == null) {
             ps.setNull(7, Types.BIGINT);
-        }else{
+        } else {
             ps.setLong(7, horseDto.fatherId());
         }
     }
