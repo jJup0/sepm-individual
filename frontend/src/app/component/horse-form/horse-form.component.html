@@ -67,17 +67,38 @@
   <div class="form-group">
     <label for="mother-input-search-box">Mother</label>
     <input
-      #mySearchBox
+      #motherSearchBox
       type="text"
       class="form-control"
-      list="mothers"
       name="mother-input"
       id="mother-input-search-box"
-      (input)="search({ searchTerm: mySearchBox.value, sex: 'female' })"
+      (input)="
+        search({ searchTerm: motherSearchBox.value, sex: 'female' }, 'mother')
+      "
     />
     <select id="mothers" name="mother-select" [(ngModel)]="horse.motherId">
-      <option *ngFor="let mother of loadedParents$ | async" [value]="mother.id">
+      <option *ngFor="let mother of loadedMothers$ | async" [value]="mother.id">
         {{ mother.name }}
+      </option>
+    </select>
+  </div>
+
+  <!-- same structure as mother form -->
+  <div class="form-group">
+    <label for="father-input-search-box">Father</label>
+    <input
+      #fatherSearchBox
+      type="text"
+      class="form-control"
+      name="father-input"
+      id="father-input-search-box"
+      (input)="
+        search({ searchTerm: fatherSearchBox.value, sex: 'male' }, 'father')
+      "
+    />
+    <select id="fathers" name="father-select" [(ngModel)]="horse.fatherId">
+      <option *ngFor="let father of loadedFathers$ | async" [value]="father.id">
+        {{ father.name }}
       </option>
     </select>
   </div>

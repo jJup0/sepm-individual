@@ -879,3 +879,37 @@ java.lang.NullPointerException: Cannot invoke "java.lang.Long.longValue()" becau
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
 	at java.base/java.lang.Thread.run(Thread.java:833) ~[na:na]
 
+2022-03-13 12:13:28.401  INFO 24300 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2022-03-13 12:13:28.419  INFO 24300 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2022-03-13 12:13:32.067  INFO 9644 --- [main] .a.i.SepmIndividualAssignmentApplication : Starting SepmIndividualAssignmentApplication using Java 17.0.2 on Jakes-Desktop with PID 9644 (C:\Users\Jakob\OneDrive\Desktop\TU\2022S\SEPM\sepm-individual-52009269\backend\target\classes started by Jakob in C:\Users\Jakob\OneDrive\Desktop\TU\2022S\SEPM\sepm-individual-52009269\backend)
+2022-03-13 12:13:32.069  INFO 9644 --- [main] .a.i.SepmIndividualAssignmentApplication : The following 1 profile is active: "datagen"
+2022-03-13 12:13:32.708  INFO 9644 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-03-13 12:13:32.713  INFO 9644 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-03-13 12:13:32.713  INFO 9644 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.58]
+2022-03-13 12:13:32.764  INFO 9644 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-03-13 12:13:32.764  INFO 9644 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 659 ms
+2022-03-13 12:13:32.787  INFO 9644 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-03-13 12:13:37.531  INFO 9644 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-03-13 12:13:37.540  INFO 9644 --- [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:./wendydb'
+2022-03-13 12:13:37.575  INFO 9644 --- [main] a.a.t.s.a.i.p.DataGeneratorBean          : Generating data…
+2022-03-13 12:13:37.582  INFO 9644 --- [main] a.a.t.s.a.i.p.DataGeneratorBean          : Finished generating data without error.
+2022-03-13 12:13:37.815  INFO 9644 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-03-13 12:13:37.822  INFO 9644 --- [main] .a.i.SepmIndividualAssignmentApplication : Started SepmIndividualAssignmentApplication in 6.071 seconds (JVM running for 6.538)
+2022-03-13 13:55:40.277  INFO 9644 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-03-13 13:55:40.278  INFO 9644 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-03-13 13:55:40.280  INFO 9644 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2022-03-13 14:08:40.023  INFO 9644 --- [http-nio-8080-exec-10] o.apache.coyote.http11.Http11Processor   : Error parsing HTTP request header
+ Note: further occurrences of HTTP request parsing errors will be logged at DEBUG level.
+
+java.lang.IllegalArgumentException: Invalid character found in the request target [/horses/search?st=hor]&s=female ]. The valid characters are defined in RFC 7230 and RFC 3986
+	at org.apache.coyote.http11.Http11InputBuffer.parseRequestLine(Http11InputBuffer.java:494) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:271) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:889) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1735) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at java.base/java.lang.Thread.run(Thread.java:833) ~[na:na]
+

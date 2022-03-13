@@ -134,7 +134,7 @@ public class HorseJdbcDao implements HorseDao {
         } else {
             ps.setLong(6, horseDto.motherId());
         }
-        if (horseDto.fatherID() == null) {
+        if (horseDto.fatherId() == null) {
             ps.setNull(7, Types.BIGINT);
         } else {
             ps.setLong(7, horseDto.fatherId());

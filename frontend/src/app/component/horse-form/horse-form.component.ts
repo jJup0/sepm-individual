@@ -32,10 +32,12 @@ export class HorseFormComponent implements OnInit {
   SEXES = sexes;
   SUBMIT_BUTTON_TEXT: string;
   submitted = false;
-  loadedParents$!: Observable<Horse[]>;
+  loadedMothers$!: Observable<Horse[]>;
+  loadedFathers$!: Observable<Horse[]>;
   searchTerm: HorseSearchDto = { searchTerm: "", sex: null };
 
-  private searchTerms = new Subject<HorseSearchDto>();
+  private motherSearchTerms = new Subject<HorseSearchDto>();
+  private fatherSearchTerms = new Subject<HorseSearchDto>();
 
   constructor(
     private route: ActivatedRoute,
@@ -43,12 +45,26 @@ export class HorseFormComponent implements OnInit {
   ) {}
 
   // Push a search term into the observable stream.
-  search(term: HorseSearchDto): void {
-    this.searchTerms.next(term);
+  search(term: HorseSearchDto, parentType: "mother" | "father"): void {
+    if (parentType == "mother") {
+      this.motherSearchTerms.next(term);
+    } else {
+      this.fatherSearchTerms.next(term);
+    }
   }
 
   ngOnInit(): void {
-    this.loadedParents$ = this.searchTerms.pipe(
+    this.loadedMothers$ = this.motherSearchTerms.pipe(
+      // wait 300ms after each keystroke before considering the term
+      debounceTime(300),
+
+      // ignore new term if same as previous term
+      distinctUntilChanged(),
+
+      // switch to new search observable each time the term changes
+      switchMap((term: HorseSearchDto) => this.horseService.search(term))
+    );
+    this.loadedFathers$ = this.fatherSearchTerms.pipe(
       // wait 300ms after each keystroke before considering the term
       debounceTime(300),
 
