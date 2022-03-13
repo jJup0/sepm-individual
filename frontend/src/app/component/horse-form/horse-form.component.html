@@ -67,12 +67,16 @@
     type="submit"
     class="btn btn-success"
     [disabled]="!horseForm.form.valid"
-    (click)="submit(true); horseForm.form.markAsPristine()"
+    (click)="submit(); horseForm.form.markAsPristine()"
   >
-    {{ SUBMIT_BUTTON_TEXT }}
+    <!-- {{ SUBMIT_BUTTON_TEXT }} -->
+    {{ this.formType === "add" ? "Add Horse" : "Update Horse" }}
   </button>
 </form>
 
-<div [hidden]="!(saved && horseForm.form.pristine)" class="alert alert-success">
-  Horse submitted!
+<div
+  [hidden]="!(submitted && horseForm.form.pristine)"
+  class="alert alert-success"
+>
+  Horse {{ this.formType === "add" ? "added" : "saved" }}!
 </div>

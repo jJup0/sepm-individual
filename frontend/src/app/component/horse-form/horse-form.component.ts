@@ -18,11 +18,11 @@ export class HorseFormComponent implements OnInit {
   horse: Horse;
 
   @Output()
-  submitPressed = new EventEmitter<boolean>();
+  submitPressed = new EventEmitter<Horse>();
 
   SEXES = sexes;
   SUBMIT_BUTTON_TEXT: string;
-  saved = false;
+  submitted = false;
 
   constructor(private route: ActivatedRoute) {}
 
@@ -37,8 +37,8 @@ export class HorseFormComponent implements OnInit {
     // );
   }
 
-  submit(valid: boolean) {
-    this.submitPressed.emit(valid);
-    this.saved = true;
+  submit() {
+    this.submitPressed.emit(this.horse);
+    this.submitted = true;
   }
 }

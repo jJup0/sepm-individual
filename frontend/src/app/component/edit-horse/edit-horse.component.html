@@ -1,7 +1,8 @@
 <h2>Edit Horse</h2>
 {{ horse | json }}
 <app-horse-form
+  *ngIf="horse"
   [formType]="FORMTYPE"
   [horse]="horse"
-  (submitPressed)="save()"
+  (submitPressed)="save($event)"
 ></app-horse-form>
