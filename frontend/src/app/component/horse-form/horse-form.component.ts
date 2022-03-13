@@ -46,7 +46,7 @@ export class HorseFormComponent implements OnInit {
 
   // Push a search term into the observable stream.
   search(term: HorseSearchDto, parentType: "mother" | "father"): void {
-    if (parentType == "mother") {
+    if (parentType === "mother") {
       this.motherSearchTerms.next(term);
     } else {
       this.fatherSearchTerms.next(term);
@@ -80,7 +80,15 @@ export class HorseFormComponent implements OnInit {
     this.submitted = true;
   }
 
-  myFunction() {
-    document.getElementById("myDropdown").classList.toggle("show");
+  horseBirthdayISO() {
+    return this.horse.birthdate.toISOString().slice(0, 10);
+  }
+
+  todaysDateISO() {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  setBirthdate(ddmmyyyy: string) {
+    this.horse.birthdate = new Date(ddmmyyyy);
   }
 }

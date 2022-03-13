@@ -36,7 +36,6 @@ export class HorseService {
   }
 
   addHorse(horse: Horse): Observable<Horse> {
-    console.log("horse service about to post horse:" + JSON.stringify(horse));
     return this.http.post<Horse>(baseUri, horse, this.httpOptions);
   }
 
@@ -44,10 +43,11 @@ export class HorseService {
     return this.http.delete<Horse>(baseUri + `/${id}`);
   }
   search(searchParameters: HorseSearchDto): Observable<Horse[]> {
-    console.log(`sending http request to `);
     return this.http.get<Horse[]>(
       baseUri +
-        `/search?st=${searchParameters.searchTerm}&s=${searchParameters.sex}`
+        `/search?st=${searchParameters.searchTerm}&s=${
+          searchParameters.sex
+        }&bb=${searchParameters.bornBefore.toISOString().slice(0, 10)}`
     );
   }
 }
