@@ -14,6 +14,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Repository
@@ -25,8 +27,7 @@ public class HorseJdbcDao implements HorseDao {
     private static final String SQL_SELECT_ONE = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?;";
     private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, description = ?, birthdate = ?, sex = ?, owner = ?, mother = ?, father = ? WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
-    private static final String SQL_SEARCH_WITHOUT_SEX = "SELECT * FROM " + TABLE_NAME + " WHERE LOWER(name) LIKE ? ESCAPE '!' LIMIT + " + MAX_SEARCH_RESULTS + ";";
-    private static final String SQL_SEARCH_WITH_SEX = "SELECT * FROM " + TABLE_NAME + " WHERE LOWER(name) LIKE ? ESCAPE '!' AND sex = ? LIMIT + " + MAX_SEARCH_RESULTS + ";";
+    private static final String SQL_SEARCH_BASE = "SELECT * FROM " + TABLE_NAME + " WHERE ";
 
 
     private final JdbcTemplate jdbcTemplate;
@@ -98,28 +99,43 @@ public class HorseJdbcDao implements HorseDao {
 
     @Override
     public List<Horse> searchHorses(HorseSearchDto horseSearchDto) {
-        // %-signs in SQL_SEARCH_WITHOUT_SEX break prepareStatement, escape special signs
-        String searchTerm = "%" + horseSearchDto.searchTerm()
-                .replace("!", "!!")
-                .replace("%", "!%")
-                .replace("_", "!_")
-                .replace("[", "![")
-                .toLowerCase() + "%";
-        if (horseSearchDto.sex() == null) {
-            return jdbcTemplate.query(connection -> {
-                PreparedStatement ps = connection.prepareStatement(SQL_SEARCH_WITHOUT_SEX);
-                ps.setString(1, searchTerm);
-
-                return ps;
-            }, this::mapRow);
-        } else {
-            return jdbcTemplate.query(connection -> {
-                PreparedStatement ps = connection.prepareStatement(SQL_SEARCH_WITH_SEX);
-                ps.setString(1, searchTerm);
-                ps.setString(2, horseSearchDto.sex().toString());
-                return ps;
-            }, this::mapRow);
+        // TODO no search parameter given error
+        
+        List<String> sqlSearchParams = new ArrayList<>();
+        if (horseSearchDto.searchTerm() != null) {
+            sqlSearchParams.add("LOWER(name) LIKE ? ESCAPE '!'");
         }
+        if (horseSearchDto.sex() != null) {
+            sqlSearchParams.add("sex = ?");
+        }
+        if (horseSearchDto.bornBefore() != null) {
+            sqlSearchParams.add("birthdate > ?");
+        }
+
+        String SQL_SEARCH_QUERY = SQL_SEARCH_BASE + String.join(" AND ", sqlSearchParams) + " LIMIT + " + MAX_SEARCH_RESULTS + ";";
+
+        return jdbcTemplate.query(connection -> {
+            PreparedStatement ps = connection.prepareStatement(SQL_SEARCH_QUERY);
+            int parameterIndex = 1;
+            if (horseSearchDto.searchTerm() != null) {
+                // %-signs in SQL_SEARCH_WITHOUT_SEX break prepareStatement, escape special signs
+                ps.setString(parameterIndex++,
+                        "%" + horseSearchDto.searchTerm()
+                                .replace("!", "!!")
+                                .replace("%", "!%")
+                                .replace("_", "!_")
+                                .replace("[", "![")
+                                .toLowerCase() + "%");
+            }
+            if (horseSearchDto.sex() != null) {
+                ps.setString(parameterIndex++, horseSearchDto.sex().toString());
+            }
+            if (horseSearchDto.bornBefore() != null) {
+                ps.setDate(parameterIndex, java.sql.Date.valueOf(horseSearchDto.bornBefore()));
+            }
+            return ps;
+        }, this::mapRow);
+
 
     }
 

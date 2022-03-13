@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
 import at.ac.tuwien.sepm.assignment.individual.service.HorseService;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.stream.Stream;
 
 @RestController
@@ -32,8 +33,8 @@ public class HorseEndpoint {
     }
 
     @GetMapping("/search")
-    public Stream<HorseDto> searchHorses(@RequestParam(name = "st") String searchTerm, @RequestParam(name = "s") HorseBiologicalGender sex) {
-        HorseSearchDto horseSearchDto = new HorseSearchDto(searchTerm, sex);
+    public Stream<HorseDto> searchHorses(@RequestParam(name = "st") String searchTerm, @RequestParam(name = "s") HorseBiologicalGender sex, @RequestParam(name = "ba") LocalDate bornAfter) {
+        HorseSearchDto horseSearchDto = new HorseSearchDto(searchTerm, sex, bornAfter);
         return service.searchHorses(horseSearchDto).stream()
                 .map(mapper::entityToDto);
     }
