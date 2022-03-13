@@ -1,7 +1,7 @@
 <h2>Add a horse</h2>
-{{ model | json }}
+{{ horse | json }}
 <app-horse-form
   [formType]="FORMTYPE"
-  [horse]="model"
-  (submitPressed)="submit()"
+  [horse]="horse"
+  (submitPressed)="submit($event)"
 ></app-horse-form>

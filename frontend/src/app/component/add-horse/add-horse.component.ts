@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 
 import { Horse } from "../../dto/horse";
-import { sexes } from "../../dto/horseSexEnum";
 import { HorseService } from "src/app/service/horse.service";
 import { HorseFormType } from "src/app/dto/horseFormTypeEnum";
 
@@ -12,36 +11,34 @@ import { HorseFormType } from "src/app/dto/horseFormTypeEnum";
 })
 export class AddHorseComponent implements OnInit {
   FORMTYPE: HorseFormType = "add";
-  submitted = false;
-  SEXES = sexes;
-
-  // Bug: birth input still buggy with display
-  model: Horse = {
-    name: "Horse",
-    description: "",
-    birthdate: new Date("01-01-2000"),
-    sex: "female",
-    owner: null,
-    motherId: null,
-    fatherId: null,
-  };
+  horse?: Horse;
 
   constructor(private service: HorseService) {}
 
-  submit(): void {
-    this.submitted = true;
-    this.postHorse();
-    this.model = {
-      name: "Horse2",
+  ngOnInit(): void {
+    this.resetHorse();
+  }
+
+  resetHorse() {
+    this.horse = {
+      name: "Horse",
       description: "",
-      birthdate: new Date("1971-01-01"),
+      birthdate: new Date(),
       sex: "female",
-      owner: "",
+      owner: null,
+      motherId: null,
+      fatherId: null,
     };
   }
 
+  submit(horse: Horse): void {
+    this.horse = horse;
+    this.postHorse();
+    this.resetHorse();
+  }
+
   postHorse(): void {
-    this.service.addHorse(this.model).subscribe({
+    this.service.addHorse(this.horse).subscribe({
       next: (data) => {
         console.log("added horse", data);
       },
@@ -51,6 +48,4 @@ export class AddHorseComponent implements OnInit {
       },
     });
   }
-
-  ngOnInit(): void {}
 }
