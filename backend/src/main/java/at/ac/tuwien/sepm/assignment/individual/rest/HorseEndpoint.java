@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.assignment.individual.rest;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
+import at.ac.tuwien.sepm.assignment.individual.enums.HorseBiologicalGender;
 import at.ac.tuwien.sepm.assignment.individual.mapper.HorseMapper;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
 import at.ac.tuwien.sepm.assignment.individual.service.HorseService;
@@ -31,7 +32,8 @@ public class HorseEndpoint {
     }
 
     @GetMapping("/search")
-    public Stream<HorseDto> searchHorses(@RequestBody HorseSearchDto horseSearchDto) {
+    public Stream<HorseDto> searchHorses(@RequestParam(name = "st") String searchTerm, @RequestParam(name = "s") HorseBiologicalGender sex) {
+        HorseSearchDto horseSearchDto = new HorseSearchDto(searchTerm, sex);
         return service.searchHorses(horseSearchDto).stream()
                 .map(mapper::entityToDto);
     }
