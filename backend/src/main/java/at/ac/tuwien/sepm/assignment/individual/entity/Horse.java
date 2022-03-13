@@ -11,8 +11,8 @@ public class Horse {
     private LocalDate birthdate;
     private HorseBiologicalGender sex;
     private String owner;
-    private Long motherId;
-    private Long fatherId;
+    private Horse mother;
+    private Horse father;
 
     public Long getId() {
         return id;
@@ -29,7 +29,6 @@ public class Horse {
     public void setName(String name) {
         this.name = name;
     }
-
 
     public String getDescription() {
         return description;
@@ -63,20 +62,19 @@ public class Horse {
         this.owner = owner;
     }
 
-
-    public Long getMotherId() {
-        return motherId;
+    public Horse getMother() {
+        return mother;
     }
 
-    public void setMotherId(Long motherId) {
-        this.motherId = motherId;
+    public void setMother(Horse mother) {
+        this.mother = mother;
     }
 
-    public Long getFatherId() {
-        return fatherId;
+    public Horse getFather() {
+        return father;
     }
 
-    public void setFatherId(Long fatherId) {
-        this.fatherId = fatherId;
+    public void setFather(Horse father) {
+        this.father = father;
     }
 }

@@ -26,8 +26,8 @@ export class AddHorseComponent implements OnInit {
       birthdate: new Date(),
       sex: "female",
       owner: null,
-      motherId: null,
-      fatherId: null,
+      mother: null,
+      father: null,
     };
   }
 

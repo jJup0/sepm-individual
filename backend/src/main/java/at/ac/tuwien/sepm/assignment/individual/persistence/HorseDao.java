@@ -13,6 +13,7 @@ import java.util.List;
 public interface HorseDao {
     /**
      * Get all horses stored in the persistent data store.
+     *
      * @return a list of all stored horses
      */
     List<Horse> getAll();
@@ -21,9 +22,12 @@ public interface HorseDao {
 
     Horse getHorse(long id);
 
+    Horse getHorseNoParents(long id);
+
     Horse editHorse(HorseDto horseDto);
 
     void deleteHorse(long id);
 
     List<Horse> searchHorses(HorseSearchDto horseSearchDto);
+
 }

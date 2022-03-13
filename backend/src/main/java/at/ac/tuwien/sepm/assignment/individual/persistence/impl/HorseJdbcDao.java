@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 @Repository
@@ -41,10 +40,32 @@ public class HorseJdbcDao implements HorseDao {
     @Override
     public List<Horse> getAll() {
         try {
-            return jdbcTemplate.query(SQL_SELECT_ALL, this::mapRow);
+            return jdbcTemplate.query(SQL_SELECT_ALL, this::mapHorsesRowNoParents);
         } catch (DataAccessException e) {
             throw new PersistenceException("Could not query all horses", e);
         }
+    }
+
+
+    @Override
+    public Horse getHorse(long id) {
+        List<Horse> horses = jdbcTemplate.query(connection -> {
+            PreparedStatement ps = connection.prepareStatement(SQL_SELECT_ONE);
+            ps.setLong(1, id);
+            return ps;
+        }, this::mapHorsesRow);
+        return horses.get(0);
+
+    }
+
+    @Override
+    public Horse getHorseNoParents(long id) {
+        List<Horse> horses = jdbcTemplate.query(connection -> {
+            PreparedStatement ps = connection.prepareStatement(SQL_SELECT_ONE);
+            ps.setLong(1, id);
+            return ps;
+        }, this::mapHorsesRowNoParents);
+        return horses.get(0);
     }
 
     @Override
@@ -60,17 +81,6 @@ public class HorseJdbcDao implements HorseDao {
         Horse addedHorse = mapper.dtoToEntity(horseDto);
         addedHorse.setId((long) keyHolder.getKeys().get("id"));
         return addedHorse;
-    }
-
-    @Override
-    public Horse getHorse(long id) {
-        List<Horse> horses = jdbcTemplate.query(connection -> {
-            PreparedStatement ps = connection.prepareStatement(SQL_SELECT_ONE);
-            ps.setLong(1, id);
-            return ps;
-        }, this::mapRow);
-        return horses.get(0);
-
     }
 
     // TODO key not present error
@@ -134,7 +144,7 @@ public class HorseJdbcDao implements HorseDao {
                 ps.setDate(parameterIndex, java.sql.Date.valueOf(horseSearchDto.bornBefore()));
             }
             return ps;
-        }, this::mapRow);
+        }, this::mapHorsesRow);
 
 
     }
@@ -145,19 +155,37 @@ public class HorseJdbcDao implements HorseDao {
         ps.setDate(3, java.sql.Date.valueOf(horseDto.birthdate()));
         ps.setString(4, horseDto.sex().toString());
         ps.setString(5, horseDto.owner());
-        if (horseDto.motherId() == null) {
+        if (horseDto.mother() == null) {
             ps.setNull(6, Types.BIGINT);
         } else {
-            ps.setLong(6, horseDto.motherId());
+            ps.setLong(6, horseDto.mother().id());
         }
-        if (horseDto.fatherId() == null) {
+        if (horseDto.father() == null) {
             ps.setNull(7, Types.BIGINT);
         } else {
-            ps.setLong(7, horseDto.fatherId());
+            ps.setLong(7, horseDto.father().id());
         }
     }
 
-    private Horse mapRow(ResultSet result, int rowNum) throws SQLException {
+    private Horse mapHorsesRowNoParents(ResultSet result, int rowNum) throws SQLException {
+        Horse horse =  mapHorsesRowBase(result);
+        horse.setMother(null);
+        horse.setFather(null);
+        return horse;
+    }
+
+    private Horse mapHorsesRow(ResultSet result, int rowNum) throws SQLException {
+        Horse horse = mapHorsesRowBase(result);
+        long motherId = result.getLong("mother");
+        //TODO NoParents
+        horse.setMother(result.wasNull() ? null : getHorseNoParents(motherId));
+        long fatherId = result.getLong("father");
+        horse.setFather(result.wasNull() ? null : getHorseNoParents(fatherId));
+        return horse;
+    }
+
+    private Horse mapHorsesRowBase(ResultSet result) throws SQLException {
+
         Horse horse = new Horse();
         horse.setId(result.getLong("id"));
         horse.setName(result.getString("name"));
@@ -165,11 +193,7 @@ public class HorseJdbcDao implements HorseDao {
         horse.setBirthdate(result.getDate("birthdate").toLocalDate());
         horse.setSex(HorseBiologicalGender.valueOf(result.getString("sex")));
         horse.setOwner(result.getString("owner"));
-
-        Long motherId = result.getLong("mother");
-        horse.setMotherId(result.wasNull() ? null : motherId);
-        Long fatherId = result.getLong("father");
-        horse.setFatherId(result.wasNull() ? null : fatherId);
         return horse;
     }
+
 }

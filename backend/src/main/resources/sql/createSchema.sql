@@ -9,6 +9,6 @@ CREATE TABLE IF NOT EXISTS horse
     owner           VARCHAR(255) NULL,
     mother          BIGINT NULL,
     father          BIGINT NULL,
-    FOREIGN KEY (mother) REFERENCES horse(id),
-    FOREIGN KEY (father) REFERENCES horse(id)
+    FOREIGN KEY (mother) REFERENCES horse(id) ON DELETE CASCADE,
+    FOREIGN KEY (father) REFERENCES horse(id) ON DELETE CASCADE
 );

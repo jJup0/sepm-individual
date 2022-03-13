@@ -7,6 +7,6 @@ export interface Horse {
   birthdate: Date;
   sex: HorseSex;
   owner?: string;
-  motherId?: number;
-  fatherId?: number;
+  mother?: Horse;
+  father?: Horse;
 }

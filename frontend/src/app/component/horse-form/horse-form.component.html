@@ -83,7 +83,7 @@
         )
       "
     />
-    <select id="mothers" name="mother-select" [(ngModel)]="horse.motherId">
+    <select id="mothers" name="mother-select" [(ngModel)]="horse.mother">
       <option *ngFor="let mother of loadedMothers$ | async" [value]="mother.id">
         {{ mother.name }}
       </option>
@@ -110,7 +110,7 @@
         )
       "
     />
-    <select id="fathers" name="father-select" [(ngModel)]="horse.fatherId">
+    <select id="fathers" name="father-select" [(ngModel)]="horse.father">
       <option *ngFor="let father of loadedFathers$ | async" [value]="father.id">
         {{ father.name }}
       </option>
