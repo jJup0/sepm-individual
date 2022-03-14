@@ -72,6 +72,7 @@
       class="form-control"
       name="mother-input"
       id="mother-input-search-box"
+      [value]="horse.mother.name"
       (input)="
         search(
           {
@@ -83,14 +84,27 @@
         )
       "
     />
-    <select id="mothers" name="mother-select" [(ngModel)]="horse.mother">
-      <option *ngFor="let mother of loadedMothers$ | async" [value]="mother.id">
+    <select
+      #motherSelect
+      id="mothers"
+      name="mother-select"
+      (input)="setParent(motherSelect.value, 'mother')"
+    >
+      <option value="" disabled selected>Select mother</option>
+      <option *ngIf="horse.mother" [value]="horse.mother | json" selected>
+        {{ horse.mother.name }}
+      </option>
+
+      <option
+        *ngFor="let mother of loadedMothers$ | async"
+        [value]="mother | json"
+      >
         {{ mother.name }}
       </option>
     </select>
   </div>
 
-  <!-- same structure as mother form -->
+  <!--  -->
   <div class="form-group">
     <label for="father-input-search-box">Father</label>
     <input
@@ -99,6 +113,7 @@
       class="form-control"
       name="father-input"
       id="father-input-search-box"
+      [value]="horse.father.name"
       (input)="
         search(
           {
@@ -110,13 +125,27 @@
         )
       "
     />
-    <select id="fathers" name="father-select" [(ngModel)]="horse.father">
-      <option *ngFor="let father of loadedFathers$ | async" [value]="father.id">
+    <select
+      #fatherSelect
+      id="fathers"
+      name="father-select"
+      (input)="setParent(fatherSelect.value, 'father')"
+    >
+      <option value="" disabled selected>Select father</option>
+      <option *ngIf="horse.father" [value]="horse.father | json" selected>
+        {{ horse.father.name }}
+      </option>
+
+      <option
+        *ngFor="let father of loadedFathers$ | async"
+        [value]="father | json"
+      >
         {{ father.name }}
       </option>
     </select>
   </div>
 
+  <!--  -->
   <button
     type="submit"
     class="btn btn-success"

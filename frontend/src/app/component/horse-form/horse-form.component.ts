@@ -11,8 +11,11 @@ import {
   Subject,
   switchMap,
 } from "rxjs";
+
 import { HorseService } from "src/app/service/horse.service";
 import { HorseSearchDto } from "src/app/dto/horseSearchDto";
+
+type ParentType = "mother" | "father";
 
 @Component({
   selector: "app-horse-form",
@@ -29,12 +32,19 @@ export class HorseFormComponent implements OnInit {
   @Output()
   submitPressed = new EventEmitter<Horse>();
 
+  motherSeachTerm: string;
+
   SEXES = sexes;
   SUBMIT_BUTTON_TEXT: string;
   submitted = false;
   loadedMothers$!: Observable<Horse[]>;
   loadedFathers$!: Observable<Horse[]>;
-  searchTerm: HorseSearchDto = { searchTerm: "", sex: null };
+
+  searchTerm: HorseSearchDto = {
+    searchTerm: "",
+    sex: null,
+    bornBefore: new Date(),
+  };
 
   private motherSearchTerms = new Subject<HorseSearchDto>();
   private fatherSearchTerms = new Subject<HorseSearchDto>();
@@ -45,7 +55,7 @@ export class HorseFormComponent implements OnInit {
   ) {}
 
   // Push a search term into the observable stream.
-  search(term: HorseSearchDto, parentType: "mother" | "father"): void {
+  search(term: HorseSearchDto, parentType: ParentType): void {
     if (parentType === "mother") {
       this.motherSearchTerms.next(term);
     } else {
@@ -78,6 +88,20 @@ export class HorseFormComponent implements OnInit {
   submit() {
     this.submitPressed.emit(this.horse);
     this.submitted = true;
+  }
+
+  returnFathers() {
+    return this.loadedFathers$;
+  }
+
+  setParent(parentStr: string, parentType: ParentType) {
+    const parent = JSON.parse(parentStr);
+    console.log("setting parents: " + parent + "has type:" + typeof parent);
+    if (parentType === "mother") {
+      this.horse.mother = parent;
+    } else if (parentType === "father") {
+      this.horse.father = parent;
+    }
   }
 
   horseBirthdayISO() {
