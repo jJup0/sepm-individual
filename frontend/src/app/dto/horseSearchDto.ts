@@ -1,7 +1,10 @@
 import { HorseSex } from "./horseSexEnum";
 
 export interface HorseSearchDto {
-  searchTerm?: string;
+  name?: string;
+  description?: string;
+  bornAfter?: string;
   sex?: HorseSex;
   bornBefore?: Date;
+  owner?: string;
 }
