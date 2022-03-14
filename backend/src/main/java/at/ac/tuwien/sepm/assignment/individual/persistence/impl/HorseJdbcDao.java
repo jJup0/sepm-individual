@@ -110,16 +110,32 @@ public class HorseJdbcDao implements HorseDao {
     @Override
     public List<Horse> searchHorses(HorseSearchDto horseSearchDto) {
         // TODO no search parameter given error
+        char escapeChar = '!';
+
 
         List<String> sqlSearchParams = new ArrayList<>();
-        if (horseSearchDto.searchTerm() != null) {
-            sqlSearchParams.add("LOWER(name) LIKE ? ESCAPE '!'");
+        if (horseSearchDto.name() != null) {
+            sqlSearchParams.add("LOWER(name) LIKE ? ESCAPE '" + escapeChar + "'");
+        }
+        if (horseSearchDto.description() != null) {
+            sqlSearchParams.add("LOWER(description) LIKE ? ESCAPE'" + escapeChar + "'");
+        }
+        if (horseSearchDto.bornAfter() != null) {
+            sqlSearchParams.add("birthdate >= ?");
+        }
+        if (horseSearchDto.bornBefore() != null) {
+            sqlSearchParams.add("birthdate <= ?");
         }
         if (horseSearchDto.sex() != null) {
             sqlSearchParams.add("sex = ?");
         }
-        if (horseSearchDto.bornBefore() != null) {
-            sqlSearchParams.add("birthdate < ?");
+        // TODO search for owner entity
+        if (horseSearchDto.owner() != null) {
+            sqlSearchParams.add("LOWER(owner) LIKE ? ESCAPE'" + escapeChar + "'");
+        }
+
+        if (sqlSearchParams.size() == 0) {
+            return getAll();
         }
 
         String SQL_SEARCH_QUERY = SQL_SEARCH_BASE + String.join(" AND ", sqlSearchParams) + " LIMIT + " + MAX_SEARCH_RESULTS + ";";
@@ -127,26 +143,36 @@ public class HorseJdbcDao implements HorseDao {
         return jdbcTemplate.query(connection -> {
             PreparedStatement ps = connection.prepareStatement(SQL_SEARCH_QUERY);
             int parameterIndex = 1;
-            if (horseSearchDto.searchTerm() != null) {
-                // %-signs in SQL_SEARCH_WITHOUT_SEX break prepareStatement, escape special signs
-                ps.setString(parameterIndex++,
-                        "%" + horseSearchDto.searchTerm()
-                                .replace("!", "!!")
-                                .replace("%", "!%")
-                                .replace("_", "!_")
-                                .replace("[", "![")
-                                .toLowerCase() + "%");
+            if (horseSearchDto.name() != null) {
+                ps.setString(parameterIndex++, globalMatchToLowerEscapeBang(horseSearchDto.name()));
+            }
+            if (horseSearchDto.description() != null) {
+                ps.setString(parameterIndex++, globalMatchToLowerEscapeBang(horseSearchDto.description()));
+            }
+            if (horseSearchDto.bornAfter() != null) {
+                ps.setDate(parameterIndex++, java.sql.Date.valueOf(horseSearchDto.bornAfter()));
+            }
+            if (horseSearchDto.bornBefore() != null) {
+                ps.setDate(parameterIndex++, java.sql.Date.valueOf(horseSearchDto.bornBefore()));
             }
             if (horseSearchDto.sex() != null) {
                 ps.setString(parameterIndex++, horseSearchDto.sex().toString());
             }
-            if (horseSearchDto.bornBefore() != null) {
-                ps.setDate(parameterIndex, java.sql.Date.valueOf(horseSearchDto.bornBefore()));
+            // TODO search for owner entity
+            if (horseSearchDto.owner() != null) {
+                ps.setString(parameterIndex++, globalMatchToLowerEscapeBang(horseSearchDto.owner()));
             }
             return ps;
         }, this::mapHorsesRow);
 
 
+    }
+
+    private String globalMatchToLowerEscapeBang(String searchTerm) {
+        for (char specialChar : new char[]{'!', '%', '_', '['}) {
+            searchTerm = searchTerm.replace("" + specialChar, "!" + searchTerm);
+        }
+        return "%" + searchTerm.toLowerCase() + "%";
     }
 
     private void fillStandardPreparedStatement(HorseDto horseDto, PreparedStatement ps) throws SQLException {
@@ -168,7 +194,7 @@ public class HorseJdbcDao implements HorseDao {
     }
 
     private Horse mapHorsesRowNoParents(ResultSet result, int rowNum) throws SQLException {
-        Horse horse =  mapHorsesRowBase(result);
+        Horse horse = mapHorsesRowBase(result);
         horse.setMother(null);
         horse.setFather(null);
         return horse;
