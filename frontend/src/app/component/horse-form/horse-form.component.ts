@@ -34,12 +34,13 @@ export class HorseFormComponent implements OnInit {
 
   SEXES = sexes;
   SUBMIT_BUTTON_TEXT: string;
+  SUBMIT_SUCCESS_TEXT: string;
   submitted = false;
   loadedMothers$!: Observable<Horse[]>;
   loadedFathers$!: Observable<Horse[]>;
 
   searchTerm: HorseSearchDto = {
-    searchTerm: "",
+    name: "",
     sex: null,
     bornBefore: new Date(),
   };
@@ -62,6 +63,25 @@ export class HorseFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    switch (this.formType) {
+      case "add":
+        this.SUBMIT_BUTTON_TEXT = "Add horse";
+        this.SUBMIT_SUCCESS_TEXT = "Horse added!";
+        break;
+      case "edit":
+        this.SUBMIT_BUTTON_TEXT = "Update horse";
+        this.SUBMIT_SUCCESS_TEXT = "Horse updated";
+        break;
+      case "search":
+        this.SUBMIT_BUTTON_TEXT = "Search";
+        this.SUBMIT_SUCCESS_TEXT = null;
+        break;
+      case "detail":
+        this.SUBMIT_BUTTON_TEXT = null;
+        this.SUBMIT_SUCCESS_TEXT = null;
+        break;
+    }
+
     this.loadedMothers$ = this.motherSearchTerms.pipe(
       // wait 300ms after each keystroke before considering the term
       debounceTime(300),
@@ -102,6 +122,9 @@ export class HorseFormComponent implements OnInit {
   }
 
   horseBirthdayISO() {
+    if (this.horse.birthdate === null) {
+      return null;
+    }
     return this.horse.birthdate.toISOString().slice(0, 10);
   }
 
