@@ -787,3 +787,24 @@ SELECT * FROM horse LIMIT =1000 [42001-210]
 2022-03-14 16:21:42.364  INFO 144 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
 2022-03-14 16:21:42.364  INFO 144 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2022-03-14 16:21:42.365  INFO 144 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+2022-03-14 17:39:13.295  WARN 144 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h13m6s845ms556µs600ns).
+2022-03-14 19:51:19.333  WARN 144 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h7s650ms674µs).
+2022-03-14 20:27:05.511  INFO 144 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2022-03-14 20:27:05.513  INFO 144 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2022-03-14 20:27:09.825  INFO 25660 --- [main] .a.i.SepmIndividualAssignmentApplication : Starting SepmIndividualAssignmentApplication using Java 17.0.2 on Jakes-Desktop with PID 25660 (C:\Users\Jakob\OneDrive\Desktop\TU\2022S\SEPM\sepm-individual-52009269\backend\target\classes started by Jakob in C:\Users\Jakob\OneDrive\Desktop\TU\2022S\SEPM\sepm-individual-52009269\backend)
+2022-03-14 20:27:09.827  INFO 25660 --- [main] .a.i.SepmIndividualAssignmentApplication : The following 1 profile is active: "datagen"
+2022-03-14 20:27:10.822  INFO 25660 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-03-14 20:27:10.831  INFO 25660 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-03-14 20:27:10.832  INFO 25660 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.58]
+2022-03-14 20:27:10.888  INFO 25660 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-03-14 20:27:10.888  INFO 25660 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1011 ms
+2022-03-14 20:27:10.920  INFO 25660 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-03-14 20:27:15.657  INFO 25660 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-03-14 20:27:15.667  INFO 25660 --- [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:./wendydb'
+2022-03-14 20:27:15.713  INFO 25660 --- [main] a.a.t.s.a.i.p.DataGeneratorBean          : Generating data…
+2022-03-14 20:27:15.723  INFO 25660 --- [main] a.a.t.s.a.i.p.DataGeneratorBean          : Finished generating data without error.
+2022-03-14 20:27:16.021  INFO 25660 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-03-14 20:27:16.028  INFO 25660 --- [main] .a.i.SepmIndividualAssignmentApplication : Started SepmIndividualAssignmentApplication in 6.589 seconds (JVM running for 7.192)
+2022-03-14 20:27:32.554  INFO 25660 --- [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-03-14 20:27:32.554  INFO 25660 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-03-14 20:27:32.555  INFO 25660 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms

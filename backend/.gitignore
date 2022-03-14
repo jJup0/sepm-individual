@@ -38,3 +38,4 @@ wendydb.mv.db
 wendydb.trace.db
 log
 log/
+/log/wendys-friends.log

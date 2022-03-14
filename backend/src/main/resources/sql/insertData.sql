@@ -19,5 +19,16 @@ VALUES
     (-9, 'Dakota', '', '2008-01-01', 'male', '', null, null),
     (-10, 'Cash', '', '2009-01-01', 'male', '', null, null)
 ;
+DELETE
+FROM owner
+where id < 0;
+
+INSERT INTO owner (id, firstName, lastName, email)
+VALUES
+    (-1, 'Owner 1', 'Lastname 1', 'jeff@example.com'),
+    (-2, 'Owner 2', 'Lastname 2', 'chef@example.com'),
+    (-3, 'Owner 3', 'Lastname 3', 'mr@example.com'),
+    (-4, 'Owner 4', 'Lastname 4', 'hello@example.com')
+;
 
 
