@@ -165,7 +165,7 @@ public class HorseJdbcDao implements HorseDao {
             }
             // TODO search for owner entity
             if (horseSearchDto.owner() != null) {
-                ps.setString(parameterIndex++, globalMatchToLowerEscapeBang(horseSearchDto.owner()));
+                ps.setString(parameterIndex, globalMatchToLowerEscapeBang(horseSearchDto.owner()));
             }
 
             return ps;

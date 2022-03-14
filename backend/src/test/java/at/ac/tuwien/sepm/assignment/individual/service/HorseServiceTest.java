@@ -46,16 +46,16 @@ public class HorseServiceTest {
     // TODO find better way
     public void addOneHorseInvalid() {
 
-        HorseDto badHorses[] = {
+        HorseDto[] badHorses = {
                 new HorseDto(null, null, "test description 1", LocalDate.now(), HorseBiologicalGender.male, "", null, null),
                 new HorseDto(null, null, "test description 1", null, HorseBiologicalGender.male, "", null, null),
                 new HorseDto(null, null, "test description 1", LocalDate.now(), null, "", null, null)};
 
         boolean failed;
-        for (int i = 0; i < badHorses.length; i++) {
+        for (HorseDto badHors : badHorses) {
             failed = false;
             try {
-                horseService.addHorse(badHorses[i]);
+                horseService.addHorse(badHors);
             } catch (Exception e) {// TODO make specific exception
                 failed = true;
             }
@@ -68,7 +68,7 @@ public class HorseServiceTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void editHorse() {
         // TODO
-        HorseDto newWendy = new HorseDto(-1l, "not wendy", "test description 1", LocalDate.now(), HorseBiologicalGender.female, "",null, null);
+        HorseDto newWendy = new HorseDto(-1L, "not wendy", "test description 1", LocalDate.now(), HorseBiologicalGender.female, "",null, null);
         horseService.editHorse(newWendy);
     }
 
@@ -76,6 +76,6 @@ public class HorseServiceTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void deleteHorse() {
         // TODO
-        horseService.deleteHorse(-1l);
+        horseService.deleteHorse(-1L);
     }
 }

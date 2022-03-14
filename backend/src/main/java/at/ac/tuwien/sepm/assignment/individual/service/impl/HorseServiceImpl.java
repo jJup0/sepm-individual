@@ -42,7 +42,6 @@ public class HorseServiceImpl implements HorseService {
     @Override
     public void deleteHorse(long id) {
         dao.deleteHorse(id);
-        return;
     }
 
     @Override
