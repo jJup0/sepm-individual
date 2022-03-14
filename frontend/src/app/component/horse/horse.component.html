@@ -10,7 +10,9 @@
     <tbody>
       <tr *ngFor="let horse of horses">
         <td>{{ horse.name }}</td>
-        <a routerLink="/edit/{{ horse.id }}">edit</a>
+        <button routerLink="/edit/{{ horse.id }}">edit</button>
+        <button routerLink="/detail/{{ horse.id }}">detail</button>
+
         <button (click)="deleteHorse(horse.id)">delete</button>
       </tr>
     </tbody>

@@ -18,8 +18,7 @@ export class EditHorseComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private horseService: HorseService,
-    private location: Location
+    private horseService: HorseService
   ) {}
 
   ngOnInit(): void {

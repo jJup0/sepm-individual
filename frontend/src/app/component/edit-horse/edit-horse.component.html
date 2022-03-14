@@ -1,7 +1,10 @@
-<h2>Edit Horse</h2>
-{{ horse | json }}
-<app-horse-form
-  [formType]="FORMTYPE"
-  [horse]="horse"
-  (submitPressed)="save($event)"
-></app-horse-form>
+<div *ngIf="!horse">Loading horse...</div>
+<div *ngIf="horse">
+  <h2>Edit Horse</h2>
+  {{ horse | json }}
+  <app-horse-form
+    [formType]="FORMTYPE"
+    [horse]="horse"
+    (submitPressed)="save($event)"
+  ></app-horse-form>
+</div>

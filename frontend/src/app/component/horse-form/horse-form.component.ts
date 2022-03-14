@@ -32,8 +32,6 @@ export class HorseFormComponent implements OnInit {
   @Output()
   submitPressed = new EventEmitter<Horse>();
 
-  motherSeachTerm: string;
-
   SEXES = sexes;
   SUBMIT_BUTTON_TEXT: string;
   submitted = false;
@@ -95,8 +93,7 @@ export class HorseFormComponent implements OnInit {
   }
 
   setParent(parentStr: string, parentType: ParentType) {
-    const parent = parentStr === null ? null : JSON.parse(parentStr);
-    console.log("setting parents: " + parent + "has type:" + typeof parent);
+    const parent: Horse = JSON.parse(parentStr);
     if (parentType === "mother") {
       this.horse.mother = parent;
     } else if (parentType === "father") {

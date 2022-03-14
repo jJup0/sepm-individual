@@ -1,0 +1,32 @@
+<p *ngIf="!horse">Loading horse...</p>
+<div *ngIf="horse">
+  <h2>Details for {{ horse.name }}</h2>
+  <p>
+    {{ horse | json }}
+  </p>
+  <div *ngIf="!deleted">
+    <button routerLink="/edit/{{ horse.id }}">edit</button>
+    <button (click)="deleteHorse(horse.id)">delete</button>
+    <app-horse-form
+      [formType]="FORMTYPE"
+      [horse]="horse"
+      (submitPressed)="(null)"
+    ></app-horse-form>
+  </div>
+  <button
+    *ngIf="horse.mother && !deleted"
+    routerLink="/detail/{{ horse.mother.id }}"
+  >
+    Mother Details ({{ horse.mother.name }})
+  </button>
+  <button
+    *ngIf="horse.father && !deleted"
+    routerLink="/detail/{{ horse.father.id }}"
+  >
+    Father Details ({{ horse.father.name }})
+  </button>
+  <div *ngIf="deleted">
+    <p class="alert alert-success">Successfully deleted {{ horse.name }}!</p>
+  </div>
+</div>
+<button routerLink="/horses">Back to main page</button>

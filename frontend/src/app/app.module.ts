@@ -11,6 +11,7 @@ import { HorseComponent } from "./component/horse/horse.component";
 import { AddHorseComponent } from "./component/add-horse/add-horse.component";
 import { EditHorseComponent } from "./component/edit-horse/edit-horse.component";
 import { HorseFormComponent } from "./component/horse-form/horse-form.component";
+import { DetailHorseComponent } from './component/detail-horse/detail-horse.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { HorseFormComponent } from "./component/horse-form/horse-form.component"
     AddHorseComponent,
     EditHorseComponent,
     HorseFormComponent,
+    DetailHorseComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,1 +1,1 @@
-export type HorseFormType = "add" | "edit";
+export type HorseFormType = "add" | "edit" | "detail";
