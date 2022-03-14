@@ -31,12 +31,6 @@ export class HorseComponent implements OnInit {
     });
   }
 
-  deleteHorse(id: number) {
-    this.service.deleteHorse(id).subscribe();
-    // TODO if no error, any nicer way?
-    this.horses = this.horses.filter((item) => item.id !== id);
-  }
-
   public vanishError(): void {
     this.error = null;
   }

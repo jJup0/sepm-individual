@@ -1,0 +1,15 @@
+<h2>Search for Horses</h2>
+{{ searchFields | json }}
+<app-horse-form
+  [formType]="FORMTYPE"
+  [horse]="searchFields"
+  (submitPressed)="search($event)"
+></app-horse-form>
+<div
+  *ngIf="matchedHorses.length === 0 && gotHorses"
+  class="alert alert-failure"
+>
+  No horses found
+</div>
+<h3>Results:</h3>
+<app-horse-table [horses]="matchedHorses"></app-horse-table>
