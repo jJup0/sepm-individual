@@ -95,7 +95,7 @@ export class HorseFormComponent implements OnInit {
   }
 
   setParent(parentStr: string, parentType: ParentType) {
-    const parent = JSON.parse(parentStr);
+    const parent = parentStr === null ? null : JSON.parse(parentStr);
     console.log("setting parents: " + parent + "has type:" + typeof parent);
     if (parentType === "mother") {
       this.horse.mother = parent;

@@ -72,7 +72,7 @@
       class="form-control"
       name="mother-input"
       id="mother-input-search-box"
-      [value]="horse.mother.name"
+      [value]="horse.mother ? horse.mother.name : null"
       (input)="
         search(
           {
@@ -90,7 +90,7 @@
       name="mother-select"
       (input)="setParent(motherSelect.value, 'mother')"
     >
-      <option value="" disabled selected>Select mother</option>
+      <option [value]="null" selected>No mother</option>
       <option *ngIf="horse.mother" [value]="horse.mother | json" selected>
         {{ horse.mother.name }}
       </option>
@@ -113,7 +113,7 @@
       class="form-control"
       name="father-input"
       id="father-input-search-box"
-      [value]="horse.father.name"
+      [value]="horse.father ? horse.father.name : null"
       (input)="
         search(
           {
@@ -131,7 +131,7 @@
       name="father-select"
       (input)="setParent(fatherSelect.value, 'father')"
     >
-      <option value="" disabled selected>Select father</option>
+      <option [value]="null" selected>No father</option>
       <option *ngIf="horse.father" [value]="horse.father | json" selected>
         {{ horse.father.name }}
       </option>
