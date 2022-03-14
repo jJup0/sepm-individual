@@ -17,11 +17,13 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.min;
+
 @Repository
 public class HorseJdbcDao implements HorseDao {
     private static final String TABLE_NAME = "horse";
-    private static final String MAX_SEARCH_RESULTS = "5";
-    private static final String SQL_SELECT_ALL = "SELECT * FROM " + TABLE_NAME;
+    private static final int MAX_SEARCH_RESULTS = 1000;
+    private static final String SQL_SELECT_ALL = "SELECT * FROM " + TABLE_NAME + " LIMIT " + MAX_SEARCH_RESULTS;
     private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, description, birthdate, sex, owner, mother, father) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private static final String SQL_SELECT_ONE = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?;";
     private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, description = ?, birthdate = ?, sex = ?, owner = ?, mother = ?, father = ? WHERE id = ?";
@@ -133,13 +135,16 @@ public class HorseJdbcDao implements HorseDao {
         if (horseSearchDto.owner() != null) {
             sqlSearchParams.add("LOWER(owner) LIKE ? ESCAPE'" + escapeChar + "'");
         }
+        int searchLimit = MAX_SEARCH_RESULTS;
+        if (horseSearchDto.limit() != null && horseSearchDto.limit() >= 0){
+            searchLimit = min(searchLimit, horseSearchDto.limit());
+        }
 
         if (sqlSearchParams.size() == 0) {
             return getAll();
         }
 
-        String SQL_SEARCH_QUERY = SQL_SEARCH_BASE + String.join(" AND ", sqlSearchParams) + " LIMIT + " + MAX_SEARCH_RESULTS + ";";
-
+        String SQL_SEARCH_QUERY = SQL_SEARCH_BASE + String.join(" AND ", sqlSearchParams) + " LIMIT + " + searchLimit + ";";
         return jdbcTemplate.query(connection -> {
             PreparedStatement ps = connection.prepareStatement(SQL_SEARCH_QUERY);
             int parameterIndex = 1;
@@ -162,6 +167,7 @@ public class HorseJdbcDao implements HorseDao {
             if (horseSearchDto.owner() != null) {
                 ps.setString(parameterIndex++, globalMatchToLowerEscapeBang(horseSearchDto.owner()));
             }
+
             return ps;
         }, this::mapHorsesRow);
 

@@ -598,3 +598,192 @@ java.lang.NullPointerException: text
 2022-03-14 12:40:08.858  INFO 15792 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2022-03-14 12:40:08.860  INFO 15792 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
 2022-03-14 13:33:43.903  WARN 15792 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=24m24s260ms501µs800ns).
+2022-03-14 16:08:24.826  INFO 15792 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2022-03-14 16:08:24.835  INFO 15792 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2022-03-14 16:08:28.510  INFO 9140 --- [main] .a.i.SepmIndividualAssignmentApplication : Starting SepmIndividualAssignmentApplication using Java 17.0.2 on Jakes-Desktop with PID 9140 (C:\Users\Jakob\OneDrive\Desktop\TU\2022S\SEPM\sepm-individual-52009269\backend\target\classes started by Jakob in C:\Users\Jakob\OneDrive\Desktop\TU\2022S\SEPM\sepm-individual-52009269\backend)
+2022-03-14 16:08:28.512  INFO 9140 --- [main] .a.i.SepmIndividualAssignmentApplication : The following 1 profile is active: "datagen"
+2022-03-14 16:08:29.159  INFO 9140 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-03-14 16:08:29.164  INFO 9140 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-03-14 16:08:29.164  INFO 9140 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.58]
+2022-03-14 16:08:29.211  INFO 9140 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-03-14 16:08:29.211  INFO 9140 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 663 ms
+2022-03-14 16:08:29.232  INFO 9140 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-03-14 16:08:33.946  INFO 9140 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-03-14 16:08:33.954  INFO 9140 --- [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:./wendydb'
+2022-03-14 16:08:33.988  INFO 9140 --- [main] a.a.t.s.a.i.p.DataGeneratorBean          : Generating data…
+2022-03-14 16:08:33.996  INFO 9140 --- [main] a.a.t.s.a.i.p.DataGeneratorBean          : Finished generating data without error.
+2022-03-14 16:08:34.232  INFO 9140 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-03-14 16:08:34.239  INFO 9140 --- [main] .a.i.SepmIndividualAssignmentApplication : Started SepmIndividualAssignmentApplication in 6.048 seconds (JVM running for 6.528)
+2022-03-14 16:08:54.341  INFO 9140 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-03-14 16:08:54.342  INFO 9140 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-03-14 16:08:54.343  INFO 9140 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2022-03-14 16:10:00.330  INFO 9140 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2022-03-14 16:10:00.338  INFO 9140 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2022-03-14 16:10:03.928  INFO 22156 --- [main] .a.i.SepmIndividualAssignmentApplication : Starting SepmIndividualAssignmentApplication using Java 17.0.2 on Jakes-Desktop with PID 22156 (C:\Users\Jakob\OneDrive\Desktop\TU\2022S\SEPM\sepm-individual-52009269\backend\target\classes started by Jakob in C:\Users\Jakob\OneDrive\Desktop\TU\2022S\SEPM\sepm-individual-52009269\backend)
+2022-03-14 16:10:03.930  INFO 22156 --- [main] .a.i.SepmIndividualAssignmentApplication : The following 1 profile is active: "datagen"
+2022-03-14 16:10:04.574  INFO 22156 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-03-14 16:10:04.579  INFO 22156 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-03-14 16:10:04.579  INFO 22156 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.58]
+2022-03-14 16:10:04.628  INFO 22156 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-03-14 16:10:04.628  INFO 22156 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 660 ms
+2022-03-14 16:10:04.654  INFO 22156 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-03-14 16:10:09.361  INFO 22156 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-03-14 16:10:09.373  INFO 22156 --- [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:./wendydb'
+2022-03-14 16:10:09.409  INFO 22156 --- [main] a.a.t.s.a.i.p.DataGeneratorBean          : Generating data…
+2022-03-14 16:10:09.417  INFO 22156 --- [main] a.a.t.s.a.i.p.DataGeneratorBean          : Finished generating data without error.
+2022-03-14 16:10:09.652  INFO 22156 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-03-14 16:10:09.659  INFO 22156 --- [main] .a.i.SepmIndividualAssignmentApplication : Started SepmIndividualAssignmentApplication in 6.036 seconds (JVM running for 6.529)
+2022-03-14 16:10:33.321  INFO 22156 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-03-14 16:10:33.322  INFO 22156 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-03-14 16:10:33.322  INFO 22156 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+2022-03-14 16:19:54.388  INFO 22156 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2022-03-14 16:19:54.396  INFO 22156 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2022-03-14 16:20:18.836  INFO 22712 --- [main] .a.i.SepmIndividualAssignmentApplication : Starting SepmIndividualAssignmentApplication using Java 17.0.2 on Jakes-Desktop with PID 22712 (C:\Users\Jakob\OneDrive\Desktop\TU\2022S\SEPM\sepm-individual-52009269\backend\target\classes started by Jakob in C:\Users\Jakob\OneDrive\Desktop\TU\2022S\SEPM\sepm-individual-52009269\backend)
+2022-03-14 16:20:18.839  INFO 22712 --- [main] .a.i.SepmIndividualAssignmentApplication : The following 1 profile is active: "datagen"
+2022-03-14 16:20:19.500  INFO 22712 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-03-14 16:20:19.506  INFO 22712 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-03-14 16:20:19.506  INFO 22712 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.58]
+2022-03-14 16:20:19.564  INFO 22712 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-03-14 16:20:19.564  INFO 22712 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 681 ms
+2022-03-14 16:20:19.584  INFO 22712 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-03-14 16:20:24.329  INFO 22712 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-03-14 16:20:24.337  INFO 22712 --- [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:./wendydb'
+2022-03-14 16:20:24.371  INFO 22712 --- [main] a.a.t.s.a.i.p.DataGeneratorBean          : Generating data…
+2022-03-14 16:20:24.379  INFO 22712 --- [main] a.a.t.s.a.i.p.DataGeneratorBean          : Finished generating data without error.
+2022-03-14 16:20:24.621  INFO 22712 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-03-14 16:20:24.632  INFO 22712 --- [main] .a.i.SepmIndividualAssignmentApplication : Started SepmIndividualAssignmentApplication in 6.196 seconds (JVM running for 6.825)
+2022-03-14 16:20:47.748  INFO 22712 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2022-03-14 16:20:47.756  INFO 22712 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2022-03-14 16:20:51.176  INFO 24972 --- [main] .a.i.SepmIndividualAssignmentApplication : Starting SepmIndividualAssignmentApplication using Java 17.0.2 on Jakes-Desktop with PID 24972 (C:\Users\Jakob\OneDrive\Desktop\TU\2022S\SEPM\sepm-individual-52009269\backend\target\classes started by Jakob in C:\Users\Jakob\OneDrive\Desktop\TU\2022S\SEPM\sepm-individual-52009269\backend)
+2022-03-14 16:20:51.178  INFO 24972 --- [main] .a.i.SepmIndividualAssignmentApplication : The following 1 profile is active: "datagen"
+2022-03-14 16:20:51.823  INFO 24972 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-03-14 16:20:51.828  INFO 24972 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-03-14 16:20:51.828  INFO 24972 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.58]
+2022-03-14 16:20:51.878  INFO 24972 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-03-14 16:20:51.878  INFO 24972 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 661 ms
+2022-03-14 16:20:51.901  INFO 24972 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-03-14 16:20:56.584  INFO 24972 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-03-14 16:20:56.593  INFO 24972 --- [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:./wendydb'
+2022-03-14 16:20:56.629  INFO 24972 --- [main] a.a.t.s.a.i.p.DataGeneratorBean          : Generating data…
+2022-03-14 16:20:56.637  INFO 24972 --- [main] a.a.t.s.a.i.p.DataGeneratorBean          : Finished generating data without error.
+2022-03-14 16:20:56.919  INFO 24972 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-03-14 16:20:56.932  INFO 24972 --- [main] .a.i.SepmIndividualAssignmentApplication : Started SepmIndividualAssignmentApplication in 6.061 seconds (JVM running for 6.515)
+2022-03-14 16:20:59.680  INFO 24972 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-03-14 16:20:59.681  INFO 24972 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-03-14 16:20:59.682  INFO 24972 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2022-03-14 16:20:59.802 ERROR 24972 --- [http-nio-8080-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is at.ac.tuwien.sepm.assignment.individual.exception.PersistenceException: Could not query all horses] with root cause
+
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM horse LIMIT [*]=1000"; expected "INTERSECTS, NOT, EXISTS, UNIQUE, INTERSECTS"; SQL statement:
+SELECT * FROM horse LIMIT =1000 [42001-210]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:521) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:496) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.message.DbException.getSyntaxError(DbException.java:265) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.command.Parser.getSyntaxError(Parser.java:890) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.command.Parser.readTerm(Parser.java:5191) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.command.Parser.readFactor(Parser.java:3423) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.command.Parser.readSum(Parser.java:3410) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.command.Parser.readConcat(Parser.java:3375) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.command.Parser.readCondition(Parser.java:3160) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.command.Parser.readExpression(Parser.java:3076) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.command.Parser.parseEndOfQuery(Parser.java:2721) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.command.Parser.parseQueryExpressionBodyAndEndOfQuery(Parser.java:2623) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.command.Parser.parseQueryExpression(Parser.java:2615) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.command.Parser.parseQuery(Parser.java:2576) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.command.Parser.parsePrepared(Parser.java:707) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.command.Parser.parse(Parser.java:674) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.command.Parser.parse(Parser.java:649) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.command.Parser.prepareCommand(Parser.java:551) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:615) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:553) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1116) ~[h2-2.1.210.jar:2.1.210]
+	at org.h2.jdbc.JdbcStatement.executeQuery(JdbcStatement.java:92) ~[h2-2.1.210.jar:2.1.210]
+	at com.zaxxer.hikari.pool.ProxyStatement.executeQuery(ProxyStatement.java:110) ~[HikariCP-4.0.3.jar:na]
+	at com.zaxxer.hikari.pool.HikariProxyStatement.executeQuery(HikariProxyStatement.java) ~[HikariCP-4.0.3.jar:na]
+	at org.springframework.jdbc.core.JdbcTemplate$1QueryStatementCallback.doInStatement(JdbcTemplate.java:452) ~[spring-jdbc-5.3.16.jar:5.3.16]
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:381) ~[spring-jdbc-5.3.16.jar:5.3.16]
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:465) ~[spring-jdbc-5.3.16.jar:5.3.16]
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:475) ~[spring-jdbc-5.3.16.jar:5.3.16]
+	at at.ac.tuwien.sepm.assignment.individual.persistence.impl.HorseJdbcDao.getAll(HorseJdbcDao.java:45) ~[classes/:na]
+	at at.ac.tuwien.sepm.assignment.individual.persistence.impl.HorseJdbcDao.searchHorses(HorseJdbcDao.java:144) ~[classes/:na]
+	at at.ac.tuwien.sepm.assignment.individual.persistence.impl.HorseJdbcDao$$FastClassBySpringCGLIB$$a382c2e7.invoke(<generated>) ~[classes/:na]
+	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.3.16.jar:5.3.16]
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:783) ~[spring-aop-5.3.16.jar:5.3.16]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163) ~[spring-aop-5.3.16.jar:5.3.16]
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:753) ~[spring-aop-5.3.16.jar:5.3.16]
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137) ~[spring-tx-5.3.16.jar:5.3.16]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.16.jar:5.3.16]
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:753) ~[spring-aop-5.3.16.jar:5.3.16]
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:698) ~[spring-aop-5.3.16.jar:5.3.16]
+	at at.ac.tuwien.sepm.assignment.individual.persistence.impl.HorseJdbcDao$$EnhancerBySpringCGLIB$$b91c4a1a.searchHorses(<generated>) ~[classes/:na]
+	at at.ac.tuwien.sepm.assignment.individual.service.impl.HorseServiceImpl.searchHorses(HorseServiceImpl.java:50) ~[classes/:na]
+	at at.ac.tuwien.sepm.assignment.individual.rest.HorseEndpoint.searchHorses(HorseEndpoint.java:49) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205) ~[spring-web-5.3.16.jar:5.3.16]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150) ~[spring-web-5.3.16.jar:5.3.16]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117) ~[spring-webmvc-5.3.16.jar:5.3.16]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:895) ~[spring-webmvc-5.3.16.jar:5.3.16]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:808) ~[spring-webmvc-5.3.16.jar:5.3.16]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-5.3.16.jar:5.3.16]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1067) ~[spring-webmvc-5.3.16.jar:5.3.16]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:963) ~[spring-webmvc-5.3.16.jar:5.3.16]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006) ~[spring-webmvc-5.3.16.jar:5.3.16]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898) ~[spring-webmvc-5.3.16.jar:5.3.16]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:655) ~[tomcat-embed-core-9.0.58.jar:4.0.FR]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883) ~[spring-webmvc-5.3.16.jar:5.3.16]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:764) ~[tomcat-embed-core-9.0.58.jar:4.0.FR]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53) ~[tomcat-embed-websocket-9.0.58.jar:9.0.58]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-5.3.16.jar:5.3.16]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) ~[spring-web-5.3.16.jar:5.3.16]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-5.3.16.jar:5.3.16]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) ~[spring-web-5.3.16.jar:5.3.16]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-5.3.16.jar:5.3.16]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) ~[spring-web-5.3.16.jar:5.3.16]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:197) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:540) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:135) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:359) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:889) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1735) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-9.0.58.jar:9.0.58]
+	at java.base/java.lang.Thread.run(Thread.java:833) ~[na:na]
+
+2022-03-14 16:21:26.985  INFO 24972 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2022-03-14 16:21:26.987  INFO 24972 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2022-03-14 16:21:30.984  INFO 144 --- [main] .a.i.SepmIndividualAssignmentApplication : Starting SepmIndividualAssignmentApplication using Java 17.0.2 on Jakes-Desktop with PID 144 (C:\Users\Jakob\OneDrive\Desktop\TU\2022S\SEPM\sepm-individual-52009269\backend\target\classes started by Jakob in C:\Users\Jakob\OneDrive\Desktop\TU\2022S\SEPM\sepm-individual-52009269\backend)
+2022-03-14 16:21:30.986  INFO 144 --- [main] .a.i.SepmIndividualAssignmentApplication : The following 1 profile is active: "datagen"
+2022-03-14 16:21:31.630  INFO 144 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-03-14 16:21:31.635  INFO 144 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-03-14 16:21:31.635  INFO 144 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.58]
+2022-03-14 16:21:31.688  INFO 144 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-03-14 16:21:31.688  INFO 144 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 665 ms
+2022-03-14 16:21:31.709  INFO 144 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-03-14 16:21:36.397  INFO 144 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-03-14 16:21:36.405  INFO 144 --- [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:./wendydb'
+2022-03-14 16:21:36.438  INFO 144 --- [main] a.a.t.s.a.i.p.DataGeneratorBean          : Generating data…
+2022-03-14 16:21:36.445  INFO 144 --- [main] a.a.t.s.a.i.p.DataGeneratorBean          : Finished generating data without error.
+2022-03-14 16:21:36.696  INFO 144 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-03-14 16:21:36.710  INFO 144 --- [main] .a.i.SepmIndividualAssignmentApplication : Started SepmIndividualAssignmentApplication in 6.033 seconds (JVM running for 6.487)
+2022-03-14 16:21:42.364  INFO 144 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-03-14 16:21:42.364  INFO 144 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-03-14 16:21:42.365  INFO 144 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms

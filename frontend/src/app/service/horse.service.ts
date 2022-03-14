@@ -50,6 +50,7 @@ export class HorseService {
       bornBefore: "bb",
       sex: "s",
       owner: "o",
+      limit: "l",
     };
     const searchParamsArr: string[] = [];
     for (const paramName in searchParameters) {
