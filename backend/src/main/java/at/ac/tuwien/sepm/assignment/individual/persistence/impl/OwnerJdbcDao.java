@@ -8,6 +8,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -17,6 +18,7 @@ public class OwnerJdbcDao implements OwnerDao {
     private static final String TABLE_NAME = "owner";
     private static final int MAX_SEARCH_RESULTS = 1000;
     private static final String SQL_SELECT_ALL = "SELECT * FROM " + TABLE_NAME + " LIMIT " + MAX_SEARCH_RESULTS;
+    private static final String SQL_SELECT_WITH_ID = "SELECT * FROM " + TABLE_NAME + " WHERE ID = ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final OwnerMapper mapper;
@@ -34,6 +36,17 @@ public class OwnerJdbcDao implements OwnerDao {
         } catch (DataAccessException e) {
             throw new PersistenceException("Could not query all owners", e);
         }
+    }
+
+    @Override
+    public Owner getWithId(long id) {
+        List<Owner> owners = jdbcTemplate.query(connection -> {
+            PreparedStatement ps = connection.prepareStatement(SQL_SELECT_WITH_ID);
+            ps.setLong(1, id);
+            return ps;
+        }, this::mapOwnerRow);
+        // TODO no owner error
+        return owners.get(0);
     }
 
     private Owner mapOwnerRow(ResultSet result, int rowNum) throws SQLException {

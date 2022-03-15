@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.assignment.individual.enums.HorseBiologicalGender;
 import at.ac.tuwien.sepm.assignment.individual.exception.PersistenceException;
 import at.ac.tuwien.sepm.assignment.individual.mapper.HorseMapper;
 import at.ac.tuwien.sepm.assignment.individual.persistence.HorseDao;
+import at.ac.tuwien.sepm.assignment.individual.persistence.OwnerDao;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -33,10 +34,12 @@ public class HorseJdbcDao implements HorseDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final HorseMapper mapper;
+    private final OwnerDao ownerDao;
 
-    public HorseJdbcDao(JdbcTemplate jdbcTemplate, HorseMapper mapper) {
+    public HorseJdbcDao(JdbcTemplate jdbcTemplate, HorseMapper mapper, OwnerDao ownerDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.mapper = mapper;
+        this.ownerDao = ownerDao;
     }
 
     @Override
@@ -57,7 +60,6 @@ public class HorseJdbcDao implements HorseDao {
             return ps;
         }, this::mapHorsesRow);
         return horses.get(0);
-
     }
 
     @Override
@@ -136,7 +138,7 @@ public class HorseJdbcDao implements HorseDao {
             sqlSearchParams.add("LOWER(owner) LIKE ? ESCAPE'" + escapeChar + "'");
         }
         int searchLimit = MAX_SEARCH_RESULTS;
-        if (horseSearchDto.limit() != null && horseSearchDto.limit() >= 0){
+        if (horseSearchDto.limit() != null && horseSearchDto.limit() >= 0) {
             searchLimit = min(searchLimit, horseSearchDto.limit());
         }
 
@@ -186,7 +188,11 @@ public class HorseJdbcDao implements HorseDao {
         ps.setString(2, horseDto.description());
         ps.setDate(3, java.sql.Date.valueOf(horseDto.birthdate()));
         ps.setString(4, horseDto.sex().toString());
-        ps.setString(5, horseDto.owner());
+        if (horseDto.owner() == null) {
+            ps.setNull(5, Types.BIGINT);
+        } else {
+            ps.setLong(5, horseDto.owner().id());
+        }
         if (horseDto.mother() == null) {
             ps.setNull(6, Types.BIGINT);
         } else {
@@ -224,7 +230,8 @@ public class HorseJdbcDao implements HorseDao {
         horse.setDescription(result.getString("description"));
         horse.setBirthdate(result.getDate("birthdate").toLocalDate());
         horse.setSex(HorseBiologicalGender.valueOf(result.getString("sex")));
-        horse.setOwner(result.getString("owner"));
+        long ownerId = result.getLong("owner");
+        horse.setOwner(result.wasNull() ? null : ownerDao.getWithId(ownerId));
         return horse;
     }
 

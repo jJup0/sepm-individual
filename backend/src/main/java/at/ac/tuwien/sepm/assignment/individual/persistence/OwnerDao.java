@@ -7,4 +7,5 @@ import java.util.List;
 public interface OwnerDao {
     List<Owner> getAll();
 
+    Owner getWithId(long id);
 }

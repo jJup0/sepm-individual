@@ -20,4 +20,9 @@ public class OwnerServiceImpl implements OwnerService {
     public List<Owner> allOwners() {
         return dao.getAll();
     }
+
+    @Override
+    public Owner getWithId(long id) {
+        return dao.getWithId(id);
+    }
 }

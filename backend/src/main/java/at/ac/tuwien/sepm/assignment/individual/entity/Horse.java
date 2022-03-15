@@ -10,7 +10,7 @@ public class Horse {
     private String description;
     private LocalDate birthdate;
     private HorseBiologicalGender sex;
-    private String owner;
+    private Owner owner;
     private Horse mother;
     private Horse father;
 
@@ -54,11 +54,11 @@ public class Horse {
         this.sex = sex;
     }
 
-    public String getOwner() {
+    public Owner getOwner() {
         return owner;
     }
 
-    public void setOwner(String owner) {
+    public void setOwner(Owner owner) {
         this.owner = owner;
     }
 
