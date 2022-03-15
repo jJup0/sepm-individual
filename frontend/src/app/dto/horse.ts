@@ -1,4 +1,5 @@
 import { HorseSex } from "./horseSexEnum";
+import { Owner } from "./owner";
 
 export interface Horse {
   id?: number;
@@ -6,7 +7,7 @@ export interface Horse {
   description?: string;
   birthdate: Date;
   sex: HorseSex;
-  owner?: string;
+  owner?: Owner;
   mother?: Horse;
   father?: Horse;
 }
