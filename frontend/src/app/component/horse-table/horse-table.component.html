@@ -13,7 +13,13 @@
         <td>{{ horse.description }}</td>
         <td>{{ dateToString(horse.birthdate) }}</td>
         <td>{{ horse.sex }}</td>
-        <td>{{ horse.owner }}</td>
+        <td>
+          {{
+            horse.owner === null
+              ? ""
+              : horse.owner.firstName + " " + horse.owner.lastName
+          }}
+        </td>
         <button routerLink="/edit/{{ horse.id }}">edit</button>
         <button routerLink="/detail/{{ horse.id }}">detail</button>
 

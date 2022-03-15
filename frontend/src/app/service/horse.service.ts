@@ -59,6 +59,7 @@ export class HorseService {
         if (paramName === "bb" || paramName === "ba") {
           param = searchParameters[paramName].toISOString().slice(0, 10);
         }
+        // TODO!!! OWNER AS DATA STRUCTURE
         searchParamsArr.push(`${shortHandMapping[paramName]}=${param}`);
       }
     }
