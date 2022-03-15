@@ -49,4 +49,9 @@ public class HorseServiceImpl implements HorseService {
         return dao.searchHorses(horseSearchDto);
     }
 
+    @Override
+    public Horse getHorseFamilyTree(long id, Integer depth) {
+        return dao.getHorseWithFamilyTree(id, depth);
+    }
+
 }

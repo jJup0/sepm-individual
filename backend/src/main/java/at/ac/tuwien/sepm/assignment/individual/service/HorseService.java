@@ -25,4 +25,6 @@ public interface HorseService {
     void deleteHorse(long id);
 
     List<Horse> searchHorses(HorseSearchDto horseSearchDto);
+
+    Horse getHorseFamilyTree(long id, Integer depth);
 }

@@ -32,6 +32,14 @@ public class HorseEndpoint {
         return mapper.entityToDto(service.getHorse(id));
     }
 
+    @GetMapping("/familytree/{id}")
+    public HorseDto getHorseFamilyTree(@PathVariable long id, @RequestParam(name = "d", required = false) Integer depth) {
+        if (depth == null){
+            depth = 3;
+        }
+        return mapper.entityToDto(service.getHorseFamilyTree(id, depth));
+    }
+
     @GetMapping("/search")
     public Stream<HorseDto> searchHorses(@RequestParam(name = "n", required = false) String name,
                                          @RequestParam(name = "d", required = false) String description,

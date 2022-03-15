@@ -22,12 +22,11 @@ public interface HorseDao {
 
     Horse getHorse(long id);
 
-    Horse getHorseNoParents(long id);
-
     Horse editHorse(HorseDto horseDto);
 
     void deleteHorse(long id);
 
     List<Horse> searchHorses(HorseSearchDto horseSearchDto);
 
+    Horse getHorseWithFamilyTree(long id, int ancestorDepth);
 }

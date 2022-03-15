@@ -24,6 +24,7 @@ import static java.lang.Math.min;
 public class HorseJdbcDao implements HorseDao {
     private static final String TABLE_NAME = "horse";
     private static final int MAX_SEARCH_RESULTS = 1000;
+    private static final int MAX_GENERATIONS = 5;
     private static final String SQL_SELECT_ALL = "SELECT * FROM " + TABLE_NAME + " LIMIT " + MAX_SEARCH_RESULTS;
     private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, description, birthdate, sex, owner, mother, father) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private static final String SQL_SELECT_ONE = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?;";
@@ -45,7 +46,8 @@ public class HorseJdbcDao implements HorseDao {
     @Override
     public List<Horse> getAll() {
         try {
-            return jdbcTemplate.query(SQL_SELECT_ALL, this::mapHorsesRowNoParents);
+            return jdbcTemplate.query(SQL_SELECT_ALL, (resultSet, rowNum) ->
+                    mapHorsesRowParentDepth(resultSet, 1));
         } catch (DataAccessException e) {
             throw new PersistenceException("Could not query all horses", e);
         }
@@ -54,23 +56,9 @@ public class HorseJdbcDao implements HorseDao {
 
     @Override
     public Horse getHorse(long id) {
-        List<Horse> horses = jdbcTemplate.query(connection -> {
-            PreparedStatement ps = connection.prepareStatement(SQL_SELECT_ONE);
-            ps.setLong(1, id);
-            return ps;
-        }, this::mapHorsesRow);
-        return horses.get(0);
+        return getHorseWithFamilyTree(id, 1);
     }
 
-    @Override
-    public Horse getHorseNoParents(long id) {
-        List<Horse> horses = jdbcTemplate.query(connection -> {
-            PreparedStatement ps = connection.prepareStatement(SQL_SELECT_ONE);
-            ps.setLong(1, id);
-            return ps;
-        }, this::mapHorsesRowNoParents);
-        return horses.get(0);
-    }
 
     @Override
     public Horse addHorse(HorseDto horseDto) {
@@ -171,9 +159,38 @@ public class HorseJdbcDao implements HorseDao {
             }
 
             return ps;
-        }, this::mapHorsesRow);
+        }, (resultSet, rowNum) ->
+                mapHorsesRowParentDepth(resultSet, 1));
 
 
+    }
+
+    @Override
+    public Horse getHorseWithFamilyTree(long id, int ancestorDepth) {
+        if (ancestorDepth == -1) {
+            return null;
+        }
+        final int limitedAncestorDepth = min(ancestorDepth, MAX_GENERATIONS);
+        List<Horse> horses = jdbcTemplate.query(connection -> {
+                    PreparedStatement ps = connection.prepareStatement(SQL_SELECT_ONE);
+                    ps.setLong(1, id);
+                    return ps;
+                }, (resultSet, rowNum) ->
+                        mapHorsesRowParentDepth(resultSet, limitedAncestorDepth)
+        );
+        // TODO no horse
+        return horses.get(0);
+
+    }
+
+    private Horse mapHorsesRowParentDepth(ResultSet result, int depthRemaining) throws SQLException {
+        Horse horse = mapHorsesRowBase(result);
+
+        long motherId = result.getLong("mother");
+        horse.setMother(result.wasNull() ? null : getHorseWithFamilyTree(motherId, depthRemaining - 1));
+        long fatherId = result.getLong("father");
+        horse.setFather(result.wasNull() ? null : getHorseWithFamilyTree(fatherId, depthRemaining - 1));
+        return horse;
     }
 
     private String globalMatchToLowerEscapeBang(String searchTerm) {
@@ -203,23 +220,6 @@ public class HorseJdbcDao implements HorseDao {
         } else {
             ps.setLong(7, horseDto.father().id());
         }
-    }
-
-    private Horse mapHorsesRowNoParents(ResultSet result, int rowNum) throws SQLException {
-        Horse horse = mapHorsesRowBase(result);
-        horse.setMother(null);
-        horse.setFather(null);
-        return horse;
-    }
-
-    private Horse mapHorsesRow(ResultSet result, int rowNum) throws SQLException {
-        Horse horse = mapHorsesRowBase(result);
-        long motherId = result.getLong("mother");
-        //TODO NoParents
-        horse.setMother(result.wasNull() ? null : getHorseNoParents(motherId));
-        long fatherId = result.getLong("father");
-        horse.setFather(result.wasNull() ? null : getHorseNoParents(fatherId));
-        return horse;
     }
 
     private Horse mapHorsesRowBase(ResultSet result) throws SQLException {
