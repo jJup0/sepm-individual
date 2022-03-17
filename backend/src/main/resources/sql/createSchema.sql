@@ -1,3 +1,11 @@
+CREATE TABLE IF NOT EXISTS owner
+(
+    id              BIGINT AUTO_INCREMENT PRIMARY KEY,
+    firstName       VARCHAR(255) NOT NULL,
+    lastName        VARCHAR(255) NOT NULL,
+    email           VARCHAR(255) NULL
+);
+
 CREATE TYPE IF NOT EXISTS HORSESEX AS ENUM ('male', 'female');
 
 CREATE TABLE IF NOT EXISTS horse
@@ -10,15 +18,9 @@ CREATE TABLE IF NOT EXISTS horse
     owner           BIGINT NULL,
     mother          BIGINT NULL,
     father          BIGINT NULL,
-    FOREIGN KEY (mother) REFERENCES horse(id) ON DELETE CASCADE,
-    FOREIGN KEY (father) REFERENCES horse(id) ON DELETE CASCADE,
+    FOREIGN KEY (mother) REFERENCES horse(id) ON DELETE SET NULL,
+    FOREIGN KEY (father) REFERENCES horse(id) ON DELETE SET NULL,
     FOREIGN KEY (owner) REFERENCES owner(id) ON DELETE SET NULL
 );
 
-CREATE TABLE IF NOT EXISTS owner
-(
-    id              BIGINT AUTO_INCREMENT PRIMARY KEY,
-    firstName       VARCHAR(255) NOT NULL,
-    lastName        VARCHAR(255) NOT NULL,
-    email           VARCHAR(255) NULL
-);
+
