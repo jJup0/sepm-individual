@@ -1,0 +1,6 @@
+*.db
+*.log
+**/dist/**
+**/node_modules/**
+**/log/**
+**/.vscode/**

@@ -1,0 +1,46 @@
+<!-- <ngb-accordion>
+  <ng-template ngbPanelContent> Yoooo </ng-template>
+  <ngb-panel title="test">
+    <ng-template ngbPanelContent> labore sustainable VHS. </ng-template>
+  </ngb-panel>
+  <ngb-panel [title]="horse.name + '\n' + horse.birthdate">
+    <ng-template ngbPanelContent>
+      <app-horse-familytree-row
+        *ngIf="horse.mother"
+        [horse]="horse.mother"
+      ></app-horse-familytree-row>
+      <app-horse-familytree-row
+        *ngIf="horse.father"
+        [horse]="horse.father"
+      ></app-horse-familytree-row>
+    </ng-template>
+  </ngb-panel>
+</ngb-accordion> -->
+
+<div *ngIf="horse" class="collapsible" [class]="horse.sex + 'Background'">
+  <button
+    type="button"
+    class="collapseControlButton"
+    (click)="toggleCollapse()"
+  >
+    {{ opened ? "-" : "+" }}
+  </button>
+  <span class="horseName">{{ horse.name }}</span>
+  <button type="button" class="deleteButton" (click)="deleteHorse()">
+    Delete
+  </button>
+  <button type="button" class="detailButton">Details</button>
+  <span class="birthdate">{{ horse.birthdate }}</span>
+</div>
+<div class="indent">
+  <app-horse-familytree-row
+    *ngIf="horse.father && opened"
+    (deletedParent)="removeParent('father')"
+    [horse]="horse.father"
+  ></app-horse-familytree-row>
+  <app-horse-familytree-row
+    *ngIf="horse.mother && opened"
+    (deletedParent)="removeParent('mother')"
+    [horse]="horse.mother"
+  ></app-horse-familytree-row>
+</div>

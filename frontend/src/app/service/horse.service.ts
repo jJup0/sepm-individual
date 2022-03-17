@@ -31,6 +31,11 @@ export class HorseService {
     return this.http.get<Horse>(baseUri + `/${id}`);
   }
 
+  getHorseFamilytree(id: number, generations: number): Observable<Horse> {
+    console.log(baseUri + `/familytree/${id}?d=${generations}`);
+    return this.http.get<Horse>(baseUri + `/familytree/${id}?d=${generations}`);
+  }
+
   updateHorse(horse: Horse): Observable<Horse> {
     return this.http.put<Horse>(baseUri, horse, this.httpOptions);
   }

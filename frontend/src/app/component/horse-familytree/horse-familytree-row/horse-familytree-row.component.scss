@@ -1,0 +1,52 @@
+// from https://www.w3schools.com/howto/howto_js_collapsible.asp
+/* Style the button that is used to open and close the collapsible content */
+.collapsible {
+  background-color: rgb(208, 215, 255);
+  color: rgb(0, 0, 0);
+  padding: 1em;
+  width: 100%;
+  font-size: 15px;
+  text-align: left;
+  border-style: solid;
+  border-style: 1px;
+  outline: #444;
+}
+
+.collapsible .birthdate {
+  float: right;
+  margin: 0.5em 1em 0em 1em;
+  //   vertical-align: middle;
+}
+.collapsible .deleteButton {
+  float: right;
+  margin: 0.5em 1em 0em 1em;
+}
+.collapsible .detailButton {
+  float: right;
+  margin: 0.5em 1em 0em 1em;
+}
+
+.collapsible .collapseControlButton {
+  width: 2em;
+  height: 2em;
+  color: white;
+  background-color: #395cf6;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  font-size: 1.4em;
+  font-family: monospace;
+  margin: 0em 1em 0em 0em;
+  border-radius: 50%;
+}
+
+.indent {
+  margin: -1px 0 0 2em;
+}
+
+.femaleBackground {
+  background-color: rgb(255, 206, 244);
+}
+.maleBackground {
+  background-color: #c4dbff;
+}

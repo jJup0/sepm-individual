@@ -20,10 +20,11 @@
               : horse.owner.firstName + " " + horse.owner.lastName
           }}
         </td>
-        <button routerLink="/edit/{{ horse.id }}">edit</button>
-        <button routerLink="/detail/{{ horse.id }}">detail</button>
+        <button routerLink="/edit/{{ horse.id }}">Edit</button>
+        <button routerLink="/detail/{{ horse.id }}">Detail</button>
+        <button routerLink="/familytree/{{ horse.id }}">Family tree</button>
 
-        <button (click)="deleteHorse(horse.id)">delete</button>
+        <button (click)="deleteHorse(horse.id)">Delete</button>
       </tr>
     </tbody>
   </table>

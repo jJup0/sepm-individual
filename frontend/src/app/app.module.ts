@@ -15,6 +15,8 @@ import { DetailHorseComponent } from "./component/detail-horse/detail-horse.comp
 import { SearchHorseComponent } from "./component/search-horse/search-horse.component";
 import { HorseTableComponent } from "./component/horse-table/horse-table.component";
 import { OwnerComponent } from './component/owner/owner.component';
+import { HorseFamilytreeComponent } from './component/horse-familytree/horse-familytree.component';
+import { HorseFamilytreeRowComponent } from './component/horse-familytree/horse-familytree-row/horse-familytree-row.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,8 @@ import { OwnerComponent } from './component/owner/owner.component';
     SearchHorseComponent,
     HorseTableComponent,
     OwnerComponent,
+    HorseFamilytreeComponent,
+    HorseFamilytreeRowComponent,
   ],
   imports: [
     BrowserModule,

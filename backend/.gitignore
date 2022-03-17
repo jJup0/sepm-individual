@@ -31,11 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-### Own ###
-wendydb.lock.db
-wendydb.mv.db
-wendydb.trace.db
-log
-log/
-/log/wendys-friends.log

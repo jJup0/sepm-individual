@@ -1,0 +1,10 @@
+<div *ngIf="horse">
+  <h2>Family tree for {{ horse.name }}</h2>
+  <p>{{ horse | json }}</p>
+</div>
+<app-horse-familytree-row
+  *ngIf="horse"
+  [horse]="horse"
+  (deletedParent)="refresh()"
+>
+</app-horse-familytree-row>

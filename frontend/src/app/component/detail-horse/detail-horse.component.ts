@@ -36,6 +36,7 @@ export class DetailHorseComponent implements OnInit {
       },
     });
   }
+
   deleteHorse(id: number) {
     this.service.deleteHorse(id).subscribe();
     this.deleted = true;
