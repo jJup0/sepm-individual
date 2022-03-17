@@ -10,24 +10,33 @@ import { HorseService } from "src/app/service/horse.service";
 })
 export class HorseFamilytreeComponent implements OnInit {
   horse: Horse;
-  generationsToGet = 3;
+  reloaded = false;
+  generationsToLoad = 3;
   constructor(
     private route: ActivatedRoute,
     private horseService: HorseService
   ) {}
 
   ngOnInit(): void {
-    this.refresh();
+    this.reloadHorses(false);
   }
 
-  refresh(): void {
+  reloadButton() {
+    this.reloaded = false;
+    this.reloadHorses(true);
+  }
+
+  reloadHorses(fromButton: boolean): void {
     this.route.params.subscribe({
       next: (params) => {
         this.horseService
-          .getHorseFamilytree(params.id, this.generationsToGet)
+          .getHorseFamilytree(params.id, this.generationsToLoad)
           .subscribe({
             next: (horse) => {
               this.horse = horse;
+              if (fromButton) {
+                this.reloaded = true;
+              }
             },
           });
       },

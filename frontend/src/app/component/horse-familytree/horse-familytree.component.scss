@@ -1,0 +1,28 @@
+button {
+  margin: 1em;
+}
+.numberInput {
+  margin: 1em;
+  width: 4em;
+}
+
+
+.tempNotification {
+  color: yellow;
+  visibility: visible;
+  animation: 2s fadeIn;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}

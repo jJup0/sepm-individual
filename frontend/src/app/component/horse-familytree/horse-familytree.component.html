@@ -1,10 +1,26 @@
 <div *ngIf="horse">
   <h2>Family tree for {{ horse.name }}</h2>
   <p>{{ horse | json }}</p>
+  <label for="generationsNumber">Generations to load: </label>
+  <input
+    type="number"
+    class="numberInput"
+    min="0"
+    max="10"
+    id="generationsNumberInput"
+    [(ngModel)]="generationsToLoad"
+  />
+  <button class="btn btn-light mr-1" (click)="reloadHorses(true)">
+    &#x21bb;
+  </button>
+  <span *ngIf="reloaded" class="alert alert-success tempNotification">
+    Reloaded!
+  </span>
 </div>
+
 <app-horse-familytree-row
   *ngIf="horse"
   [horse]="horse"
-  (deletedParent)="refresh()"
+  (deletedParent)="reloadHorses(false)"
 >
 </app-horse-familytree-row>
