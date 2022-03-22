@@ -90,11 +90,11 @@ public class HorseServiceValidatorImpl implements HorseServiceValidator {
         }
 
         // mother has to be female
-        if (dao.getHorse(horseDto.mother().id()).getSex() != HorseBiologicalGender.female){
+        if (horseDto.mother() != null && dao.getHorse(horseDto.mother().id()).getSex() != HorseBiologicalGender.female){
             throw new IllegalEditException(failString + "mother has to be female");
         }
         // father has to be male
-        if (dao.getHorse(horseDto.father().id()).getSex() != HorseBiologicalGender.male){
+        if (horseDto.father() != null && dao.getHorse(horseDto.father().id()).getSex() != HorseBiologicalGender.male){
             throw new IllegalEditException(failString + "father has to be male");
         }
 

@@ -61,7 +61,7 @@ public class HorseEndpoint {
         }
     }
 
-    @GetMapping("/horses/selection")
+    @GetMapping("/selection")
     public Stream<HorseDto> searchHorses(@RequestParam(name = "n", required = false) String name,
                                          @RequestParam(name = "d", required = false) String description,
                                          @RequestParam(name = "ba", required = false) String bornAfter,

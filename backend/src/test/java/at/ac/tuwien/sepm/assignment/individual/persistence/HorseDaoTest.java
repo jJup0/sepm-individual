@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import at.ac.tuwien.sepm.assignment.individual.enums.HorseBiologicalGender;
+import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import at.ac.tuwien.sepm.assignment.individual.exception.PersistenceException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @ActiveProfiles({"test", "datagen"})
@@ -21,77 +23,54 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest
 public class HorseDaoTest {
 
+    private static final int TEST_DATA_SIZE = 10;
+
     @Autowired
     HorseDao horseDao;
 
     @Test
-    public void getAllReturnsAllStoredHorses() {
-        List<Horse> horses = null;
-        try {
-            horses = horseDao.getAll();
-        } catch (PersistenceException e) {
-            e.printStackTrace();
-            assertThat(false).isTrue();
-        }
-        assertThat(horses.size()).isEqualTo(1);
-        assertThat(horses.get(0).getId()).isEqualTo(-1);
-        assertThat(horses.get(0).getName()).isEqualTo("Wendy");
+    public void getAllReturnsAllStoredHorses() throws Exception{
+        List<Horse> horses = horseDao.getAll();
+        assertThat(horses.size()).isEqualTo(TEST_DATA_SIZE);
+        assertThat(horses.get(TEST_DATA_SIZE-1).getId()).isEqualTo(-1);
+        assertThat(horses.get(TEST_DATA_SIZE-1).getName()).isEqualTo("Wendy");
     }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
-    public void addOneHorseValid() {
-
+    public void addHorseValid() throws Exception{
         HorseDto newHorseDto = new HorseDto(null, "test horse 1", "test description 1", LocalDate.now(), HorseBiologicalGender.male, null, null, null);
-        Horse addedHorse = null;
-        try {
-            addedHorse = horseDao.addHorse(newHorseDto);
-        } catch (PersistenceException e) {
-            e.printStackTrace();
-            assertThat(false).isTrue();
-        }
-        assertThat(addedHorse.getId()).isNotNull();
+        Horse addedHorse = horseDao.addHorse(newHorseDto);
+        assertThat(addedHorse.getId()).isGreaterThan(0);
     }
 
-    @Test
-    // TODO find better way
-    public void addOneHorseInvalid() {
 
-        HorseDto[] badHorses = {
-                new HorseDto(null, null, "test description 1", LocalDate.now(), HorseBiologicalGender.male, null, null, null),
-                new HorseDto(null, null, "test description 1", null, HorseBiologicalGender.male, null, null, null),
-                new HorseDto(null, null, "test description 1", LocalDate.now(), null, null, null, null)};
-
-        boolean failed;
-        for (HorseDto badHors : badHorses) {
-            failed = false;
-            try {
-                horseDao.addHorse(badHors);
-            } catch (Exception e) {// TODO make specific exception
-                failed = true;
-            }
-            assertThat(failed).isTrue();
-        }
-    }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
-    public void editHorse() {
-        // TODO
-        HorseDto newWendy = new HorseDto(-1L, "not wendy", "test description 1", LocalDate.now(), HorseBiologicalGender.female, null, null, null);
-        try {
-            horseDao.editHorse(newWendy);
-        } catch (PersistenceException e) {
-            e.printStackTrace();
-            assertThat(false).isTrue();
-        }
+    public void editHorseValid() throws Exception {
+        Horse wendy = horseDao.getHorse(-1);
+        assertThat(wendy.getName()).isEqualTo("Wendy");
+        HorseDto newWendyDto = new HorseDto(-1L, "not wendy", "test description 1", LocalDate.now(), HorseBiologicalGender.female, null, null, null);
+        Horse newWendy = horseDao.editHorse(newWendyDto);
+        assertThat(newWendy.getName()).isEqualTo("not wendy");
+    }
+
+    @Test
+    public void editHorseNonExistent() throws Exception {
+        HorseDto newWendyDto = new HorseDto(-101L, "not wendy", "test description 1", LocalDate.now(), HorseBiologicalGender.female, null, null, null);
+        assertThatThrownBy(() -> {
+            Horse newWendy = horseDao.editHorse(newWendyDto);
+        }).isInstanceOf(NotFoundException.class);
     }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void deleteHorse() {
-        // TODO
         horseDao.deleteHorse(-1L);
+        horseDao.deleteHorse(-1L);
+        horseDao.deleteHorse(-102L);
     }
+
 }
 

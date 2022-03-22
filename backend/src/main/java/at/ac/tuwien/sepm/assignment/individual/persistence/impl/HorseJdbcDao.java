@@ -105,11 +105,11 @@ public class HorseJdbcDao implements HorseDao {
     }
 
 
-    // TODO key not present error
     @Override
-    public Horse editHorse(HorseDto horseDto) throws PersistenceException {
+    public Horse editHorse(HorseDto horseDto) throws PersistenceException, NotFoundException {
+        final int affectedRows;
         try {
-            jdbcTemplate.update(connection -> {
+            affectedRows = jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(SQL_UPDATE);
                 fillStandardPreparedStatement(horseDto, ps);
                 ps.setLong(8, horseDto.id());
@@ -118,11 +118,14 @@ public class HorseJdbcDao implements HorseDao {
         } catch (DataAccessException e) {
             throw new PersistenceException("error editing horse", e);
         }
+        if (affectedRows != 1) {
+            throw new NotFoundException("Could not edit horse, id(" + horseDto.id() + ") not found");
+        }
         return mapper.dtoToEntity(horseDto);
 
     }
 
-    // TODO key not present error?
+    // TODO key not present?
     @Override
     public void deleteHorse(long id) {
         jdbcTemplate.update(connection -> {
@@ -152,7 +155,6 @@ public class HorseJdbcDao implements HorseDao {
         if (horseSearchDto.sex() != null) {
             sqlSearchParams.add("sex = ?");
         }
-        // TODO search for owner entity
         if (horseSearchDto.ownerId() != null) {
             sqlSearchParams.add("owner = ?");
         }
@@ -173,10 +175,10 @@ public class HorseJdbcDao implements HorseDao {
             String SQL_SEARCH_QUERY = SQL_SEARCH_BASE + String.join(" AND ", sqlSearchParams) + " LIMIT + " + searchLimit + ";";
             return jdbcTemplate.query(connection -> {
                 PreparedStatement ps = connection.prepareStatement(SQL_SEARCH_QUERY);
-            int parameterIndex = 1;
-            if (horseSearchDto.name() != null) {
-                ps.setString(parameterIndex++, globalMatchToLowerEscapeBang(horseSearchDto.name()));
-            }
+                int parameterIndex = 1;
+                if (horseSearchDto.name() != null) {
+                    ps.setString(parameterIndex++, globalMatchToLowerEscapeBang(horseSearchDto.name()));
+                }
                 if (horseSearchDto.description() != null) {
                     ps.setString(parameterIndex++, globalMatchToLowerEscapeBang(horseSearchDto.description()));
                 }
@@ -186,20 +188,19 @@ public class HorseJdbcDao implements HorseDao {
                 if (horseSearchDto.bornBefore() != null) {
                     ps.setDate(parameterIndex++, java.sql.Date.valueOf(horseSearchDto.bornBefore()));
                 }
-                        if (horseSearchDto.sex() != null) {
-                            ps.setString(parameterIndex++, horseSearchDto.sex().toString());
-                        }
-                // TODO search for owner entity
+                if (horseSearchDto.sex() != null) {
+                    ps.setString(parameterIndex++, horseSearchDto.sex().toString());
+                }
                 if (horseSearchDto.ownerId() != null) {
                     ps.setLong(parameterIndex, horseSearchDto.ownerId());
                 }
 
                 return ps;
-        }, (resultSet, rowNum) ->
-        mapHorsesRowParentDepth(resultSet, 1));
+            }, (resultSet, rowNum) ->
+                    mapHorsesRowParentDepth(resultSet, 1));
 
 
-        } catch (DataAccessException e){
+        } catch (DataAccessException e) {
             throw new PersistenceException("error searching for horses", e);
         }
     }
@@ -230,7 +231,6 @@ public class HorseJdbcDao implements HorseDao {
     }
 
 
-
     private Horse mapHorsesRowParentDepth(ResultSet result, int depthRemaining) throws SQLException {
         Horse horse = new Horse();
 
@@ -245,7 +245,7 @@ public class HorseJdbcDao implements HorseDao {
         try {
             horse.setOwner(result.wasNull() ? null : ownerDao.getWithId(ownerId));
         } catch (PersistenceException e) {
-           throw new SQLException("error getting owner of horse with id(" + horse.getId() + ")", e);
+            throw new SQLException("error getting owner of horse with id(" + horse.getId() + ")", e);
         } catch (NotFoundException e) {
             throw new SQLException("error finding owner of horse with id(" + horse.getId() + ")", e);
         }

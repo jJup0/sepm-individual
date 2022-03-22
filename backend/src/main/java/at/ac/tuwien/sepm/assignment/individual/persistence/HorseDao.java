@@ -26,7 +26,7 @@ public interface HorseDao {
 
     List<Horse> getChildren(long id) throws PersistenceException, NotFoundException;
 
-    Horse editHorse(HorseDto horseDto) throws PersistenceException;
+    Horse editHorse(HorseDto horseDto) throws PersistenceException, NotFoundException;
 
     void deleteHorse(long id);
 
