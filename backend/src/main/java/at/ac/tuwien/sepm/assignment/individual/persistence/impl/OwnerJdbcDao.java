@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.assignment.individual.persistence.impl;
 
 import at.ac.tuwien.sepm.assignment.individual.entity.Owner;
+import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import at.ac.tuwien.sepm.assignment.individual.exception.PersistenceException;
 import at.ac.tuwien.sepm.assignment.individual.mapper.OwnerMapper;
 import at.ac.tuwien.sepm.assignment.individual.persistence.OwnerDao;
@@ -30,7 +31,7 @@ public class OwnerJdbcDao implements OwnerDao {
     }
 
     @Override
-    public List<Owner> getAll() {
+    public List<Owner> getAll() throws PersistenceException {
         try {
             return jdbcTemplate.query(SQL_SELECT_ALL, this::mapOwnerRow);
         } catch (DataAccessException e) {
@@ -39,13 +40,15 @@ public class OwnerJdbcDao implements OwnerDao {
     }
 
     @Override
-    public Owner getWithId(long id) {
+    public Owner getWithId(long id) throws NotFoundException {
         List<Owner> owners = jdbcTemplate.query(connection -> {
             PreparedStatement ps = connection.prepareStatement(SQL_SELECT_WITH_ID);
             ps.setLong(1, id);
             return ps;
         }, this::mapOwnerRow);
-        // TODO no owner error
+        if (owners.size() == 0) {
+            throw new NotFoundException("Could not find owner with id(" + id + ")");
+        }
         return owners.get(0);
     }
 

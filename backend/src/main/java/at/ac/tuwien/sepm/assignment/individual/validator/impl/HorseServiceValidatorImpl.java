@@ -2,8 +2,11 @@ package at.ac.tuwien.sepm.assignment.individual.validator.impl;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
+import at.ac.tuwien.sepm.assignment.individual.enums.HorseBiologicalGender;
 import at.ac.tuwien.sepm.assignment.individual.exception.IllegalEditException;
 import at.ac.tuwien.sepm.assignment.individual.exception.MissingAttributeException;
+import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
+import at.ac.tuwien.sepm.assignment.individual.exception.PersistenceException;
 import at.ac.tuwien.sepm.assignment.individual.persistence.HorseDao;
 import at.ac.tuwien.sepm.assignment.individual.validator.HorseServiceValidator;
 import org.springframework.stereotype.Component;
@@ -34,7 +37,7 @@ public class HorseServiceValidatorImpl implements HorseServiceValidator {
     }
 
     @Override
-    public void validateEditHorse(HorseDto horseDto) throws MissingAttributeException, IllegalEditException {
+    public void validateEditHorse(HorseDto horseDto) throws MissingAttributeException, IllegalEditException, PersistenceException, NotFoundException {
         // handle null values first
         // Owner, description, mother and father can be null
         String failString = "failed to edit horse: ";
@@ -84,6 +87,15 @@ public class HorseServiceValidatorImpl implements HorseServiceValidator {
             if (dao.getChildren(horseDto.id()).size() != 0){
                 throw new IllegalEditException(failString + "sex can not be changed if the horse has children");
             }
+        }
+
+        // mother has to be female
+        if (dao.getHorse(horseDto.mother().id()).getSex() != HorseBiologicalGender.female){
+            throw new IllegalEditException(failString + "mother has to be female");
+        }
+        // father has to be male
+        if (dao.getHorse(horseDto.father().id()).getSex() != HorseBiologicalGender.male){
+            throw new IllegalEditException(failString + "father has to be male");
         }
 
 

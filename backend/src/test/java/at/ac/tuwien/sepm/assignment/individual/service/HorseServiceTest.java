@@ -7,6 +7,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 import at.ac.tuwien.sepm.assignment.individual.enums.HorseBiologicalGender;
+import at.ac.tuwien.sepm.assignment.individual.exception.IllegalEditException;
+import at.ac.tuwien.sepm.assignment.individual.exception.MissingAttributeException;
+import at.ac.tuwien.sepm.assignment.individual.exception.MyInternalServerError;
+import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +29,13 @@ public class HorseServiceTest {
 
     @Test
     public void getAllReturnsAllStoredHorses() {
-        List<Horse> horses = horseService.allHorses();
+        List<Horse> horses = null;
+        try {
+            horses = horseService.allHorses();
+        } catch (MyInternalServerError e) {
+            e.printStackTrace();
+            assertThat(false).isTrue();
+        }
         assertThat(horses.size()).isEqualTo(1);
         assertThat(horses.get(0).getId()).isEqualTo(-1);
         assertThat(horses.get(0).getName()).isEqualTo("Wendy");
@@ -36,7 +46,16 @@ public class HorseServiceTest {
     public void addOneHorseValid() {
 
         HorseDto newHorseDto = new HorseDto(null, "test horse 1", "test description 1", LocalDate.now(), HorseBiologicalGender.male, null, null, null);
-        Horse addedHorse = horseService.addHorse(newHorseDto);
+        Horse addedHorse = null;
+        try {
+            addedHorse = horseService.addHorse(newHorseDto);
+        } catch (MissingAttributeException e) {
+            e.printStackTrace();
+            assertThat(false).isTrue();
+        } catch (MyInternalServerError e) {
+            e.printStackTrace();
+            assertThat(false).isTrue();
+        }
         assertThat(addedHorse.getId()).isNotNull();
 
 
@@ -69,7 +88,12 @@ public class HorseServiceTest {
     public void editHorse() {
         // TODO
         HorseDto newWendy = new HorseDto(-1L, "not wendy", "test description 1", LocalDate.now(), HorseBiologicalGender.female, null, null, null);
-        horseService.editHorse(newWendy);
+        try {
+            horseService.editHorse(newWendy);
+        } catch (MissingAttributeException | IllegalEditException | NotFoundException | MyInternalServerError e) {
+            e.printStackTrace();
+            assertThat(false).isTrue();
+        }
     }
 
     @Test

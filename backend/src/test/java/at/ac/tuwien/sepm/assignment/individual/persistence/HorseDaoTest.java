@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import at.ac.tuwien.sepm.assignment.individual.enums.HorseBiologicalGender;
+import at.ac.tuwien.sepm.assignment.individual.exception.PersistenceException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +26,13 @@ public class HorseDaoTest {
 
     @Test
     public void getAllReturnsAllStoredHorses() {
-        List<Horse> horses = horseDao.getAll();
+        List<Horse> horses = null;
+        try {
+            horses = horseDao.getAll();
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            assertThat(false).isTrue();
+        }
         assertThat(horses.size()).isEqualTo(1);
         assertThat(horses.get(0).getId()).isEqualTo(-1);
         assertThat(horses.get(0).getName()).isEqualTo("Wendy");
@@ -36,7 +43,13 @@ public class HorseDaoTest {
     public void addOneHorseValid() {
 
         HorseDto newHorseDto = new HorseDto(null, "test horse 1", "test description 1", LocalDate.now(), HorseBiologicalGender.male, null, null, null);
-        Horse addedHorse = horseDao.addHorse(newHorseDto);
+        Horse addedHorse = null;
+        try {
+            addedHorse = horseDao.addHorse(newHorseDto);
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            assertThat(false).isTrue();
+        }
         assertThat(addedHorse.getId()).isNotNull();
     }
 
@@ -66,7 +79,12 @@ public class HorseDaoTest {
     public void editHorse() {
         // TODO
         HorseDto newWendy = new HorseDto(-1L, "not wendy", "test description 1", LocalDate.now(), HorseBiologicalGender.female, null, null, null);
-        horseDao.editHorse(newWendy);
+        try {
+            horseDao.editHorse(newWendy);
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            assertThat(false).isTrue();
+        }
     }
 
     @Test
