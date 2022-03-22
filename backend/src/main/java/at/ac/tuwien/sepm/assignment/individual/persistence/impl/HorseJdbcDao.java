@@ -31,6 +31,7 @@ public class HorseJdbcDao implements HorseDao {
     private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, description = ?, birthdate = ?, sex = ?, owner = ?, mother = ?, father = ? WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
     private static final String SQL_SEARCH_BASE = "SELECT * FROM " + TABLE_NAME + " WHERE ";
+    private static final String SQL_GET_CHILDREN = "SELECT * FROM " + TABLE_NAME + " WHERE mother = ? OR father = ?";
 
 
     private final JdbcTemplate jdbcTemplate;
@@ -59,6 +60,21 @@ public class HorseJdbcDao implements HorseDao {
         return getHorseWithFamilyTree(id, 1);
     }
 
+    @Override
+    public List<Horse> getChildren(long id) {
+        try {
+            return jdbcTemplate.query(connection -> {
+                PreparedStatement ps = connection.prepareStatement(SQL_GET_CHILDREN,
+                        Statement.RETURN_GENERATED_KEYS);
+                ps.setLong(1, id);
+                ps.setLong(2, id);
+                return ps;
+            }, (resultSet, rowNum) ->
+                    mapHorsesRowParentDepth(resultSet, 0));
+        } catch (DataAccessException e) {
+            throw new PersistenceException("Could not query all horses", e);
+        }
+    }
 
     @Override
     public Horse addHorse(HorseDto horseDto) {
@@ -74,6 +90,7 @@ public class HorseJdbcDao implements HorseDao {
         addedHorse.setId((long) keyHolder.getKeys().get("id"));
         return addedHorse;
     }
+
 
     // TODO key not present error
     @Override
@@ -167,6 +184,7 @@ public class HorseJdbcDao implements HorseDao {
 
     @Override
     public Horse getHorseWithFamilyTree(long id, int ancestorDepth) {
+        // TODO horse doesnt exist error
         if (ancestorDepth == -1) {
             return null;
         }

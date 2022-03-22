@@ -22,6 +22,8 @@ public interface HorseDao {
 
     Horse getHorse(long id);
 
+    List<Horse> getChildren(long id);
+
     Horse editHorse(HorseDto horseDto);
 
     void deleteHorse(long id);

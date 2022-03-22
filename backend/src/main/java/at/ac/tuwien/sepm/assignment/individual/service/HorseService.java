@@ -3,6 +3,8 @@ package at.ac.tuwien.sepm.assignment.individual.service;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
+import at.ac.tuwien.sepm.assignment.individual.exception.IllegalEditException;
+import at.ac.tuwien.sepm.assignment.individual.exception.MissingAttributeException;
 
 import java.util.List;
 
@@ -16,11 +18,11 @@ public interface HorseService {
      */
     List<Horse> allHorses();
 
-    Horse addHorse(HorseDto horseDto);
+    Horse addHorse(HorseDto horseDto) throws MissingAttributeException;
 
     Horse getHorse(long id);
 
-    Horse editHorse(HorseDto horseDto);
+    Horse editHorse(HorseDto horseDto) throws MissingAttributeException, IllegalEditException;
 
     void deleteHorse(long id);
 

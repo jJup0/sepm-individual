@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.assignment.individual.mapper;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
-import at.ac.tuwien.sepm.assignment.individual.persistence.OwnerDao;
 import org.springframework.stereotype.Component;
 
 @Component
