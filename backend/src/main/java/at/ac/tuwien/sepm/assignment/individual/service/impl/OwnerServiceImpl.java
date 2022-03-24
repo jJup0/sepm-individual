@@ -40,7 +40,7 @@ public class OwnerServiceImpl implements OwnerService {
         LOGGER.trace("getWithId({}) called", id);
 
         try {
-            return dao.getWithId(id);
+            return dao.getOwner(id);
         } catch (PersistenceException e) {
             throw new ServiceException("Error fetching owner with id(" + id + ")", e);
         }

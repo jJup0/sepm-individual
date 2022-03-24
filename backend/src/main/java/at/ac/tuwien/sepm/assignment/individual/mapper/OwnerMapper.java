@@ -8,10 +8,19 @@ import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
 
+/**
+ * Component that maps owner DTOs to entities and vice versa.
+ */
 @Component
 public class OwnerMapper {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    /**
+     * Maps an owner entity to a DTO.
+     *
+     * @param owner The owner entity to be converted
+     * @return An owner DTO matching the given entity
+     */
     public OwnerDto entityToDto(Owner owner) {
         LOGGER.trace("entityToDto() called on {}", owner);
 
@@ -21,6 +30,12 @@ public class OwnerMapper {
         return new OwnerDto(owner.getId(), owner.getFirstName(), owner.getLastName(), owner.getEmail());
     }
 
+    /**
+     * Maps a horse DTO to an entity.
+     *
+     * @param ownerDto The owner DTO to be converted
+     * @return An owner entity matching the given DTO
+     */
     public Owner dtoToEntity(OwnerDto ownerDto) {
         LOGGER.trace("dtoToEntity() called on {}", ownerDto);
         if (ownerDto == null) {

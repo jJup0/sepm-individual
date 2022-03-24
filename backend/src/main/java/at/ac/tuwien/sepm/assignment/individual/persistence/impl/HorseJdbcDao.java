@@ -264,7 +264,7 @@ public class HorseJdbcDao implements HorseDao {
 
         long ownerId = result.getLong("owner");
         try {
-            horse.setOwner(result.wasNull() ? null : ownerDao.getWithId(ownerId));
+            horse.setOwner(result.wasNull() ? null : ownerDao.getOwner(ownerId));
         } catch (PersistenceException e) {
             throw new SQLException("error getting owner of horse with id(" + horse.getId() + ")", e);
         } catch (NotFoundException e) {

@@ -1,5 +1,9 @@
 package at.ac.tuwien.sepm.assignment.individual.entity;
 
+/**
+ * Class for Owner Entities
+ * Contains all common properties
+ */
 public class Owner {
     private Long id;
     private String firstName;

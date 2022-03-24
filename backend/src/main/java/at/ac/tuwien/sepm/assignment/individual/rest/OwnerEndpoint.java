@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.assignment.individual.rest;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.OwnerDto;
+import at.ac.tuwien.sepm.assignment.individual.exception.PersistenceException;
 import at.ac.tuwien.sepm.assignment.individual.exception.ServiceException;
 import at.ac.tuwien.sepm.assignment.individual.mapper.OwnerMapper;
 import at.ac.tuwien.sepm.assignment.individual.service.OwnerService;
@@ -23,6 +24,12 @@ public class OwnerEndpoint {
     private final OwnerService service;
     private final OwnerMapper mapper;
 
+    /**
+     * Constructor for rest endpoint for all owner related requests
+     *
+     * @param service Owner service component to relay requests to
+     * @param mapper  Owner mapper to map incoming entities to DTOs
+     */
     public OwnerEndpoint(OwnerService service, OwnerMapper mapper) {
         LOGGER.trace("OwnerEndpoint constructed");
 
@@ -30,6 +37,12 @@ public class OwnerEndpoint {
         this.mapper = mapper;
     }
 
+    /**
+     * Get all owners.
+     *
+     * @return a stream of all stored owners as DTOs
+     * @throws ResponseStatusException if some internal error occurs in the database
+     */
     @GetMapping
     public Stream<OwnerDto> allOwners() {
         LOGGER.info("all Owners requested");

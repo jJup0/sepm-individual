@@ -119,7 +119,7 @@ public class HorseServiceValidatorImpl implements HorseServiceValidator {
     }
 
     private boolean newHorseYoungerThan(HorseDto horseDto, Horse otherHorse) {
-        LOGGER.trace("newHorseYoungerThan() called");
+        LOGGER.trace("newHorseYoungerThan() calledVali");
 
         return horseDto.birthdate().compareTo(otherHorse.getBirthdate()) > 0;
     }

@@ -6,6 +6,10 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
 
+/**
+ * Class for Owner DTOs
+ * Contains all common properties
+ */
 public record OwnerDto(Long id, String firstName, String lastName, String email) {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

@@ -1,11 +1,7 @@
 package at.ac.tuwien.sepm.assignment.individual.rest;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
-import at.ac.tuwien.sepm.assignment.individual.enums.HorseBiologicalGender;
-import at.ac.tuwien.sepm.assignment.individual.exception.IllegalEditException;
-import at.ac.tuwien.sepm.assignment.individual.exception.MissingAttributeException;
-import at.ac.tuwien.sepm.assignment.individual.exception.ServiceException;
-import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
+import at.ac.tuwien.sepm.assignment.individual.exception.*;
 import at.ac.tuwien.sepm.assignment.individual.mapper.HorseMapper;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
 import at.ac.tuwien.sepm.assignment.individual.service.HorseService;
@@ -18,6 +14,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.lang.invoke.MethodHandles;
 import java.util.stream.Stream;
 
+/**
+ * Rest endpoint for horses
+ */
 @RestController
 @RequestMapping(path = "/horses")
 public class HorseEndpoint {
@@ -26,6 +25,12 @@ public class HorseEndpoint {
     private final HorseService service;
     private final HorseMapper mapper;
 
+    /**
+     * Constructor for rest endpoint for all horse related requests
+     *
+     * @param service Horse service component to relay requests to
+     * @param mapper  Horse mapper to map incoming entities to DTOs
+     */
     public HorseEndpoint(HorseService service, HorseMapper mapper) {
         LOGGER.trace("HorseEndpoint constructed");
 
@@ -33,6 +38,12 @@ public class HorseEndpoint {
         this.mapper = mapper;
     }
 
+    /**
+     * Gets all horses.
+     *
+     * @return a stream of all stored horses as DTOs
+     * @throws ResponseStatusException if internal error occurs
+     */
     @GetMapping
     public Stream<HorseDto> allHorses() {
         LOGGER.info("allHorses requested");
@@ -45,6 +56,13 @@ public class HorseEndpoint {
         }
     }
 
+    /**
+     * Get a specific horse according to the given id.
+     *
+     * @param id ID of the horse to be returned
+     * @return The horse that was requested as a DTO
+     * @throws ResponseStatusException if some internal error occurs in the database, or horse could not be found
+     */
     @GetMapping("/{id}")
     public HorseDto getHorse(@PathVariable long id) {
         LOGGER.info("getHorse with id {} requested", id);
@@ -62,11 +80,19 @@ public class HorseEndpoint {
         }
     }
 
+    /**
+     * Gets the family tree according to a given horse ID.
+     *
+     * @param id    ID of the horse for which the family tree should be fetched
+     * @param depth The amount of generations that should be returned to the family tree.
+     * @return A single horse DTO with recursive mother and father DTOs with a maximum depth of ancestorDepth.
+     * @throws ResponseStatusException if some internal error occurs in the database or if the ID could not be found in the database
+     */
     @GetMapping("/familytree/{id}")
-    public HorseDto getHorseFamilyTree(@PathVariable long id, @RequestParam(name = "d", required = false) Integer depth) {
+    public HorseDto getHorseFamilyTree(@PathVariable long id, @RequestParam(name = "depth", required = false) Integer depth) {
         LOGGER.info("family tree of horse with id {} and depth {} requested", id, depth);
 
-        if (depth == null){
+        if (depth == null) {
             depth = 3;
         }
         try {
@@ -82,6 +108,13 @@ public class HorseEndpoint {
         }
     }
 
+    /**
+     * Searches for horses matching the search DTO
+     *
+     * @param horseSearchDto A horse search DTO containing all the parameters that a horse must have
+     * @return A stream of all the horses (as DTOs) that match all the parameters
+     * @throws ResponseStatusException if some internal error occurs in the database
+     */
     @GetMapping("/selection")
     public Stream<HorseDto> searchHorses(HorseSearchDto horseSearchDto) {
         LOGGER.info("horse search request with parameters {}", horseSearchDto);
@@ -95,6 +128,13 @@ public class HorseEndpoint {
         }
     }
 
+    /**
+     * Adds a given horse DTO.
+     *
+     * @param horseDto The horse that should be added
+     * @return an entity version of the added horse including an ID
+     * @throws PersistenceException if some internal error occurs in the database
+     */
     @PostMapping
     public HorseDto addHorse(@RequestBody HorseDto horseDto) {
         LOGGER.info("add horse request with horse: {}", horseDto);
@@ -112,6 +152,16 @@ public class HorseEndpoint {
         }
     }
 
+    /**
+     * Edits a horse according to the ID given in the horseDto.
+     *
+     * @param horseDto A horse DTO containing all the information that should be updated for a horse.
+     *                 The chosen horse that will be updated is determined by ID.
+     * @return An entity version of the given horseDto
+     * @throws ResponseStatusException if some internal error occurs in the database or if the ID could not be found in
+     *                                 the database or if the horse is missing some required properties or if the requested
+     *                                 edits violate constraints
+     */
     @PutMapping()
     public HorseDto editHorse(@RequestBody HorseDto horseDto) {
         LOGGER.info("edit horse request with horse: {}", horseDto);
@@ -137,6 +187,11 @@ public class HorseEndpoint {
         }
     }
 
+    /**
+     * Deletes a horse.
+     *
+     * @param id ID of the horse that should be deleted
+     */
     @DeleteMapping("/{id}")
     public void deleteHorse(@PathVariable long id) {
 

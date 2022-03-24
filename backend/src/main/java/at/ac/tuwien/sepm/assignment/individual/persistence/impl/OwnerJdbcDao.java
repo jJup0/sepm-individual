@@ -48,7 +48,7 @@ public class OwnerJdbcDao implements OwnerDao {
     }
 
     @Override
-    public Owner getWithId(long id) throws NotFoundException {
+    public Owner getOwner(long id) throws NotFoundException {
         LOGGER.trace("getWithId({}) called", id);
         List<Owner> owners = jdbcTemplate.query(connection -> {
             PreparedStatement ps = connection.prepareStatement(SQL_SELECT_WITH_ID);

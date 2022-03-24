@@ -7,6 +7,10 @@ import org.slf4j.LoggerFactory;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 
+/**
+ * Class for horse search parameter DTOs
+ * Contains all possible search parameters
+ */
 public record HorseSearchDto(String name, String description, LocalDate bornAfter, LocalDate bornBefore, HorseBiologicalGender sex, Long ownerId, Integer limit) {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
