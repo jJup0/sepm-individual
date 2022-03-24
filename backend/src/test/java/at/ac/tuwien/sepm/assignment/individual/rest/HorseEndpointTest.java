@@ -131,7 +131,7 @@ public class HorseEndpointTest {
   public void gettingSelection() throws Exception {
     byte[] body = mockMvc
             .perform(MockMvcRequestBuilders
-                    .get("/horses/selection?n=dy")
+                    .get("/horses/selection?name=dy")
                     .accept(MediaType.APPLICATION_JSON)
             ).andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();

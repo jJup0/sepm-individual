@@ -5,13 +5,10 @@ import at.ac.tuwien.sepm.assignment.individual.dto.OwnerDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import at.ac.tuwien.sepm.assignment.individual.enums.HorseBiologicalGender;
-import at.ac.tuwien.sepm.assignment.individual.exception.IllegalEditException;
 import at.ac.tuwien.sepm.assignment.individual.exception.MissingAttributeException;
-import at.ac.tuwien.sepm.assignment.individual.exception.MyInternalServerError;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import at.ac.tuwien.sepm.assignment.individual.mapper.HorseMapper;
 import at.ac.tuwien.sepm.assignment.individual.mapper.OwnerMapper;
@@ -84,7 +81,7 @@ public class HorseServiceTest {
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
-    public void editHorse() throws Exception{
+    public void editHorseValid() throws Exception{
 
 
         Horse oldWendy = horseService.getHorse(-1);
@@ -128,10 +125,12 @@ public class HorseServiceTest {
             assertThatThrownBy(() -> {
                 horseService.editHorse(incompleteHorse);
             }).isInstanceOf(MissingAttributeException.class)
-                    .hasMessageStartingWith("failed to edit horse:");
+                    .hasMessageStartingWith("failed to edit horse");
         }
 
     }
+
+    // TODO illegal edits test
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)

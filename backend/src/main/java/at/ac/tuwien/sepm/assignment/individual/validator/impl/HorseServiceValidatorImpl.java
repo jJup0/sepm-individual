@@ -9,21 +9,29 @@ import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import at.ac.tuwien.sepm.assignment.individual.exception.PersistenceException;
 import at.ac.tuwien.sepm.assignment.individual.persistence.HorseDao;
 import at.ac.tuwien.sepm.assignment.individual.validator.HorseServiceValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 // TODO is this the right annotation?
 @Component
 public class HorseServiceValidatorImpl implements HorseServiceValidator {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private final HorseDao dao;
 
     public HorseServiceValidatorImpl(HorseDao dao) {
+        LOGGER.trace("HorseServiceValidatorImpl constructed");
         this.dao = dao;
     }
 
     @Override
     public void validateAddHorse(HorseDto horseDto) throws MissingAttributeException {
+        LOGGER.debug("validating new horse {}", horseDto);
+
         String failString = "failed to add new horse: ";
         if (horseDto.name() == null) {
             throw new MissingAttributeException(failString + "name missing");
@@ -38,6 +46,8 @@ public class HorseServiceValidatorImpl implements HorseServiceValidator {
 
     @Override
     public void validateEditHorse(HorseDto horseDto) throws MissingAttributeException, IllegalEditException, PersistenceException, NotFoundException {
+        LOGGER.debug("validating horse edit {}", horseDto);
+
         // handle null values first
         // Owner, description, mother and father can be null
         String failString = "failed to edit horse: ";
@@ -103,10 +113,14 @@ public class HorseServiceValidatorImpl implements HorseServiceValidator {
 
 
     private boolean newHorseOlderThan(HorseDto horseDto, Horse otherHorse) {
+        LOGGER.trace("newHorseOlderThan() called");
+
         return horseDto.birthdate().compareTo(otherHorse.getBirthdate()) < 0;
     }
 
     private boolean newHorseYoungerThan(HorseDto horseDto, Horse otherHorse) {
+        LOGGER.trace("newHorseYoungerThan() called");
+
         return horseDto.birthdate().compareTo(otherHorse.getBirthdate()) > 0;
     }
 }

@@ -1,34 +1,43 @@
 package at.ac.tuwien.sepm.assignment.individual.rest;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.OwnerDto;
-import at.ac.tuwien.sepm.assignment.individual.exception.MyInternalServerError;
+import at.ac.tuwien.sepm.assignment.individual.exception.ServiceException;
 import at.ac.tuwien.sepm.assignment.individual.mapper.OwnerMapper;
 import at.ac.tuwien.sepm.assignment.individual.service.OwnerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.lang.invoke.MethodHandles;
 import java.util.stream.Stream;
 
 @RestController
 @RequestMapping(path = "/owners")
 public class OwnerEndpoint {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final OwnerService service;
     private final OwnerMapper mapper;
 
     public OwnerEndpoint(OwnerService service, OwnerMapper mapper) {
+        LOGGER.trace("OwnerEndpoint constructed");
+
         this.service = service;
         this.mapper = mapper;
     }
 
     @GetMapping
     public Stream<OwnerDto> allOwners() {
+        LOGGER.info("all Owners requested");
+
         try {
             return service.allOwners().stream().map(mapper::entityToDto);
-        } catch (MyInternalServerError e) {
+        } catch (ServiceException e) {
+            LOGGER.error("allOwners() Internal server error:\n" + e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error fetching all owners", e);
         }
     }

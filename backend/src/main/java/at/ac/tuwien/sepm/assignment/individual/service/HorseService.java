@@ -15,17 +15,17 @@ public interface HorseService {
      * Lists all horses stored in the system.
      * @return list of all stored horses
      */
-    List<Horse> allHorses() throws MyInternalServerError;
+    List<Horse> allHorses() throws ServiceException;
 
-    Horse addHorse(HorseDto horseDto) throws MissingAttributeException, MyInternalServerError;
+    Horse addHorse(HorseDto horseDto) throws MissingAttributeException, ServiceException;
 
-    Horse getHorse(long id) throws NotFoundException, MyInternalServerError;
+    Horse getHorse(long id) throws NotFoundException, ServiceException;
 
-    Horse editHorse(HorseDto horseDto) throws MissingAttributeException, IllegalEditException, NotFoundException, MyInternalServerError;
+    Horse editHorse(HorseDto horseDto) throws MissingAttributeException, IllegalEditException, NotFoundException, ServiceException;
 
     void deleteHorse(long id);
 
-    List<Horse> searchHorses(HorseSearchDto horseSearchDto) throws MyInternalServerError;
+    List<Horse> searchHorses(HorseSearchDto horseSearchDto) throws ServiceException;
 
-    Horse getHorseFamilyTree(long id, Integer depth) throws NotFoundException, MyInternalServerError;
+    Horse getHorseFamilyTree(long id, Integer depth) throws NotFoundException, ServiceException;
 }

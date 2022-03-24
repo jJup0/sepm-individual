@@ -9,12 +9,15 @@ import at.ac.tuwien.sepm.assignment.individual.exception.PersistenceException;
 import at.ac.tuwien.sepm.assignment.individual.mapper.HorseMapper;
 import at.ac.tuwien.sepm.assignment.individual.persistence.HorseDao;
 import at.ac.tuwien.sepm.assignment.individual.persistence.OwnerDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.lang.invoke.MethodHandles;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +26,10 @@ import static java.lang.Math.min;
 
 @Repository
 public class HorseJdbcDao implements HorseDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private static final String TABLE_NAME = "horse";
-    private static final int MAX_SEARCH_RESULTS = 1000;
-    private static final int MAX_GENERATIONS = 5;
-    private static final String SQL_SELECT_ALL = "SELECT * FROM " + TABLE_NAME + " LIMIT " + MAX_SEARCH_RESULTS;
+    private static final String SQL_SELECT_ALL = "SELECT * FROM " + TABLE_NAME;
     private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, description, birthdate, sex, owner, mother, father) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private static final String SQL_SELECT_ONE = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?;";
     private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, description = ?, birthdate = ?, sex = ?, owner = ?, mother = ?, father = ? WHERE id = ?";
@@ -40,6 +43,7 @@ public class HorseJdbcDao implements HorseDao {
     private final OwnerDao ownerDao;
 
     public HorseJdbcDao(JdbcTemplate jdbcTemplate, HorseMapper mapper, OwnerDao ownerDao) {
+        LOGGER.trace("HorseJdbcDao constructed");
         this.jdbcTemplate = jdbcTemplate;
         this.mapper = mapper;
         this.ownerDao = ownerDao;
@@ -47,6 +51,7 @@ public class HorseJdbcDao implements HorseDao {
 
     @Override
     public List<Horse> getAll() throws PersistenceException {
+        LOGGER.trace("getAll() called");
         try {
             return jdbcTemplate.query(SQL_SELECT_ALL, (resultSet, rowNum) ->
                     mapHorsesRowParentDepth(resultSet, 1));
@@ -63,11 +68,14 @@ public class HorseJdbcDao implements HorseDao {
 
     @Override
     public Horse getHorse(long id) throws PersistenceException, NotFoundException {
+        LOGGER.trace("getHorse({}) called", id);
         return getFamilyTreeOfHorse(id, 1);
     }
 
     @Override
     public List<Horse> getChildren(long id) throws PersistenceException, NotFoundException {
+        LOGGER.trace("getChildren({}) called", id);
+
         try {
             return jdbcTemplate.query(connection -> {
                 PreparedStatement ps = connection.prepareStatement(SQL_GET_CHILDREN,
@@ -86,6 +94,8 @@ public class HorseJdbcDao implements HorseDao {
 
     @Override
     public Horse addHorse(HorseDto horseDto) throws PersistenceException {
+        LOGGER.trace("addHorse({}) called", horseDto);
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
         try {
             jdbcTemplate.update(connection -> {
@@ -107,6 +117,8 @@ public class HorseJdbcDao implements HorseDao {
 
     @Override
     public Horse editHorse(HorseDto horseDto) throws PersistenceException, NotFoundException {
+        LOGGER.trace("editHorse({}) called", horseDto);
+
         final int affectedRows;
         try {
             affectedRows = jdbcTemplate.update(connection -> {
@@ -128,6 +140,8 @@ public class HorseJdbcDao implements HorseDao {
     // TODO key not present?
     @Override
     public void deleteHorse(long id) {
+        LOGGER.trace("deleteHorse({}) called", id);
+
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(SQL_DELETE);
             ps.setLong(1, id);
@@ -137,6 +151,8 @@ public class HorseJdbcDao implements HorseDao {
 
     @Override
     public List<Horse> searchHorses(HorseSearchDto horseSearchDto) throws PersistenceException {
+        LOGGER.trace("searchHorses({}) called", horseSearchDto);
+
         char escapeChar = '!';
 
         List<String> sqlSearchParams = new ArrayList<>();
@@ -158,10 +174,6 @@ public class HorseJdbcDao implements HorseDao {
         if (horseSearchDto.ownerId() != null) {
             sqlSearchParams.add("owner = ?");
         }
-        int searchLimit = MAX_SEARCH_RESULTS;
-        if (horseSearchDto.limit() != null && horseSearchDto.limit() >= 0) {
-            searchLimit = min(searchLimit, horseSearchDto.limit());
-        }
 
         if (sqlSearchParams.size() == 0) {
             try {
@@ -172,7 +184,14 @@ public class HorseJdbcDao implements HorseDao {
         }
         try {
 
-            String SQL_SEARCH_QUERY = SQL_SEARCH_BASE + String.join(" AND ", sqlSearchParams) + " LIMIT + " + searchLimit + ";";
+            // Bulky code because SQL_SEARCH_QUERY has to be final in lambda
+            String limitStr = "";
+            if (horseSearchDto.limit() != null){
+                limitStr = " LIMIT + " + horseSearchDto.limit() + ";";
+            }
+            String SQL_SEARCH_QUERY = SQL_SEARCH_BASE + String.join(" AND ", sqlSearchParams) + limitStr;
+
+
             return jdbcTemplate.query(connection -> {
                 PreparedStatement ps = connection.prepareStatement(SQL_SEARCH_QUERY);
                 int parameterIndex = 1;
@@ -194,7 +213,7 @@ public class HorseJdbcDao implements HorseDao {
                 if (horseSearchDto.ownerId() != null) {
                     ps.setLong(parameterIndex, horseSearchDto.ownerId());
                 }
-
+                LOGGER.debug("searching horses with prepared statement: " + ps.toString());
                 return ps;
             }, (resultSet, rowNum) ->
                     mapHorsesRowParentDepth(resultSet, 1));
@@ -207,11 +226,11 @@ public class HorseJdbcDao implements HorseDao {
 
     @Override
     public Horse getFamilyTreeOfHorse(long id, int ancestorDepth) throws PersistenceException, NotFoundException {
-        if (ancestorDepth == -1) {
+        LOGGER.trace("getFamilyTreeOfHorse({}, {}) called", id, ancestorDepth);
+        if (ancestorDepth < 0) {
             return null;
         }
         // prevent user from retrieving very large family tree
-        final int limitedAncestorDepth = min(ancestorDepth, MAX_GENERATIONS);
         List<Horse> horses;
         try {
             horses = jdbcTemplate.query(connection -> {
@@ -219,7 +238,7 @@ public class HorseJdbcDao implements HorseDao {
                         ps.setLong(1, id);
                         return ps;
                     }, (resultSet, rowNum) ->
-                            mapHorsesRowParentDepth(resultSet, limitedAncestorDepth)
+                            mapHorsesRowParentDepth(resultSet, ancestorDepth)
             );
         } catch (DataAccessException e) {
             throw new PersistenceException("Could not query all horse with id (" + id + ")", e);
@@ -232,6 +251,8 @@ public class HorseJdbcDao implements HorseDao {
 
 
     private Horse mapHorsesRowParentDepth(ResultSet result, int depthRemaining) throws SQLException {
+        LOGGER.trace("mapHorsesRowParentDepth called with remaining depth {}", depthRemaining);
+
         Horse horse = new Horse();
 
         horse.setId(result.getLong("id"));
@@ -266,6 +287,8 @@ public class HorseJdbcDao implements HorseDao {
     }
 
     private String globalMatchToLowerEscapeBang(String searchTerm) {
+        LOGGER.trace("globalMatchToLowerEscapeBang({}) called", searchTerm);
+
         for (char specialChar : new char[]{'!', '%', '_', '['}) {
             searchTerm = searchTerm.replace("" + specialChar, "!" + searchTerm);
         }
@@ -273,6 +296,8 @@ public class HorseJdbcDao implements HorseDao {
     }
 
     private void fillStandardPreparedStatement(HorseDto horseDto, PreparedStatement ps) throws SQLException {
+        LOGGER.trace("fillStandardPreparedStatement({}, _) called", horseDto);
+
         ps.setString(1, horseDto.name());
         ps.setString(2, horseDto.description());
         ps.setDate(3, java.sql.Date.valueOf(horseDto.birthdate()));
@@ -296,6 +321,8 @@ public class HorseJdbcDao implements HorseDao {
     }
 
     private void handleDataAccessException(DataAccessException dataAccessException, String message) throws PersistenceException, NotFoundException {
+        LOGGER.trace("handleDataAccessException(_, {}) called", message);
+
         Throwable cause = dataAccessException.getCause();
         // wrapped SQLException
         if (cause.getClass() == PersistenceException.class) {
