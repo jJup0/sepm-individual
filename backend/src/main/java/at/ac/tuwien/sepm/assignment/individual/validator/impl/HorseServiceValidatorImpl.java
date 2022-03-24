@@ -111,15 +111,27 @@ public class HorseServiceValidatorImpl implements HorseServiceValidator {
 
     }
 
-
+    /**
+     * Compares birthdays of an edit request horse DTO and corresponding existing horse entity
+     * @param horseDto The edit request horse DTO
+     * @param otherHorse The existing horse entity
+     * @return True if the birthdate of the edit request is earlier than it is in the entity
+     */
     private boolean newHorseOlderThan(HorseDto horseDto, Horse otherHorse) {
         LOGGER.trace("newHorseOlderThan() called");
 
         return horseDto.birthdate().compareTo(otherHorse.getBirthdate()) < 0;
     }
 
+
+    /**
+     * Compares birthdays of an edit request horse DTO and corresponding existing horse entity
+     * @param horseDto The edit request horse DTO
+     * @param otherHorse The existing horse entity
+     * @return True if the birthdate of the edit request is later than it is in the entity
+     */
     private boolean newHorseYoungerThan(HorseDto horseDto, Horse otherHorse) {
-        LOGGER.trace("newHorseYoungerThan() calledVali");
+        LOGGER.trace("newHorseYoungerThan() called");
 
         return horseDto.birthdate().compareTo(otherHorse.getBirthdate()) > 0;
     }

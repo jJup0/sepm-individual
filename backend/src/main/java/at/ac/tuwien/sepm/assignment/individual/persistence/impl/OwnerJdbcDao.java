@@ -61,6 +61,13 @@ public class OwnerJdbcDao implements OwnerDao {
         return owners.get(0);
     }
 
+    /**
+     * Maps a result set to an owner entity
+     * @param result The result set to map from
+     * @param rowNum The number of the current row
+     * @return An owner entity representation of the result set
+     * @throws SQLException if an unexpected error occurs while getting values from columns of the result set
+     */
     private Owner mapOwnerRow(ResultSet result, int rowNum) throws SQLException {
         LOGGER.trace("mapOwnerRow(_, _) called");
 

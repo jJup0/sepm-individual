@@ -37,6 +37,8 @@ public class HorseJdbcDao implements HorseDao {
     private static final String SQL_SEARCH_BASE = "SELECT * FROM " + TABLE_NAME + " WHERE ";
     private static final String SQL_GET_CHILDREN = "SELECT * FROM " + TABLE_NAME + " WHERE mother = ? OR father = ?";
 
+    private static final String ESCAPE_CHAR = "!";
+
 
     private final JdbcTemplate jdbcTemplate;
     private final HorseMapper mapper;
@@ -153,14 +155,12 @@ public class HorseJdbcDao implements HorseDao {
     public List<Horse> searchHorses(HorseSearchDto horseSearchDto) throws PersistenceException {
         LOGGER.trace("searchHorses({}) called", horseSearchDto);
 
-        char escapeChar = '!';
-
         List<String> sqlSearchParams = new ArrayList<>();
         if (horseSearchDto.name() != null) {
-            sqlSearchParams.add("LOWER(name) LIKE ? ESCAPE '" + escapeChar + "'");
+            sqlSearchParams.add("LOWER(name) LIKE ? ESCAPE '" + ESCAPE_CHAR + "'");
         }
         if (horseSearchDto.description() != null) {
-            sqlSearchParams.add("LOWER(description) LIKE ? ESCAPE'" + escapeChar + "'");
+            sqlSearchParams.add("LOWER(description) LIKE ? ESCAPE'" + ESCAPE_CHAR + "'");
         }
         if (horseSearchDto.bornAfter() != null) {
             sqlSearchParams.add("birthdate >= ?");
@@ -186,7 +186,7 @@ public class HorseJdbcDao implements HorseDao {
 
             // Bulky code because SQL_SEARCH_QUERY has to be final in lambda
             String limitStr = "";
-            if (horseSearchDto.limit() != null){
+            if (horseSearchDto.limit() != null) {
                 limitStr = " LIMIT + " + horseSearchDto.limit() + ";";
             }
             String SQL_SEARCH_QUERY = SQL_SEARCH_BASE + String.join(" AND ", sqlSearchParams) + limitStr;
@@ -250,6 +250,7 @@ public class HorseJdbcDao implements HorseDao {
     }
 
 
+    // TODO javaDoc and make recursive request to DB
     private Horse mapHorsesRowParentDepth(ResultSet result, int depthRemaining) throws SQLException {
         LOGGER.trace("mapHorsesRowParentDepth called with remaining depth {}", depthRemaining);
 
@@ -286,15 +287,28 @@ public class HorseJdbcDao implements HorseDao {
         return horse;
     }
 
+    /**
+     * Escapes special characters in a search term and pads the string with '%', so that it will be globally matched in an SQL query
+     *
+     * @param searchTerm The search term to be formatted
+     * @return A formatted version of the search term
+     */
     private String globalMatchToLowerEscapeBang(String searchTerm) {
         LOGGER.trace("globalMatchToLowerEscapeBang({}) called", searchTerm);
 
         for (char specialChar : new char[]{'!', '%', '_', '['}) {
-            searchTerm = searchTerm.replace("" + specialChar, "!" + searchTerm);
+            searchTerm = searchTerm.replace("" + specialChar, ESCAPE_CHAR + searchTerm);
         }
         return "%" + searchTerm.toLowerCase() + "%";
     }
 
+    /**
+     * Fills prepared statement (from beginning index=1) with a horse DTO
+     *
+     * @param horseDto The DTO used to filled the prepared statement
+     * @param ps       The prepared statement to fill
+     * @throws SQLException if some unexpected error occurs while filling the prepared statement
+     */
     private void fillStandardPreparedStatement(HorseDto horseDto, PreparedStatement ps) throws SQLException {
         LOGGER.trace("fillStandardPreparedStatement({}, _) called", horseDto);
 
@@ -320,6 +334,13 @@ public class HorseJdbcDao implements HorseDao {
         }
     }
 
+    /**
+     * General exception handler for different type of exceptions that can occur from jdbcTemplate methods
+     * @param dataAccessException The exception for which the cause should be checked
+     * @param message The message that should be added in the new wrapped exception
+     * @throws PersistenceException if the given exception was thrown by the jdbcTemplate itself
+     * @throws NotFoundException if the given was thrown manually due to an id not being found in the database
+     */
     private void handleDataAccessException(DataAccessException dataAccessException, String message) throws PersistenceException, NotFoundException {
         LOGGER.trace("handleDataAccessException(_, {}) called", message);
 
