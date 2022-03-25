@@ -145,6 +145,14 @@ public class HorseEndpoint {
             LOGGER.error("Horse missing required property: \n" + e.getMessage(), e);
 
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Horse missing required property", e);
+        } catch (ConstraintViolation e) {
+            LOGGER.error("Horse parents or birthday violating constraints: \n" + e.getMessage(), e);
+
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Horse violating constraints", e);
+        } catch (NotFoundException e) {
+            LOGGER.error("Horse parents not found: \n" + e.getMessage(), e);
+
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Horse parents not found", e);
         } catch (ServiceException e) {
             LOGGER.error("addHorse() Internal server error:\n" + e.getMessage(), e);
 
@@ -172,7 +180,7 @@ public class HorseEndpoint {
             LOGGER.error("Horse missing required property\n" + e.getMessage(), e);
 
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Horse missing required property", e);
-        } catch (IllegalEditException e) {
+        } catch (ConstraintViolation e) {
             LOGGER.error("Illegal edit on horse sex, birthdate or parents\n" + e.getMessage(), e);
 
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Illegal edit on horse sex, birthdate or parents", e);

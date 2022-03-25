@@ -38,13 +38,15 @@ public class HorseServiceImpl implements HorseService {
     }
 
     @Override
-    public Horse addHorse(HorseDto horseDto) throws MissingAttributeException, ServiceException {
+    public Horse addHorse(HorseDto horseDto) throws MissingAttributeException, ServiceException, ConstraintViolation, NotFoundException {
         LOGGER.trace("addHorse({}) called", horseDto);
 
         try {
             validator.validateAddHorse(horseDto);
-        } catch (MissingAttributeException missingAttributeException) {
-            throw missingAttributeException;
+        } catch (MissingAttributeException | ConstraintViolation | NotFoundException e) {
+            throw e;
+        } catch (PersistenceException persistenceException){
+            throw new ServiceException(persistenceException);
         }
         try {
             return dao.addHorse(horseDto);
@@ -65,7 +67,7 @@ public class HorseServiceImpl implements HorseService {
     }
 
     @Override
-    public Horse editHorse(HorseDto horseDto) throws MissingAttributeException, IllegalEditException, NotFoundException, ServiceException {
+    public Horse editHorse(HorseDto horseDto) throws MissingAttributeException, ConstraintViolation, NotFoundException, ServiceException {
         LOGGER.trace("editHorse({}) called", horseDto);
 
         try {

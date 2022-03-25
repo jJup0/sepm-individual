@@ -57,7 +57,7 @@ public interface HorseService {
      * @throws MissingAttributeException if some properties required for a horse are missing
      * @throws ServiceException          if some internal error occurs in the database
      */
-    Horse addHorse(HorseDto horseDto) throws MissingAttributeException, ServiceException;
+    Horse addHorse(HorseDto horseDto) throws MissingAttributeException, ServiceException, ConstraintViolation, NotFoundException;
 
     /**
      * Edits a horse according to the ID given in the horseDto.
@@ -66,11 +66,11 @@ public interface HorseService {
      *                 The chosen horse that will be updated is determined by ID.
      * @return An entity version of the given horseDto
      * @throws MissingAttributeException if some properties required for a horse are missing
-     * @throws IllegalEditException      if some properties that want to be edited violate constraints
+     * @throws ConstraintViolation      if some properties that want to be edited violate constraints
      * @throws ServiceException          if some internal error occurs in the database
      * @throws NotFoundException         if the ID could not be found in the database
      */
-    Horse editHorse(HorseDto horseDto) throws MissingAttributeException, IllegalEditException, NotFoundException, ServiceException;
+    Horse editHorse(HorseDto horseDto) throws MissingAttributeException, ConstraintViolation, NotFoundException, ServiceException;
 
     /**
      * Deletes a horse from the database. If horse not in the database, nothing happens.
