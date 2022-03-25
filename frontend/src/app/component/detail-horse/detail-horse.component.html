@@ -1,32 +1,37 @@
 <p *ngIf="!horse">Loading horse...</p>
 <div *ngIf="horse">
   <h2>Details for {{ horse.name }}</h2>
+  
   <p>
     {{ horse | json }}
   </p>
+
   <div *ngIf="!deleted">
-    <button routerLink="/edit/{{ horse.id }}">edit</button>
-    <button (click)="deleteHorse(horse.id)">delete</button>
-    <app-horse-form
-      [formType]="FORMTYPE"
-      [horse]="horse"
-      (submitPressed)="(null)"
-    ></app-horse-form>
+
+    <app-horse-form [formType]="FORMTYPE" [horse]="horse" (submitPressed)="(null)"></app-horse-form>
+
+    <div class="button-block">
+      <button class="edit-button redirect-button" routerLink="/edit/{{ horse.id }}">Edit</button>
+      <button class="delete-button redirect-button" (click)="deleteHorse(horse.id)">Delete</button>
+    </div>
+
   </div>
-  <button
-    *ngIf="horse.mother && !deleted"
-    routerLink="/detail/{{ horse.mother.id }}"
-  >
-    Mother Details ({{ horse.mother.name }})
-  </button>
-  <button
-    *ngIf="horse.father && !deleted"
-    routerLink="/detail/{{ horse.father.id }}"
-  >
-    Father Details ({{ horse.father.name }})
-  </button>
+
+  <div class="button-block">
+    <button *ngIf="horse.mother && !deleted" class="detail-button" routerLink="/detail/{{ horse.mother.id }}">
+      Mother Details ({{ horse.mother.name }})
+    </button>
+    <button *ngIf="horse.father && !deleted" class="detail-button" routerLink="/detail/{{ horse.father.id }}">
+      Father Details ({{ horse.father.name }})
+    </button>
+  </div>
+
   <div *ngIf="deleted">
     <p class="alert alert-success">Successfully deleted {{ horse.name }}!</p>
   </div>
+
 </div>
-<button routerLink="/horses">Back to main page</button>
+
+<div class="button-block">
+  <button routerLink="/horses">&#x21E6;Back to main page</button>
+</div>

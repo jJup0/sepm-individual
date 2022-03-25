@@ -1,1 +1,47 @@
 /* You can add global styles to this file, and also import other style files */
+
+
+h2 {
+    padding: 0.25em;
+}
+
+button {
+    margin: 1em;
+    padding: 0.3em 1em;
+    background-color: rgb(190, 206, 231);
+}
+
+table button {
+    margin: auto 0.3em auto 0.3em;
+
+}
+
+
+
+.edit-button {
+    background-color: rgb(170, 190, 216);
+}
+
+.detail-button {
+    background-color: rgb(179, 216, 170);
+}
+
+.family-tree-button {
+    background-color: rgb(255, 231, 191);
+}
+
+.delete-button {
+    margin: auto 0em auto 2em;
+    background-color: rgb(195, 50, 50);
+}
+
+
+div.button-block {
+    display: block;
+    margin: 1em;
+}
+
+div.button-block button {
+    margin: 0em 1em;
+    font-size: 120%;
+}
