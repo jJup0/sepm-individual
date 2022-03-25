@@ -30,7 +30,6 @@ export class DetailHorseComponent implements OnInit {
         this.horseService.getHorse(params.id).subscribe({
           next: (horse) => {
             this.horse = horse;
-            this.horse.birthdate = new Date(this.horse.birthdate);
           },
         });
       },

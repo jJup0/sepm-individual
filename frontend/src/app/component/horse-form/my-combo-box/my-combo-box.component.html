@@ -1,0 +1,31 @@
+<div class="form-group">
+    <label [for]="parentName + '-input-search-box'">{{parentName | titlecase}}</label>
+
+    <input
+    #parentSearchBox
+    type="text"
+    class="form-control "
+    [name]="parentName + '-input'"
+    [id]="parentName + '-input-search-box'"
+    [value]="parentObject ? parentObject.name : null" 
+    (input)="search(parentSearchBox.value)"
+  />
+  <select
+    #parentSelect
+    (input)="setParent(parentSelect.value)"
+    *ngIf="formType !== 'detail'"
+  >
+  <option [value]="null" selected>No {{parentName}}</option>
+  <option *ngIf="parentObject && searched === false" [value]="parentObject | json" selected>
+    {{ parentObject.name }}
+  </option>
+
+    <option
+      *ngFor="let parent of loadedParents$ | async"
+      [value]="parent | json"
+    >
+      {{ parent.name }}
+    </option>
+  </select>
+</div>
+

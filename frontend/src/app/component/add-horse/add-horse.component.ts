@@ -23,7 +23,7 @@ export class AddHorseComponent implements OnInit {
     this.horse = {
       name: "Horse",
       description: "",
-      birthdate: new Date(),
+      birthdate: new Date().toISOString().slice(0,10),
       sex: "female",
       owner: null,
       mother: null,

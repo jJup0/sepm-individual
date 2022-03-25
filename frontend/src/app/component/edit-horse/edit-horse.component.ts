@@ -28,7 +28,6 @@ export class EditHorseComponent implements OnInit {
     const id = Number(this.route.snapshot.paramMap.get("id"));
     this.horseService.getHorse(id).subscribe((horse) => {
       this.horse = horse;
-      this.horse.birthdate = new Date(this.horse.birthdate);
     });
   }
 

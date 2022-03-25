@@ -40,9 +40,9 @@ export class HorseFormComponent implements OnInit {
   loadedFathers$!: Observable<Horse[]>;
 
   searchTerm: HorseSearchDto = {
-    name: "",
+    name: null,
     sex: null,
-    bornBefore: new Date(),
+    bornBefore: null,
   };
 
   private motherSearchTerms = new Subject<HorseSearchDto>();
@@ -52,15 +52,6 @@ export class HorseFormComponent implements OnInit {
     private route: ActivatedRoute,
     private horseService: HorseService
   ) {}
-
-  // Push a search term into the observable stream.
-  search(term: HorseSearchDto, parentType: ParentType): void {
-    if (parentType === "mother") {
-      this.motherSearchTerms.next(term);
-    } else {
-      this.fatherSearchTerms.next(term);
-    }
-  }
 
   ngOnInit(): void {
     switch (this.formType) {
@@ -108,12 +99,8 @@ export class HorseFormComponent implements OnInit {
     this.submitted = true;
   }
 
-  returnFathers() {
-    return this.loadedFathers$;
-  }
 
-  setParent(parentStr: string, parentType: ParentType) {
-    const parent: Horse = JSON.parse(parentStr);
+  setParent(parent: Horse, parentType: ParentType) {
     if (parentType === "mother") {
       this.horse.mother = parent;
     } else if (parentType === "father") {
@@ -121,18 +108,7 @@ export class HorseFormComponent implements OnInit {
     }
   }
 
-  horseBirthdayISO() {
-    if (this.horse.birthdate === null) {
-      return null;
-    }
-    return this.horse.birthdate.toISOString().slice(0, 10);
-  }
-
   todaysDateISO() {
     return new Date().toISOString().slice(0, 10);
-  }
-
-  setBirthdate(ddmmyyyy: string) {
-    this.horse.birthdate = new Date(ddmmyyyy);
   }
 }

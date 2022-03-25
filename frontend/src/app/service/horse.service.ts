@@ -48,31 +48,12 @@ export class HorseService {
     return this.http.delete<Horse>(baseUri + `/${id}`);
   }
   search(searchParameters: HorseSearchDto): Observable<Horse[]> {
-    const shortHandMapping = {
-      name: "n",
-      description: "d",
-      bornAfter: "ba",
-      bornBefore: "bb",
-      sex: "s",
-      owner: "o",
-      limit: "l",
-    };
-    const searchParamsArr: string[] = [];
-    for (const paramName in searchParameters) {
-      if (searchParameters[paramName] !== null) {
-        let param = searchParameters[paramName];
-        if (paramName === "bb" || paramName === "ba") {
-          param = searchParameters[paramName].toISOString().slice(0, 10);
-        }
-        // TODO!!! OWNER AS DATA STRUCTURE
-        searchParamsArr.push(`${shortHandMapping[paramName]}=${param}`);
-      }
-    }
-    console.log(
-      "searching for: " + baseUri + "/search?" + searchParamsArr.join("&")
-    );
+
+    const searchParametersStandardized = JSON.parse(JSON.stringify(searchParameters));
+    const urlSearchParams = new URLSearchParams(searchParametersStandardized).toString();
+    
     return this.http.get<Horse[]>(
-      baseUri + "/search?" + searchParamsArr.join("&")
+      baseUri + "/selection?" + urlSearchParams
     );
   }
 }

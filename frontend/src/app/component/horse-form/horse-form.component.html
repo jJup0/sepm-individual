@@ -2,176 +2,54 @@
 <form #horseForm="ngForm" *ngIf="horse">
   <fieldset [disabled]="formType === 'detail'">
     <label for="name">Name</label>
-    <input
-      type="text"
-      class="form-control"
-      id="name"
-      [required]="formType !== 'search'"
-      [(ngModel)]="horse.name"
-      name="name"
-      #name="ngModel"
-    />
+    <input type="text" class="form-control" id="name" [required]="formType !== 'search'" [(ngModel)]="horse.name"
+      name="name" #name="ngModel" />
     <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
       Name is required
     </div>
 
     <div class="form-group">
       <label for="description">Description</label>
-      <input
-        type="text"
-        class="form-control"
-        id="description"
-        [(ngModel)]="horse.description"
-        name="description"
-      />
+      <input type="text" class="form-control" id="description" [(ngModel)]="horse.description" name="description" />
     </div>
 
     <div class="form-group">
-      <label for="birthdate"
-        >Birthdate{{ formType === "search" ? " (born after)" : "" }}</label
-      >
-      <input
-        #birthdateIdentifier
-        type="date"
-        class="form-control"
-        id="birthdate"
-        name="birthdate"
-        [value]="horseBirthdayISO()"
-        [max]="todaysDateISO()"
-        required
-        (input)="setBirthdate(birthdateIdentifier.value)"
-      />
+      <label for="birthdate">Birthdate{{ formType === "search" ? " (born after)" : "" }}</label>
+      <input #birthdateIdentifier type="date" class="form-control" id="birthdate" name="birthdate"
+        [(ngModel)]="horse.birthdate" [max]="todaysDateISO()" required />
     </div>
 
-    <div class="form-group">
-      <div *ngFor="let sex of SEXES">
-        <input
-          id="sex"
-          type="radio"
-          name="sexesradio"
-          [value]="sex"
-          [(ngModel)]="horse.sex"
-        />
-        <label for="sex">{{ sex | titlecase }}</label>
+    <label for="sexes-form-group">Sex</label>
+    <div id="sexes-form-group" class="form-group radio-toolbar">
+      <div *ngFor="let sex of SEXES" class="sexes-radio">
+        <input type="radio" [id]="sex + '-radio'" name="sexesradio" [value]="sex" [(ngModel)]="horse.sex" />
+        <label [for]="sex + '-radio'" class="sexes-label">{{ sex | titlecase }}</label>
       </div>
     </div>
     <!-- TODO!!! owner with id -->
     <div class="form-group">
       <label for="owner">Owner</label>
-      <input
-        type="text"
-        class="form-control"
-        id="owner"
-        [(ngModel)]="horse.owner"
-        name="owner"
-      />
+      <input type="text" class="form-control" id="owner" [(ngModel)]="horse.owner" name="owner" />
     </div>
 
-    <fieldset
-      id="parents-field-set"
-      [hidden]=" formType === 'search'"
-    >
-      <div class="form-group">
-        <label for="mother-input-search-box">Mother</label>
-        <input
-          #motherSearchBox
-          type="text"
-          class="form-control"
-          name="mother-input"
-          id="mother-input-search-box"
-          [value]="horse.mother ? horse.mother.name : null"
-          (input)="
-            search(
-              {
-                name: motherSearchBox.value,
-                sex: 'female',
-                bornBefore: horse.birthdate,
-                limit: 5
-              },
-              'mother'
-            )
-          "
-        />
-        <select
-          #motherSelect
-          id="mothers"
-          name="mother-select"
-          (input)="setParent(motherSelect.value, 'mother')"
-          *ngIf="formType !== 'detail'"
-        >
-          <option [value]="null" selected>No mother</option>
-          <option *ngIf="horse.mother" [value]="horse.mother | json" selected>
-            {{ horse.mother.name }}
-          </option>
+    <fieldset id="parents-field-set" [hidden]=" formType === 'search'">
+      <app-my-combo-box parentSex="female" [childHorse]="horse" [formType]="formType" [parentObject]="horse.mother"
+        (setParentEmitter)="setParent($event, 'mother')">
+      </app-my-combo-box>
 
-          <option
-            *ngFor="let mother of loadedMothers$ | async"
-            [value]="mother | json"
-          >
-            {{ mother.name }}
-          </option>
-        </select>
-      </div>
+      <app-my-combo-box parentSex="male" [childHorse]="horse" [formType]="formType" [parentObject]="horse.father"
+        (setParentEmitter)="setParent($event, 'father')">
+      </app-my-combo-box>
 
-      <div class="form-group">
-        <label for="father-input-search-box">Father</label>
-        <input
-          #fatherSearchBox
-          type="text"
-          class="form-control"
-          name="father-input"
-          id="father-input-search-box"
-          [value]="horse.father ? horse.father.name : null"
-          (input)="
-            search(
-              {
-                name: fatherSearchBox.value,
-                sex: 'male',
-                bornBefore: horse.birthdate,
-                limit: 5
-              },
-              'father'
-            )
-          "
-        />
-        <select
-          #fatherSelect
-          id="fathers"
-          name="father-select"
-          (input)="setParent(fatherSelect.value, 'father')"
-          *ngIf="formType !== 'detail'"
-        >
-          <option [value]="null" selected>No father</option>
-          <option *ngIf="horse.father" [value]="horse.father | json" selected>
-            {{ horse.father.name }}
-          </option>
-
-          <option
-            *ngFor="let father of loadedFathers$ | async"
-            [value]="father | json"
-          >
-            {{ father.name }}
-          </option>
-        </select>
-      </div>
     </fieldset>
 
-    <!--  -->
-    <button
-      type="submit"
-      class="btn btn-success"
-      [disabled]="!horseForm.form.valid"
-      (click)="submit(); horseForm.form.markAsPristine()"
-      *ngIf="formType !== 'detail'"
-    >
+    <button type="submit" class="btn btn-success" [disabled]="!horseForm.form.valid"
+      (click)="submit(); horseForm.form.markAsPristine()" *ngIf="formType !== 'detail'">
       {{ SUBMIT_BUTTON_TEXT }}
     </button>
 
-    <div
-      *ngIf="horse && SUBMIT_SUCCESS_TEXT"
-      [hidden]="!(submitted && horseForm.form.pristine)"
-      class="alert alert-success"
-    >
+    <div *ngIf="horse && SUBMIT_SUCCESS_TEXT" [hidden]="!(submitted && horseForm.form.pristine)"
+      class="alert alert-success">
       {{ SUBMIT_SUCCESS_TEXT }}
     </div>
   </fieldset>

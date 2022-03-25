@@ -29,10 +29,7 @@ export class SearchHorseComponent implements OnInit {
     const horseSearchDto: HorseSearchDto = {
       name: horse.name,
       description: horse.description,
-      bornAfter:
-        horse.birthdate === null
-          ? null
-          : new Date(horse.birthdate).toISOString().slice(0, 10),
+      bornAfter: horse.birthdate,
       sex: horse.sex,
       bornBefore: null,
       owner: horse.owner,

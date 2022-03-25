@@ -14,9 +14,10 @@ import { HorseFormComponent } from "./component/horse-form/horse-form.component"
 import { DetailHorseComponent } from "./component/detail-horse/detail-horse.component";
 import { SearchHorseComponent } from "./component/search-horse/search-horse.component";
 import { HorseTableComponent } from "./component/horse-table/horse-table.component";
-import { OwnerComponent } from './component/owner/owner.component';
-import { HorseFamilytreeComponent } from './component/horse-familytree/horse-familytree.component';
-import { HorseFamilytreeRowComponent } from './component/horse-familytree/horse-familytree-row/horse-familytree-row.component';
+import { OwnerComponent } from "./component/owner/owner.component";
+import { HorseFamilytreeComponent } from "./component/horse-familytree/horse-familytree.component";
+import { HorseFamilytreeRowComponent } from "./component/horse-familytree/horse-familytree-row/horse-familytree-row.component";
+import { MyComboBoxComponent } from './component/horse-form/my-combo-box/my-combo-box.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { HorseFamilytreeRowComponent } from './component/horse-familytree/horse-
     OwnerComponent,
     HorseFamilytreeComponent,
     HorseFamilytreeRowComponent,
+    MyComboBoxComponent,
   ],
   imports: [
     BrowserModule,
