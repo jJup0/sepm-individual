@@ -9,6 +9,7 @@ import java.util.List;
 import at.ac.tuwien.sepm.assignment.individual.enums.HorseBiologicalGender;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import at.ac.tuwien.sepm.assignment.individual.exception.PersistenceException;
+import at.ac.tuwien.sepm.assignment.individual.mapper.HorseMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +28,9 @@ public class HorseDaoTest {
 
     @Autowired
     HorseDao horseDao;
+    @Autowired
+    HorseMapper mapper;
+
 
     @Test
     public void getAllReturnsAllStoredHorses() throws Exception{
@@ -37,23 +41,27 @@ public class HorseDaoTest {
     }
 
     @Test
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void addHorseValid() throws Exception{
         HorseDto newHorseDto = new HorseDto(null, "test horse 1", "test description 1", LocalDate.now(), HorseBiologicalGender.male, null, null, null);
         Horse addedHorse = horseDao.addHorse(newHorseDto);
         assertThat(addedHorse.getId()).isGreaterThan(0);
+
+        // Clean up
+        horseDao.deleteHorse(addedHorse.getId());
     }
 
 
 
     @Test
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void editHorseValid() throws Exception {
         Horse wendy = horseDao.getHorse(-1);
         assertThat(wendy.getName()).isEqualTo("Wendy");
         HorseDto newWendyDto = new HorseDto(-1L, "not wendy", "test description 1", LocalDate.now(), HorseBiologicalGender.female, null, null, null);
         Horse newWendy = horseDao.editHorse(newWendyDto);
         assertThat(newWendy.getName()).isEqualTo("not wendy");
+
+        // Clean up
+        horseDao.editHorse(mapper.entityToDto(wendy));
     }
 
     @Test
