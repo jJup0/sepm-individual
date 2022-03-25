@@ -47,7 +47,7 @@ public interface HorseService {
      * @return A list of all the horses that match all the parameters
      * @throws ServiceException if some internal error occurs in the database
      */
-    List<Horse> searchHorses(HorseSearchDto horseSearchDto) throws ServiceException;
+    List<Horse> searchHorses(HorseSearchDto horseSearchDto) throws ServiceException, NotParsableDateException;
 
     /**
      * Adds a given horse DTO to persistence.

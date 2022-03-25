@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
 import at.ac.tuwien.sepm.assignment.individual.service.HorseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -125,6 +126,11 @@ public class HorseEndpoint {
             LOGGER.error("searchHorses() Internal server error:\n" + e.getMessage(), e);
 
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error searching for horses", e);
+        } catch (NotParsableDateException e) {
+            LOGGER.error("searchHorses() Could not parse date:\n" + e.getMessage(), e);
+
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Error with date format", e);
+
         }
     }
 

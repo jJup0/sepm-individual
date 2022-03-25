@@ -3,10 +3,7 @@ package at.ac.tuwien.sepm.assignment.individual.validator.impl;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.enums.HorseBiologicalGender;
-import at.ac.tuwien.sepm.assignment.individual.exception.ConstraintViolation;
-import at.ac.tuwien.sepm.assignment.individual.exception.MissingAttributeException;
-import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
-import at.ac.tuwien.sepm.assignment.individual.exception.PersistenceException;
+import at.ac.tuwien.sepm.assignment.individual.exception.*;
 import at.ac.tuwien.sepm.assignment.individual.persistence.HorseDao;
 import at.ac.tuwien.sepm.assignment.individual.validator.HorseServiceValidator;
 import org.slf4j.Logger;
@@ -14,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -77,6 +75,18 @@ public class HorseServiceValidatorImpl implements HorseServiceValidator {
             }
         }
 
+    }
+
+    @Override
+    public void validateDate(String date) throws NotParsableDateException {
+        if (date == null){
+            return;
+        }
+        try {
+            LocalDate.parse(date);
+        } catch (java.time.DateTimeException e){
+            throw new NotParsableDateException(e);
+        }
     }
 
 

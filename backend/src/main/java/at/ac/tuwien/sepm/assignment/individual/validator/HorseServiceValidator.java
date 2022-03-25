@@ -28,4 +28,12 @@ public interface HorseServiceValidator {
      * @throws NotFoundException         if there is no entry in the database for a horse with the given id
      */
     void validateEditHorse(HorseDto horseDto) throws MissingAttributeException, ConstraintViolation, PersistenceException, NotFoundException;
+
+    /**
+     * Validates a date, used for search parameter date, as this can apparently not be processed by spring directly as a local date
+     *
+     * @param date Date as string to validate
+     * @throws NotParsableDateException if the date is not valid
+     */
+    void validateDate(String date) throws NotParsableDateException;
 }

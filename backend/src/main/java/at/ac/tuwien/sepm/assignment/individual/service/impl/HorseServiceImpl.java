@@ -90,8 +90,13 @@ public class HorseServiceImpl implements HorseService {
     }
 
     @Override
-    public List<Horse> searchHorses(HorseSearchDto horseSearchDto) throws ServiceException {
+    public List<Horse> searchHorses(HorseSearchDto horseSearchDto) throws ServiceException, NotParsableDateException {
         LOGGER.trace("searchHorses({}) called", horseSearchDto);
+
+        // Spring can somehow not convert to LocalDate when parameters are passed directly to DTO in the endpoint so validate them here:
+
+        validator.validateDate(horseSearchDto.bornBefore());
+        validator.validateDate(horseSearchDto.bornAfter());
 
         try {
             return dao.searchHorses(horseSearchDto);
