@@ -45,4 +45,15 @@ public class OwnerServiceImpl implements OwnerService {
             throw new ServiceException("Error fetching owner with id(" + id + ")", e);
         }
     }
+
+    @Override
+    public List<Owner> searchOwners(String term) throws ServiceException {
+        LOGGER.trace("searchOwners({}) called", term);
+
+        try {
+            return dao.searchOwners(term);
+        } catch (PersistenceException e) {
+            throw new ServiceException("Error searching for owners", e);
+        }
+    }
 }

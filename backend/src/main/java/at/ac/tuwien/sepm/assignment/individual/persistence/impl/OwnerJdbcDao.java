@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
 import java.sql.PreparedStatement;
@@ -22,10 +23,14 @@ public class OwnerJdbcDao implements OwnerDao {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    private static final String ESCAPE_CHAR = "!";
     private static final String TABLE_NAME = "owner";
-    private static final int MAX_SEARCH_RESULTS = 1000;
-    private static final String SQL_SELECT_ALL = "SELECT * FROM " + TABLE_NAME + " LIMIT " + MAX_SEARCH_RESULTS;
+    private static final int SEARCH_LIMIT = 5;
+    private static final String SQL_SELECT_ALL = "SELECT * FROM " + TABLE_NAME;
     private static final String SQL_SELECT_WITH_ID = "SELECT * FROM " + TABLE_NAME + " WHERE ID = ?";
+    private static final String SQL_SEARCH = "SELECT * FROM " + TABLE_NAME + " WHERE CONCAT(lower(firstname), ' ', lower(lastname)) LIKE ? ESCAPE '" + ESCAPE_CHAR + "' LIMIT " + SEARCH_LIMIT;
+
+
 
     private final JdbcTemplate jdbcTemplate;
     private final OwnerMapper mapper;
@@ -62,6 +67,29 @@ public class OwnerJdbcDao implements OwnerDao {
     }
 
     /**
+     * Get owners matching search term.
+     *
+     * @param term String search term to search for
+     * @return a list owners (maximum of 5) matching that search term
+     * @throws ResponseStatusException if some internal error occurs in the database
+     */
+    @Override
+    public List<Owner> searchOwners(String term) throws PersistenceException {
+        LOGGER.trace("searchOwners({}) called", term);
+
+        try {
+            return jdbcTemplate.query(connection -> {
+                PreparedStatement ps = connection.prepareStatement(SQL_SEARCH);
+                ps.setString(1, globalMatchToLowerEscapeBang(term));
+                return ps;
+            }, this::mapOwnerRow);
+        } catch (DataAccessException e) {
+            throw new PersistenceException("error searching for horses", e);
+        }
+    }
+
+
+    /**
      * Maps a result set to an owner entity
      * @param result The result set to map from
      * @param rowNum The number of the current row
@@ -78,4 +106,20 @@ public class OwnerJdbcDao implements OwnerDao {
         owner.setEmail(result.getString("email"));
         return owner;
     }
+
+    /**
+     * Escapes special characters in a search term and pads the string with '%', so that it will be globally matched in an SQL query
+     *
+     * @param searchTerm The search term to be formatted
+     * @return A formatted version of the search term
+     */
+    private String globalMatchToLowerEscapeBang(String searchTerm) {
+        LOGGER.trace("globalMatchToLowerEscapeBang({}) called", searchTerm);
+
+        for (char specialChar : new char[]{'!', '%', '_', '['}) {
+            searchTerm = searchTerm.replace("" + specialChar, ESCAPE_CHAR + searchTerm);
+        }
+        return "%" + searchTerm.toLowerCase() + "%";
+    }
+
 }

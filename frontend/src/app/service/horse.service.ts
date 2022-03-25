@@ -48,12 +48,13 @@ export class HorseService {
     return this.http.delete<Horse>(baseUri + `/${id}`);
   }
   search(searchParameters: HorseSearchDto): Observable<Horse[]> {
-
-    const searchParametersStandardized = JSON.parse(JSON.stringify(searchParameters));
-    const urlSearchParams = new URLSearchParams(searchParametersStandardized).toString();
-    
-    return this.http.get<Horse[]>(
-      baseUri + "/selection?" + urlSearchParams
+    const searchParametersStandardized = JSON.parse(
+      JSON.stringify(searchParameters)
     );
+    const urlSearchParams = new URLSearchParams(
+      searchParametersStandardized
+    ).toString();
+
+    return this.http.get<Horse[]>(baseUri + "/selection?" + urlSearchParams);
   }
 }

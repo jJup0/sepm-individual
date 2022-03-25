@@ -14,6 +14,7 @@ import {
 
 import { HorseService } from "src/app/service/horse.service";
 import { HorseSearchDto } from "src/app/dto/horseSearchDto";
+import { Owner } from "src/app/dto/owner";
 
 type ParentType = "mother" | "father";
 
@@ -94,11 +95,11 @@ export class HorseFormComponent implements OnInit {
       switchMap((term: HorseSearchDto) => this.horseService.search(term))
     );
   }
+
   submit() {
     this.submitPressed.emit(this.horse);
     this.submitted = true;
   }
-
 
   setParent(parent: Horse, parentType: ParentType) {
     if (parentType === "mother") {
@@ -106,6 +107,10 @@ export class HorseFormComponent implements OnInit {
     } else if (parentType === "father") {
       this.horse.father = parent;
     }
+  }
+
+  setOwner(owner: Owner) {
+    this.horse.owner = owner;
   }
 
   todaysDateISO() {

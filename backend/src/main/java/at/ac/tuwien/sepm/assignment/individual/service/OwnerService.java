@@ -4,7 +4,9 @@ import at.ac.tuwien.sepm.assignment.individual.entity.Owner;
 import at.ac.tuwien.sepm.assignment.individual.exception.PersistenceException;
 import at.ac.tuwien.sepm.assignment.individual.exception.ServiceException;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
 import java.util.List;
 
 public interface OwnerService {
@@ -25,4 +27,13 @@ public interface OwnerService {
      * @throws ServiceException if some internal error occurs in the database
      */
     Owner getWithId(long id) throws NotFoundException, ServiceException;
+
+    /**
+     * Get owners matching search term.
+     *
+     * @param term String search term to search for
+     * @return a list owners (maximum of 5) matching that search term
+     * @throws ResponseStatusException if some internal error occurs in the database
+     */
+    List<Owner> searchOwners(String term) throws ServiceException;
 }

@@ -36,6 +36,5 @@ export class EditHorseComponent implements OnInit {
   save(horse: Horse): void {
     this.horse = horse;
     this.horseService.updateHorse(this.horse).subscribe();
-    console.log(`saved horse: ${JSON.stringify(this.horse)}`);
   }
 }

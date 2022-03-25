@@ -13,11 +13,11 @@ import { HorseSex } from "src/app/dto/horseSexEnum";
 import { HorseService } from "src/app/service/horse.service";
 
 @Component({
-  selector: "app-my-combo-box",
-  templateUrl: "./my-combo-box.component.html",
-  styleUrls: ["./my-combo-box.component.scss"],
+  selector: "app-parent-combo-box",
+  templateUrl: "./parent-combo-box.component.html",
+  styleUrls: ["./parent-combo-box.component.scss"],
 })
-export class MyComboBoxComponent implements OnInit {
+export class ParentComboBoxComponent implements OnInit {
   @Input()
   parentSex: HorseSex;
 

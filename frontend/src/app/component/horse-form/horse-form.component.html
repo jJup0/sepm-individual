@@ -26,24 +26,23 @@
         <label [for]="sex + '-radio'" class="sexes-label">{{ sex | titlecase }}</label>
       </div>
     </div>
-    <!-- TODO!!! owner with id -->
-    <div class="form-group">
-      <label for="owner">Owner</label>
-      <input type="text" class="form-control" id="owner" [(ngModel)]="horse.owner" name="owner" />
-    </div>
+
+    <app-owner-combo-box [ownedHorse]="horse" [formType]="formType" [currentOwner]="horse.owner"
+    (setOwnerEmitter)="setOwner($event)">
+  </app-owner-combo-box>
 
     <fieldset id="parents-field-set" [hidden]=" formType === 'search'">
-      <app-my-combo-box parentSex="female" [childHorse]="horse" [formType]="formType" [parentObject]="horse.mother"
+      <app-parent-combo-box parentSex="female" [childHorse]="horse" [formType]="formType" [parentObject]="horse.mother"
         (setParentEmitter)="setParent($event, 'mother')">
-      </app-my-combo-box>
+      </app-parent-combo-box>
 
-      <app-my-combo-box parentSex="male" [childHorse]="horse" [formType]="formType" [parentObject]="horse.father"
+      <app-parent-combo-box parentSex="male" [childHorse]="horse" [formType]="formType" [parentObject]="horse.father"
         (setParentEmitter)="setParent($event, 'father')">
-      </app-my-combo-box>
+      </app-parent-combo-box>
 
     </fieldset>
 
-    <button type="submit" class="btn btn-success" [disabled]="!horseForm.form.valid"
+    <button type="submit" id="submit-button" class="btn btn-success" [disabled]="!horseForm.form.valid"
       (click)="submit(); horseForm.form.markAsPristine()" *ngIf="formType !== 'detail'">
       {{ SUBMIT_BUTTON_TEXT }}
     </button>

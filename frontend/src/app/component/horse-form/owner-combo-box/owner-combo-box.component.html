@@ -1,0 +1,31 @@
+<div class="form-group">
+    <label for="owner-input-search-box">Owner</label>
+
+    <input
+    #ownerSearchBox
+    type="text"
+    class="form-control "
+    name="owner-input"
+    id="owner-input-search-box"
+    [value]="currentOwner ? currentOwner.name : null" 
+    (input)="search(ownerSearchBox.value)"
+  />
+  <select
+    #ownerSelect
+    (input)="setOwner(ownerSelect.value)"
+    *ngIf="formType !== 'detail'"
+  >
+  <option [value]="null" selected>No Owner</option>
+  <option *ngIf="currentOwner && searched === false" [value]="currentOwner | json" selected>
+    {{ currentOwner.name }}
+  </option>
+
+    <option
+      *ngFor="let owner of loadedOwners$ | async"
+      [value]="owner | json"
+    >
+      {{ owner.firstName + " " + owner.lastName }}
+    </option>
+  </select>
+</div>
+

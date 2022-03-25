@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.assignment.individual.persistence;
 import at.ac.tuwien.sepm.assignment.individual.entity.Owner;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import at.ac.tuwien.sepm.assignment.individual.exception.PersistenceException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -29,4 +30,13 @@ public interface OwnerDao {
      * @throws PersistenceException if some internal error occurs in the database
      */
     Owner getOwner(long id) throws PersistenceException, NotFoundException;
+
+    /**
+     * Get owners matching search term.
+     *
+     * @param term String search term to search for
+     * @return a list owners (maximum of 5) matching that search term
+     * @throws ResponseStatusException if some internal error occurs in the database
+     */
+    List<Owner> searchOwners(String term) throws PersistenceException;
 }

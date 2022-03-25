@@ -8,24 +8,15 @@
   border-left: 5px solid #a94442; /* red */
 }
 
-// // .
 .sexes-radio {
-//   // font-size: 2em;
   display: inline;
-//   // background-color: #42a948;
-//   // appearance: button;
-//   padding: 0.2em 2em;
-//   font-size: 1.25em;
 }
 
 .radio-toolbar input {
   display: none;
 }
 
-.radio-toolbar {
 
-  // display: inline;
-}
 .radio-toolbar .sexes-label {
   background-color: #ddd;
   padding: 0.2em;
@@ -36,4 +27,8 @@
 
 .radio-toolbar input[type="radio"]:checked+label {
   background-color: #bbb;
+}
+
+#submit-button{
+  margin: 1em;
 }
