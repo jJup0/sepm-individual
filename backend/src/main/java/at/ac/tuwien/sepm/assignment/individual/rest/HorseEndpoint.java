@@ -141,6 +141,7 @@ public class HorseEndpoint {
      * @throws PersistenceException if some internal error occurs in the database
      */
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public HorseDto addHorse(@RequestBody HorseDtoIdReferences horseDto) {
         LOGGER.info("add horse request with horse: {}", horseDto);
 
@@ -153,7 +154,7 @@ public class HorseEndpoint {
         } catch (ConstraintViolation e) {
             LOGGER.error("Horse parents or birthday violating constraints: \n" + e.getMessage(), e);
 
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
         } catch (NotFoundException e) {
             LOGGER.error("Horse parents not found: \n" + e.getMessage(), e);
 
@@ -188,7 +189,7 @@ public class HorseEndpoint {
         } catch (ConstraintViolation e) {
             LOGGER.error("Illegal edit on horse sex, birthdate or parents\n" + e.getMessage(), e);
 
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
         } catch (NotFoundException e) {
             LOGGER.error("Could not find horse with id(" + horseDto.id() + ")\n" + e.getMessage(), e);
 
