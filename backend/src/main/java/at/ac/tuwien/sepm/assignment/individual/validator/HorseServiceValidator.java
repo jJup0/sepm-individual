@@ -1,7 +1,10 @@
 package at.ac.tuwien.sepm.assignment.individual.validator;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
+import at.ac.tuwien.sepm.assignment.individual.enums.HorseBiologicalGender;
 import at.ac.tuwien.sepm.assignment.individual.exception.*;
+
+import java.time.LocalDate;
 
 public interface HorseServiceValidator {
 
@@ -33,7 +36,17 @@ public interface HorseServiceValidator {
      * Validates a date, used for search parameter date, as this can apparently not be processed by spring directly as a local date
      *
      * @param date Date as string to validate
-     * @throws NotParsableDateException if the date is not valid
+     * @return The parsed birthdate
+     * @throws NotParsableValueException if the date is not valid
      */
-    void validateDate(String date) throws NotParsableDateException;
+    LocalDate validateDate(String date) throws NotParsableValueException;
+
+    /**
+     * Validates a sex string used for search parameter, as this can apparently not be processed by spring directly as an enum if null
+     *
+     * @param sex Sex as string to validate
+     * @return The parsed horse sex
+     * @throws NotParsableValueException if the sex string is not valid
+     */
+    HorseBiologicalGender validateSex(String sex)throws NotParsableValueException;
 }

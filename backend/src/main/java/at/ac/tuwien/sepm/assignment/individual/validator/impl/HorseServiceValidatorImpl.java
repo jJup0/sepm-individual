@@ -78,14 +78,26 @@ public class HorseServiceValidatorImpl implements HorseServiceValidator {
     }
 
     @Override
-    public void validateDate(String date) throws NotParsableDateException {
+    public LocalDate validateDate(String date) throws NotParsableValueException {
         if (date == null){
-            return;
+            return null;
         }
         try {
-            LocalDate.parse(date);
+            return LocalDate.parse(date);
         } catch (java.time.DateTimeException e){
-            throw new NotParsableDateException(e);
+            throw new NotParsableValueException("Date not parseable", e);
+        }
+    }
+
+    @Override
+    public HorseBiologicalGender validateSex(String sex) throws NotParsableValueException {
+        if (sex == null){
+            return null;
+        }
+        try {
+            return HorseBiologicalGender.valueOf(sex);
+        } catch (IllegalArgumentException e){
+            throw new NotParsableValueException("Sex not parseable", e);
         }
     }
 

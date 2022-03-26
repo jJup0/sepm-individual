@@ -1,17 +1,15 @@
 package at.ac.tuwien.sepm.assignment.individual.dto;
 
-import at.ac.tuwien.sepm.assignment.individual.enums.HorseBiologicalGender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
-import java.time.LocalDate;
 
 /**
- * Cleaned version of DirtyHorseSearchDto
+ * Class for horse search parameter DTOs coming from outside
  * Contains all possible search parameters
  */
-public record HorseSearchDto(String name, String description, LocalDate bornAfter, LocalDate bornBefore, HorseBiologicalGender sex, Long ownerId, Integer limit) {
+public record DirtyHorseSearchDto(String name, String description, String bornAfter, String bornBefore, String sex, Long ownerId, Integer limit) {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Override

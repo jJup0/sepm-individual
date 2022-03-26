@@ -1,13 +1,12 @@
 package at.ac.tuwien.sepm.assignment.individual.rest;
 
-import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.DirtyHorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.exception.*;
 import at.ac.tuwien.sepm.assignment.individual.mapper.HorseMapper;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
 import at.ac.tuwien.sepm.assignment.individual.service.HorseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -53,7 +52,7 @@ public class HorseEndpoint {
             return service.allHorses().stream().map(mapper::entityToDto);
         } catch (ServiceException e) {
             LOGGER.error("allHorses() Internal server error:\n" + e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error fetching all horses", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error fetching all horses");
         }
     }
 
@@ -112,21 +111,21 @@ public class HorseEndpoint {
     /**
      * Searches for horses matching the search DTO
      *
-     * @param horseSearchDto A horse search DTO containing all the parameters that a horse must have
+     * @param dirtyHorseSearchDto A horse search DTO containing all the parameters that a horse must have
      * @return A stream of all the horses (as DTOs) that match all the parameters
      * @throws ResponseStatusException if some internal error occurs in the database
      */
     @GetMapping("/selection")
-    public Stream<HorseDto> searchHorses(HorseSearchDto horseSearchDto) {
-        LOGGER.info("horse search request with parameters {}", horseSearchDto);
+    public Stream<HorseDto> searchHorses(DirtyHorseSearchDto dirtyHorseSearchDto) {
+        LOGGER.info("horse search request with parameters {}", dirtyHorseSearchDto);
 
         try {
-            return service.searchHorses(horseSearchDto).stream().map(mapper::entityToDto);
+            return service.searchHorses(dirtyHorseSearchDto).stream().map(mapper::entityToDto);
         } catch (ServiceException e) {
             LOGGER.error("searchHorses() Internal server error:\n" + e.getMessage(), e);
 
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error searching for horses", e);
-        } catch (NotParsableDateException e) {
+        } catch (NotParsableValueException e) {
             LOGGER.error("searchHorses() Could not parse date:\n" + e.getMessage(), e);
 
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Error with date format", e);

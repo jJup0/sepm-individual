@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepm.assignment.individual.service;
 
+import at.ac.tuwien.sepm.assignment.individual.dto.DirtyHorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
-import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.exception.*;
 
@@ -43,11 +43,11 @@ public interface HorseService {
     /**
      * Searches for horses matching the search DTO
      *
-     * @param horseSearchDto A horse search DTO containing all the parameters that a horse must have
+     * @param dirtyHorseSearchDto A horse search DTO containing all the parameters that a horse must have
      * @return A list of all the horses that match all the parameters
      * @throws ServiceException if some internal error occurs in the database
      */
-    List<Horse> searchHorses(HorseSearchDto horseSearchDto) throws ServiceException, NotParsableDateException;
+    List<Horse> searchHorses(DirtyHorseSearchDto dirtyHorseSearchDto) throws ServiceException, NotParsableValueException;
 
     /**
      * Adds a given horse DTO to persistence.
