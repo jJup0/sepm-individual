@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.assignment.individual.dto.OwnerDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 import at.ac.tuwien.sepm.assignment.individual.enums.HorseBiologicalGender;
@@ -47,6 +48,8 @@ public class HorseServiceTest {
     @Test
     public void getAllReturnsAllStoredHorses() throws Exception {
         List<Horse> horses = horseService.allHorses();
+        Collections.sort(horses);
+        System.out.println(horses);
         assertThat(horses.size()).isEqualTo(TEST_DATA_SIZE);
         assertThat(horses.get(TEST_DATA_SIZE - 1).getId()).isEqualTo(-1);
         assertThat(horses.get(TEST_DATA_SIZE - 1).getName()).isEqualTo("Wendy");
@@ -125,15 +128,15 @@ public class HorseServiceTest {
         String dDesc = dakota.getDescription();
         LocalDate dBday = dakota.getBirthdate();
         HorseBiologicalGender dSex = dakota.getSex();
-        OwnerDto dOwner = ownerMapper.entityToDto(dakota.getOwner());
-        HorseDto dMother = horseMapper.entityToDto(dakota.getMother());
-        HorseDto dFather = horseMapper.entityToDto(dakota.getFather());
+        Long dOwnerId = dakota.getOwner() == null ? null : dakota.getOwner().getId();
+        Long dMotherId = dakota.getMother() == null ? null : dakota.getMother().getId();
+        Long dFatherId = dakota.getFather() == null ? null : dakota.getFather().getId();
 
         HorseDtoIdReferences[] editRequestsIncomplete = {
-                new HorseDtoIdReferences(null, dName, dDesc, dBday, dSex, dOwner.id(), dMother.id(), dFather.id()),
-                new HorseDtoIdReferences(dId, null, dDesc, dBday, dSex, dOwner.id(), dMother.id(), dFather.id()),
-                new HorseDtoIdReferences(dId, dName, dDesc, null, dSex, dOwner.id(), dMother.id(), dFather.id()),
-                new HorseDtoIdReferences(dId, dName, dDesc, dBday, null, dOwner.id(), dMother.id(), dFather.id())
+                new HorseDtoIdReferences(null, dName, dDesc, dBday, dSex, dOwnerId, dMotherId, dFatherId),
+                new HorseDtoIdReferences(dId, null, dDesc, dBday, dSex, dOwnerId, dMotherId, dFatherId),
+                new HorseDtoIdReferences(dId, dName, dDesc, null, dSex, dOwnerId, dMotherId, dFatherId),
+                new HorseDtoIdReferences(dId, dName, dDesc, dBday, null, dOwnerId, dMotherId, dFatherId)
         };
 
         for (HorseDtoIdReferences incompleteHorse : editRequestsIncomplete) {
@@ -206,15 +209,28 @@ public class HorseServiceTest {
     public void deleteHorse() throws Exception {
         Horse wendy = horseService.getHorse(-1);
         Horse wendyClone = horseService.addHorse(horseMapper.recursiveDtoToReferenceIdDto(horseMapper.entityToDto(wendy)));
+        assertThat(horseService.allHorses().size()).isEqualTo(TEST_DATA_SIZE + 1);
+
+        List<Horse> all = horseService.allHorses();
+        Collections.sort(all);
+        for (Horse h : all) {
+            System.out.println(h);
+        }
 
         horseService.deleteHorse(wendyClone.getId());
         assertThat(horseService.allHorses().size()).isEqualTo(TEST_DATA_SIZE);
 
         horseService.deleteHorse(wendyClone.getId());
         assertThat(horseService.allHorses().size()).isEqualTo(TEST_DATA_SIZE);
+
+        all = horseService.allHorses();
+        Collections.sort(all);
+        for (Horse h : all) {
+            System.out.println(h);
+        }
 
         assertThatThrownBy(() -> {
-            horseService.getHorse(wendyClone.getId());
+            System.out.println(horseService.getHorse(wendyClone.getId()));
         }).isInstanceOf(NotFoundException.class);
     }
 

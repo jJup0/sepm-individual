@@ -8,7 +8,7 @@ import java.time.LocalDate;
  * Class for Horse Entities with owner, mother and father as entities
  * Contains all common properties
  */
-public class Horse {
+public class Horse implements Comparable<Horse>{
     private Long id;
     private String name;
     private String description;
@@ -80,5 +80,24 @@ public class Horse {
 
     public void setFather(Horse father) {
         this.father = father;
+    }
+
+    @Override
+    public int compareTo(Horse o) {
+        return getId().compareTo(o.getId());
+    }
+
+    @Override
+    public String toString() {
+        return "Horse{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", birthdate=" + birthdate +
+                ", sex=" + sex +
+                ", owner=" + owner +
+                ", mother=" + mother +
+                ", father=" + father +
+                '}';
     }
 }

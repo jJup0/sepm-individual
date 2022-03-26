@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.assignment.individual.dto.HorseDtoIdReferences;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 import at.ac.tuwien.sepm.assignment.individual.enums.HorseBiologicalGender;
@@ -34,23 +35,24 @@ public class HorseDaoTest {
 
 
     @Test
-    public void getAllReturnsAllStoredHorses() throws Exception{
+    public void getAllReturnsAllStoredHorses() throws Exception {
         List<Horse> horses = horseDao.getAll();
+        Collections.sort(horses);
         assertThat(horses.size()).isEqualTo(TEST_DATA_SIZE);
-        assertThat(horses.get(TEST_DATA_SIZE-1).getId()).isEqualTo(-1);
-        assertThat(horses.get(TEST_DATA_SIZE-1).getName()).isEqualTo("Wendy");
+        assertThat(horses.get(TEST_DATA_SIZE - 1).getId()).isEqualTo(-1);
+        assertThat(horses.get(TEST_DATA_SIZE - 1).getName()).isEqualTo("Wendy");
     }
 
     @Test
-    public void addHorseValid() throws Exception{
+    public void addHorseValid() throws Exception {
         HorseDtoIdReferences newHorseDto = new HorseDtoIdReferences(null, "test horse 1", "test description 1", LocalDate.now(), HorseBiologicalGender.male, null, null, null);
         Horse addedHorse = horseDao.addHorse(newHorseDto);
         assertThat(addedHorse.getId()).isGreaterThan(0);
+        assertThat(horseDao.getAll().size()).isEqualTo(TEST_DATA_SIZE + 1);
 
         // Clean up
         horseDao.deleteHorse(addedHorse.getId());
     }
-
 
 
     @Test

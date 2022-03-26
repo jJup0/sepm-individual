@@ -96,13 +96,14 @@ public class HorseJdbcDao implements HorseDao {
             }, this::mapHorseJoinedWithOwnerRow);
 
         } catch (DataAccessException e) {
-            throw new PersistenceException("Error getting all horses", e);
+            throw new PersistenceException("Error getting horse with id(" + id + ")", e);
         }
 
         List<Horse> result = constructRecursiveEntities(horsesIdReferences, id);
         if (result.size() == 0) {
             throw new NotFoundException("Could not find horse with id(" + id + ")");
         }
+
         return result.get(0);
     }
 
@@ -146,7 +147,7 @@ public class HorseJdbcDao implements HorseDao {
 
         assert (keyHolder.getKeys() != null);
         try {
-            return getHorse((long)keyHolder.getKeys().get("id"));
+            return getHorse((long) keyHolder.getKeys().get("id"));
         } catch (NotFoundException e) {
             throw new PersistenceException("Error adding horse", e);
         }
@@ -287,6 +288,7 @@ public class HorseJdbcDao implements HorseDao {
 
     /**
      * Maps a result set to a horse entity with number references to parents
+     *
      * @param result Result set given to convert
      * @param rowNum The number of the row
      * @return A horse entity with parents referenced by ids
@@ -322,8 +324,9 @@ public class HorseJdbcDao implements HorseDao {
     /**
      * Turns a list of horse entities with parents as ids into recursive entities.
      * All parents must already be in the list.
+     *
      * @param horsesIdReferences A list of horse entities with parents as ids
-     * @param idToGet The id of the horse of interest, null if every horse is needed
+     * @param idToGet            The id of the horse of interest, null if every horse is needed
      * @return A list of horses of interest as recursive entities
      */
     private List<Horse> constructRecursiveEntities(List<HorseIdReferences> horsesIdReferences, Long idToGet) {
@@ -335,24 +338,25 @@ public class HorseJdbcDao implements HorseDao {
         for (HorseIdReferences horseIdRef : horsesIdReferences) {
             recHelper(horseIdRef.getId(), horsesIdRefMap, prevConstructed);
         }
-        if ((idToGet) == null){
+        if ((idToGet) == null) {
             return new ArrayList<Horse>(prevConstructed.values());
-        } else{
+        } else {
+            if (prevConstructed.get(idToGet) == null) {
+                return new ArrayList<>();
+            }
             return Arrays.asList(prevConstructed.get(idToGet));
         }
-
     }
 
     /**
      * A helper function for converting horse entities with parent ids to recursive entities.
+     *
      * @param horseIdToConvert ID of the horse which is to be converted
-     * @param horsesIdRefMap A mapping of ID -> horseWithParentIDs
-     * @param prevConstructed A mapping of ID -> recursiveHorseEntities (that have already been constructed in this method previously)
+     * @param horsesIdRefMap   A mapping of ID -> horseWithParentIDs
+     * @param prevConstructed  A mapping of ID -> recursiveHorseEntities (that have already been constructed in this method previously)
      */
     private void recHelper(Long horseIdToConvert, HashMap<Long, HorseIdReferences> horsesIdRefMap, HashMap<Long, Horse> prevConstructed) {
-        if (!horsesIdRefMap.containsKey(horseIdToConvert)) {
-            prevConstructed.put(horseIdToConvert, null);
-        } else {
+        if (horsesIdRefMap.containsKey(horseIdToConvert)) {
             HorseIdReferences horseWithIdReferences = horsesIdRefMap.get(horseIdToConvert);
             Horse horse = mapper.referenceEntityToRecurisve(horseWithIdReferences);
             if (horseWithIdReferences.getMotherId() != null) {
@@ -366,7 +370,6 @@ public class HorseJdbcDao implements HorseDao {
             prevConstructed.put(horseIdToConvert, horse);
         }
     }
-
 
 
     /**
