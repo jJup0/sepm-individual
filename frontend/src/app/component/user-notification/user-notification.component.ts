@@ -46,7 +46,7 @@ export class UserNotificationComponent implements OnInit {
       clearTimeout(this.hiddenTimeOutId);
       this.hiddenTimeOutId = setTimeout(() => {
         this.hidden = true;
-      }, 3000);
+      }, 5000);
     });
   }
 }
