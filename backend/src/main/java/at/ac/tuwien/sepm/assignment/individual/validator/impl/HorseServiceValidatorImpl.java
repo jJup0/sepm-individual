@@ -1,9 +1,11 @@
 package at.ac.tuwien.sepm.assignment.individual.validator.impl;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseDtoIdReferences;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.enums.HorseBiologicalGender;
 import at.ac.tuwien.sepm.assignment.individual.exception.*;
+import at.ac.tuwien.sepm.assignment.individual.mapper.HorseMapper;
 import at.ac.tuwien.sepm.assignment.individual.persistence.HorseDao;
 import at.ac.tuwien.sepm.assignment.individual.validator.HorseServiceValidator;
 import org.slf4j.Logger;
@@ -19,22 +21,26 @@ public class HorseServiceValidatorImpl implements HorseServiceValidator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final HorseDao dao;
+    private final HorseMapper mapper;
 
-    public HorseServiceValidatorImpl(HorseDao dao) {
+    public HorseServiceValidatorImpl(HorseDao dao, HorseMapper mapper) {
         LOGGER.trace("HorseServiceValidatorImpl constructed");
         this.dao = dao;
+        this.mapper = mapper;
     }
 
     @Override
-    public void validateAddHorse(HorseDto horseDto) throws MissingAttributeException, ConstraintViolation, PersistenceException, NotFoundException {
+    public void validateAddHorse(HorseDtoIdReferences horseDto) throws MissingAttributeException, ConstraintViolation, PersistenceException, NotFoundException {
         LOGGER.debug("validating new horse {}", horseDto);
 
-        validateHorseCU(horseDto, "add");
+        validateHorseCU(mapper.idReferenceDtoToDto(horseDto), "add");
     }
 
     @Override
-    public void validateEditHorse(HorseDto horseDto) throws MissingAttributeException, ConstraintViolation, PersistenceException, NotFoundException {
-        LOGGER.debug("validating horse edit on {}", horseDto);
+    public void validateEditHorse(HorseDtoIdReferences horseDtoIdReference) throws MissingAttributeException, ConstraintViolation, PersistenceException, NotFoundException {
+        LOGGER.debug("validating horse edit on {}", horseDtoIdReference);
+
+        HorseDto horseDto = mapper.idReferenceDtoToDto(horseDtoIdReference);
 
         if (horseDto.id() == null) {
             throw new MissingAttributeException("failed to edit horse: can not edit horse without given id");

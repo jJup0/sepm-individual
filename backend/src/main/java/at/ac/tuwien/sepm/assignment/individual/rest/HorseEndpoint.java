@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.assignment.individual.rest;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.DirtyHorseSearchDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseDtoIdReferences;
 import at.ac.tuwien.sepm.assignment.individual.exception.*;
 import at.ac.tuwien.sepm.assignment.individual.mapper.HorseMapper;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
@@ -140,7 +141,7 @@ public class HorseEndpoint {
      * @throws PersistenceException if some internal error occurs in the database
      */
     @PostMapping
-    public HorseDto addHorse(@RequestBody HorseDto horseDto) {
+    public HorseDto addHorse(@RequestBody HorseDtoIdReferences horseDto) {
         LOGGER.info("add horse request with horse: {}", horseDto);
 
         try {
@@ -175,7 +176,7 @@ public class HorseEndpoint {
      *                                 edits violate constraints
      */
     @PutMapping()
-    public HorseDto editHorse(@RequestBody HorseDto horseDto) {
+    public HorseDto editHorse(@RequestBody HorseDtoIdReferences horseDto) {
         LOGGER.info("edit horse request with horse: {}", horseDto);
 
         try {

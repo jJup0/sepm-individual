@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.assignment.individual.mapper;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseDtoIdReferences;
+import at.ac.tuwien.sepm.assignment.individual.dto.OwnerDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.entity.HorseIdReferences;
 import org.slf4j.Logger;
@@ -72,7 +74,7 @@ public class HorseMapper {
      * @param horseIdReferences The horse with ids as parent references
      * @return A horse entity matching the given id reference entity
      */
-    public Horse referenceEntityToRecurisve(HorseIdReferences horseIdReferences){
+    public Horse referenceEntityToRecurisve(HorseIdReferences horseIdReferences) {
         LOGGER.trace("dtoToEntity() called on {}", horseIdReferences);
         if (horseIdReferences == null) {
             return null;
@@ -85,5 +87,43 @@ public class HorseMapper {
         newHorse.setSex(horseIdReferences.getSex());
         newHorse.setOwner(horseIdReferences.getOwner());
         return newHorse;
+    }
+
+    /**
+     * Maps a horse DTO with id references to a pseudo recursive DTO
+     *
+     * @param horseDtoIdReferences The DTO with id references to convert
+     * @return A recursive horse DTO representing the given ID reference DTO
+     */
+    public HorseDto idReferenceDtoToDto(HorseDtoIdReferences horseDtoIdReferences) {
+        return new HorseDto(
+                horseDtoIdReferences.id(),
+                horseDtoIdReferences.name(),
+                horseDtoIdReferences.description(),
+                horseDtoIdReferences.birthdate(),
+                horseDtoIdReferences.sex(),
+                horseDtoIdReferences.ownerId() == null ? null : new OwnerDto(horseDtoIdReferences.ownerId(), null, null, null),
+                horseDtoIdReferences.motherId() == null ? null :new HorseDto(horseDtoIdReferences.motherId(), null, null, null, null, null, null, null),
+                horseDtoIdReferences.fatherId() == null ? null :new HorseDto(horseDtoIdReferences.fatherId(), null, null, null, null, null, null, null)
+        );
+    }
+
+    /**
+     * Maps a recursive horse DTO to a DTO with id references
+     *
+     * @param horseDto The recursive DTO to convert
+     * @return A DTO with id references representing the given recursive DTO
+     */
+    public HorseDtoIdReferences recursiveDtoToReferenceIdDto(HorseDto horseDto) {
+        return new HorseDtoIdReferences(
+                horseDto.id(),
+                horseDto.name(),
+                horseDto.description(),
+                horseDto.birthdate(),
+                horseDto.sex(),
+                horseDto.owner() == null ? null : horseDto.owner().id(),
+                horseDto.mother() == null ? null : horseDto.mother().id(),
+                horseDto.father() == null ? null : horseDto.father().id()
+        );
     }
 }

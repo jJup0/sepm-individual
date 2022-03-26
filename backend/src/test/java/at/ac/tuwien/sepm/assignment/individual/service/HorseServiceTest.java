@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.assignment.individual.service;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseDtoIdReferences;
 import at.ac.tuwien.sepm.assignment.individual.dto.OwnerDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 
@@ -55,16 +56,16 @@ public class HorseServiceTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void addValidHorses() throws Exception {
 
-        HorseDto newHorseDto1 = new HorseDto(null, "test horse 1", null, LocalDate.now(), HorseBiologicalGender.female, null, null, null);
+        HorseDtoIdReferences newHorseDto1 = new HorseDtoIdReferences(null, "test horse 1", null, LocalDate.now(), HorseBiologicalGender.female, null, null, null);
         Horse addedHorse1 = horseService.addHorse(newHorseDto1);
         long firstId = addedHorse1.getId();
         assertThat(addedHorse1.getId()).isGreaterThan(0);
 
-        HorseDto newHorseDto2 = new HorseDto(null, "test horse 1", null, LocalDate.now(), HorseBiologicalGender.female, null, null, null);
+        HorseDtoIdReferences newHorseDto2 = new HorseDtoIdReferences(null, "test horse 1", null, LocalDate.now(), HorseBiologicalGender.female, null, null, null);
         Horse addedHorse2 = horseService.addHorse(newHorseDto2);
         assertThat(addedHorse2.getId()).isEqualTo(firstId + 1);
 
-        HorseDto newHorseDto3 = new HorseDto(100L, "test horse 1", null, LocalDate.now(), HorseBiologicalGender.male, null, null, null);
+        HorseDtoIdReferences newHorseDto3 = new HorseDtoIdReferences(100L, "test horse 1", null, LocalDate.now(), HorseBiologicalGender.male, null, null, null);
         Horse addedHorse3 = horseService.addHorse(newHorseDto3);
         assertThat(addedHorse3.getId()).isEqualTo(firstId + 2);
 
@@ -77,12 +78,12 @@ public class HorseServiceTest {
     @Test
     public void addInvalidHorses() throws Exception {
 
-        HorseDto[] missingAttributeHorses = {
-                new HorseDto(null, null, null, LocalDate.now(), HorseBiologicalGender.male, null, null, null),
-                new HorseDto(null, "1", null, null, HorseBiologicalGender.male, null, null, null),
-                new HorseDto(null, "2", null, LocalDate.now(), null, null, null, null)};
+        HorseDtoIdReferences[] missingAttributeHorses = {
+                new HorseDtoIdReferences(null, null, null, LocalDate.now(), HorseBiologicalGender.male, null, null, null),
+                new HorseDtoIdReferences(null, "1", null, null, HorseBiologicalGender.male, null, null, null),
+                new HorseDtoIdReferences(null, "2", null, LocalDate.now(), null, null, null, null)};
 
-        for (HorseDto incompleteHorse : missingAttributeHorses) {
+        for (HorseDtoIdReferences incompleteHorse : missingAttributeHorses) {
             assertThatThrownBy(() -> {
                 horseService.addHorse(incompleteHorse);
             }).isInstanceOf(MissingAttributeException.class)
@@ -97,7 +98,7 @@ public class HorseServiceTest {
 
         Horse oldWendy = horseService.getHorse(-1);
 
-        HorseDto newWendyRequestDto = new HorseDto(-1L, "not wendy", null, oldWendy.getBirthdate().plusDays(1), HorseBiologicalGender.female, null, null, null);
+        HorseDtoIdReferences newWendyRequestDto = new HorseDtoIdReferences(-1L, "not wendy", null, oldWendy.getBirthdate().plusDays(1), HorseBiologicalGender.female, null, null, null);
         Horse newWendy = horseService.editHorse(newWendyRequestDto);
 
         assertThat(newWendy.getName()).isEqualTo("not wendy");
@@ -109,7 +110,7 @@ public class HorseServiceTest {
         assertThat(newWendy.getOwner()).isNotEqualTo(oldWendy.getOwner());
 
         // Clean up
-        horseService.editHorse(horseMapper.entityToDto(oldWendy));
+        horseService.editHorse(horseMapper.recursiveDtoToReferenceIdDto(horseMapper.entityToDto(oldWendy)));
         assertThat(horseService.getHorse(oldWendy.getId()).getName()).isEqualTo(oldWendy.getName());
     }
 
@@ -128,14 +129,14 @@ public class HorseServiceTest {
         HorseDto dMother = horseMapper.entityToDto(dakota.getMother());
         HorseDto dFather = horseMapper.entityToDto(dakota.getFather());
 
-        HorseDto[] editRequestsIncomplete = {
-                new HorseDto(null, dName, dDesc, dBday, dSex, dOwner, dMother, dFather),
-                new HorseDto(dId, null, dDesc, dBday, dSex, dOwner, dMother, dFather),
-                new HorseDto(dId, dName, dDesc, null, dSex, dOwner, dMother, dFather),
-                new HorseDto(dId, dName, dDesc, dBday, null, dOwner, dMother, dFather)
+        HorseDtoIdReferences[] editRequestsIncomplete = {
+                new HorseDtoIdReferences(null, dName, dDesc, dBday, dSex, dOwner.id(), dMother.id(), dFather.id()),
+                new HorseDtoIdReferences(dId, null, dDesc, dBday, dSex, dOwner.id(), dMother.id(), dFather.id()),
+                new HorseDtoIdReferences(dId, dName, dDesc, null, dSex, dOwner.id(), dMother.id(), dFather.id()),
+                new HorseDtoIdReferences(dId, dName, dDesc, dBday, null, dOwner.id(), dMother.id(), dFather.id())
         };
 
-        for (HorseDto incompleteHorse : editRequestsIncomplete) {
+        for (HorseDtoIdReferences incompleteHorse : editRequestsIncomplete) {
             assertThatThrownBy(() -> {
                 horseService.editHorse(incompleteHorse);
             }).isInstanceOf(MissingAttributeException.class)
@@ -149,9 +150,9 @@ public class HorseServiceTest {
 
         LocalDate parentBirthday = LocalDate.of(2000, 1, 1);
 
-        Horse mother = horseService.addHorse(new HorseDto(null, "Mother", null, parentBirthday, HorseBiologicalGender.female, null, null, null));
-        Horse father = horseService.addHorse(new HorseDto(null, "Father", null, parentBirthday, HorseBiologicalGender.male, null, null, null));
-        Horse child = horseService.addHorse(new HorseDto(null, "Child", null, parentBirthday.plusYears(1), HorseBiologicalGender.male, null, horseMapper.entityToDto(mother), horseMapper.entityToDto(father)));
+        Horse mother = horseService.addHorse(new HorseDtoIdReferences(null, "Mother", null, parentBirthday, HorseBiologicalGender.female, null, null, null));
+        Horse father = horseService.addHorse(new HorseDtoIdReferences(null, "Father", null, parentBirthday, HorseBiologicalGender.male, null, null, null));
+        Horse child = horseService.addHorse(new HorseDtoIdReferences(null, "Child", null, parentBirthday.plusYears(1), HorseBiologicalGender.male, null, mother.getId(), father.getId()));
 
         // For testing purposes entities will for a short time not actually be in the database
         // Parent tests:
@@ -160,7 +161,7 @@ public class HorseServiceTest {
             // Birthdate:
             parent.setBirthdate(parentBirthday.plusYears(2));
             assertThatThrownBy(() -> {
-                horseService.editHorse(horseMapper.entityToDto(parent));
+                horseService.editHorse(horseMapper.recursiveDtoToReferenceIdDto(horseMapper.entityToDto(parent)));
             }).isInstanceOf(ConstraintViolation.class).hasMessageEndingWith("new birthdate can not be later than birthdate of any child");
             parent.setBirthdate(parentBirthday.plusYears(-2));
 
@@ -169,7 +170,7 @@ public class HorseServiceTest {
             HorseBiologicalGender newSex = parent == mother ? HorseBiologicalGender.male : HorseBiologicalGender.female;
             parent.setSex(newSex);
             assertThatThrownBy(() -> {
-                horseService.editHorse(horseMapper.entityToDto(parent));
+                horseService.editHorse(horseMapper.recursiveDtoToReferenceIdDto(horseMapper.entityToDto(parent)));
             }).isInstanceOf(ConstraintViolation.class).hasMessageEndingWith("sex can not be changed if the horse has children");
             parent.setSex(oldSex);
         }
@@ -178,19 +179,19 @@ public class HorseServiceTest {
         // Birthdate
         child.setBirthdate(parentBirthday.plusYears(-2));
         assertThatThrownBy(() -> {
-            horseService.editHorse(horseMapper.entityToDto(child));
+            horseService.editHorse(horseMapper.recursiveDtoToReferenceIdDto(horseMapper.entityToDto(child)));
         }).isInstanceOf(ConstraintViolation.class).hasMessageMatching(".*[mother|father] has to be older");
         child.setBirthdate(parentBirthday.plusYears(2));
 
         // Assign wrong parent:
         child.setMother(father);
         assertThatThrownBy(() -> {
-            horseService.editHorse(horseMapper.entityToDto(child));
+            horseService.editHorse(horseMapper.recursiveDtoToReferenceIdDto(horseMapper.entityToDto(child)));
         }).isInstanceOf(ConstraintViolation.class).hasMessageEndingWith("mother has to be female");
         child.setMother(mother);
         child.setFather(mother);
         assertThatThrownBy(() -> {
-            horseService.editHorse(horseMapper.entityToDto(child));
+            horseService.editHorse(horseMapper.recursiveDtoToReferenceIdDto(horseMapper.entityToDto(child)));
         }).isInstanceOf(ConstraintViolation.class).hasMessageEndingWith("father has to be male");
         child.setFather(father);
 
@@ -204,7 +205,7 @@ public class HorseServiceTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void deleteHorse() throws Exception {
         Horse wendy = horseService.getHorse(-1);
-        Horse wendyClone = horseService.addHorse(horseMapper.entityToDto(wendy));
+        Horse wendyClone = horseService.addHorse(horseMapper.recursiveDtoToReferenceIdDto(horseMapper.entityToDto(wendy)));
 
         horseService.deleteHorse(wendyClone.getId());
         assertThat(horseService.allHorses().size()).isEqualTo(TEST_DATA_SIZE);

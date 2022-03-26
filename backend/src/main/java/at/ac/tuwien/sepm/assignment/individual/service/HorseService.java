@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.assignment.individual.service;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.DirtyHorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseDtoIdReferences;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.exception.*;
 
@@ -57,7 +58,7 @@ public interface HorseService {
      * @throws MissingAttributeException if some properties required for a horse are missing
      * @throws ServiceException          if some internal error occurs in the database
      */
-    Horse addHorse(HorseDto horseDto) throws MissingAttributeException, ServiceException, ConstraintViolation, NotFoundException;
+    Horse addHorse(HorseDtoIdReferences horseDto) throws MissingAttributeException, ServiceException, ConstraintViolation, NotFoundException;
 
     /**
      * Edits a horse according to the ID given in the horseDto.
@@ -70,7 +71,7 @@ public interface HorseService {
      * @throws ServiceException          if some internal error occurs in the database
      * @throws NotFoundException         if the ID could not be found in the database
      */
-    Horse editHorse(HorseDto horseDto) throws MissingAttributeException, ConstraintViolation, NotFoundException, ServiceException;
+    Horse editHorse(HorseDtoIdReferences horseDto) throws MissingAttributeException, ConstraintViolation, NotFoundException, ServiceException;
 
     /**
      * Deletes a horse from the database. If horse not in the database, nothing happens.

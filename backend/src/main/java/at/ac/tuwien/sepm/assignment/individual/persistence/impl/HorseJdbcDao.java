@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.assignment.individual.persistence.impl;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseDtoIdReferences;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.entity.HorseIdReferences;
@@ -37,8 +38,8 @@ public class HorseJdbcDao implements HorseDao {
     private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
     private static final String SQL_GET_RECURSIVE_BASE = "" +
             "WITH RECURSIVE hft(gen, id, name, description, birthdate, sex, ownerId, ownerFn, ownerLn, ownerE, mother, father) AS (\n" +
-            "        SELECT ?, h.id, h.name, h.description, h.birthdate, h.sex, o.id, o.firstName, o.lastName, o.email, h.mother, h.father\n" +
-            "        FROM " + TABLE_NAME + " h LEFT JOIN Owner o\n ON h.owner = o.id" +
+            "        SELECT %s ?, h.id, h.name, h.description, h.birthdate, h.sex, o.id, o.firstName, o.lastName, o.email, h.mother, h.father\n" +
+            "        FROM " + TABLE_NAME + " h LEFT JOIN Owner o ON h.owner = o.id\n" +
             "        %s\n" +
             "    UNION ALL\n" +
             "        SELECT hft.gen - 1, h.id, h.name, h.description, h.birthdate, h.sex, o.id, o.firstName, o.lastName, o.email, h.mother, h.father\n" +
@@ -66,7 +67,7 @@ public class HorseJdbcDao implements HorseDao {
         List<HorseIdReferences> horsesIdReferences;
         try {
             horsesIdReferences = jdbcTemplate.query(connection -> {
-                PreparedStatement ps = connection.prepareStatement(SQL_GET_RECURSIVE_BASE.formatted(""),
+                PreparedStatement ps = connection.prepareStatement(SQL_GET_RECURSIVE_BASE.formatted("", ""),
                         Statement.RETURN_GENERATED_KEYS);
                 ps.setLong(1, 0);
                 return ps;
@@ -79,43 +80,6 @@ public class HorseJdbcDao implements HorseDao {
         return constructRecursiveEntities(horsesIdReferences, null);
     }
 
-    // TODO javadoc
-    private List<Horse> constructRecursiveEntities(List<HorseIdReferences> horsesIdReferences, Long idToGet) {
-        HashMap<Long, HorseIdReferences> horsesIdRefMap = new HashMap<>();
-        for (HorseIdReferences horseIdRef : horsesIdReferences) {
-            horsesIdRefMap.put(horseIdRef.getId(), horseIdRef);
-        }
-        HashMap<Long, Horse> prevConstructed = new HashMap<>();
-        for (HorseIdReferences horseIdRef : horsesIdReferences) {
-            recHelper(horseIdRef.getId(), horsesIdRefMap, prevConstructed);
-        }
-        if ((idToGet) == null){
-            return new ArrayList<Horse>(prevConstructed.values());
-        } else{
-            return Arrays.asList(prevConstructed.get(idToGet));
-        }
-
-    }
-
-    // TODO javaDoc
-    private void recHelper(Long horseIdToConvert, HashMap<Long, HorseIdReferences> horsesIdRefMap, HashMap<Long, Horse> prevConstructed) {
-        if (!horsesIdRefMap.containsKey(horseIdToConvert)) {
-            prevConstructed.put(horseIdToConvert, null);
-        } else {
-            HorseIdReferences horseWithIdReferences = horsesIdRefMap.get(horseIdToConvert);
-            Horse horse = mapper.referenceEntityToRecurisve(horseWithIdReferences);
-            if (horseWithIdReferences.getMotherId() != null) {
-                recHelper(horseWithIdReferences.getMotherId(), horsesIdRefMap, prevConstructed);
-                horse.setMother(prevConstructed.get(horseWithIdReferences.getMotherId()));
-            }
-            if (horseWithIdReferences.getFatherId() != null) {
-                recHelper(horseWithIdReferences.getFatherId(), horsesIdRefMap, prevConstructed);
-                horse.setFather(prevConstructed.get(horseWithIdReferences.getFatherId()));
-            }
-            prevConstructed.put(horseIdToConvert, horse);
-        }
-    }
-
 
     @Override
     public Horse getHorse(long id) throws PersistenceException, NotFoundException {
@@ -124,7 +88,7 @@ public class HorseJdbcDao implements HorseDao {
         List<HorseIdReferences> horsesIdReferences;
         try {
             horsesIdReferences = jdbcTemplate.query(connection -> {
-                PreparedStatement ps = connection.prepareStatement(SQL_GET_RECURSIVE_BASE.formatted("WHERE h.id = ?"),
+                PreparedStatement ps = connection.prepareStatement(SQL_GET_RECURSIVE_BASE.formatted("", "WHERE h.id = ?"),
                         Statement.RETURN_GENERATED_KEYS);
                 ps.setLong(1, 1);
                 ps.setLong(2, id);
@@ -149,7 +113,7 @@ public class HorseJdbcDao implements HorseDao {
         List<HorseIdReferences> horsesIdReferences;
         try {
             horsesIdReferences = jdbcTemplate.query(connection -> {
-                PreparedStatement ps = connection.prepareStatement(SQL_GET_RECURSIVE_BASE.formatted("WHERE mother = ? OR father = ?"),
+                PreparedStatement ps = connection.prepareStatement(SQL_GET_RECURSIVE_BASE.formatted("", "WHERE mother = ? OR father = ?"),
                         Statement.RETURN_GENERATED_KEYS);
                 ps.setLong(1, 0);
                 ps.setLong(2, id);
@@ -164,7 +128,7 @@ public class HorseJdbcDao implements HorseDao {
     }
 
     @Override
-    public Horse addHorse(HorseDto horseDto) throws PersistenceException {
+    public Horse addHorse(HorseDtoIdReferences horseDto) throws PersistenceException {
         LOGGER.trace("addHorse({}) called", horseDto);
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -172,30 +136,33 @@ public class HorseJdbcDao implements HorseDao {
             jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(SQL_INSERT,
                         Statement.RETURN_GENERATED_KEYS);
-                fillStandardPreparedStatement(horseDto, ps);
+                fillStandardPreparedStatement(mapper.idReferenceDtoToDto(horseDto), ps);
                 return ps;
             }, keyHolder);
         } catch (DataAccessException e) {
             throw new PersistenceException("Error adding horse", e);
         }
 
-        Horse addedHorse = mapper.dtoToEntity(horseDto);
-        assert (keyHolder.getKeys() != null);
 
-        addedHorse.setId((long) keyHolder.getKeys().get("id"));
-        return addedHorse;
+        assert (keyHolder.getKeys() != null);
+        try {
+            return getHorse((long)keyHolder.getKeys().get("id"));
+        } catch (NotFoundException e) {
+            throw new PersistenceException("Error adding horse", e);
+        }
+
     }
 
 
     @Override
-    public Horse editHorse(HorseDto horseDto) throws PersistenceException, NotFoundException {
+    public Horse editHorse(HorseDtoIdReferences horseDto) throws PersistenceException, NotFoundException {
         LOGGER.trace("editHorse({}) called", horseDto);
 
         final int affectedRows;
         try {
             affectedRows = jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(SQL_UPDATE);
-                fillStandardPreparedStatement(horseDto, ps);
+                fillStandardPreparedStatement(mapper.idReferenceDtoToDto(horseDto), ps);
                 ps.setLong(8, horseDto.id());
                 return ps;
             });
@@ -205,8 +172,8 @@ public class HorseJdbcDao implements HorseDao {
         if (affectedRows != 1) {
             throw new NotFoundException("Could not edit horse id(" + horseDto.id() + "), not found");
         }
-        return mapper.dtoToEntity(horseDto);
 
+        return getHorse(horseDto.id());
     }
 
     @Override
@@ -255,14 +222,10 @@ public class HorseJdbcDao implements HorseDao {
             }
         }
 
-        List<HorseIdReferences> horsesIdReferences;
-        // Bulky code because SQL_SEARCH_QUERY has to be final in lambda
-        String limitStr = "";
-        if (horseSearchDto.limit() != null) {
-            limitStr = " LIMIT + " + horseSearchDto.limit() + ";";
-        }
-        String SQL_SEARCH_QUERY = SQL_GET_RECURSIVE_BASE.formatted("WHERE " + String.join(" AND ", sqlSearchParams) + limitStr);
+        String limitStr = horseSearchDto.limit() == null ? "" : "TOP " + horseSearchDto.limit();
+        String SQL_SEARCH_QUERY = SQL_GET_RECURSIVE_BASE.formatted(limitStr, "WHERE " + String.join(" AND ", sqlSearchParams));
 
+        List<HorseIdReferences> horsesIdReferences;
         try {
             horsesIdReferences = jdbcTemplate.query(connection -> {
                 PreparedStatement ps = connection.prepareStatement(SQL_SEARCH_QUERY);
@@ -305,7 +268,7 @@ public class HorseJdbcDao implements HorseDao {
         List<HorseIdReferences> horsesIdReferences;
         try {
             horsesIdReferences = jdbcTemplate.query(connection -> {
-                PreparedStatement ps = connection.prepareStatement(SQL_GET_RECURSIVE_BASE.formatted("WHERE h.id = ?"));
+                PreparedStatement ps = connection.prepareStatement(SQL_GET_RECURSIVE_BASE.formatted("", "WHERE h.id = ?"));
                 ps.setLong(1, ancestorDepth);
                 ps.setLong(2, id);
                 LOGGER.debug("Getting family tree of horse with id(" + id + "): " + ps.toString());
@@ -322,7 +285,13 @@ public class HorseJdbcDao implements HorseDao {
         return horses.get(0);
     }
 
-    // TODO javaDoc
+    /**
+     * Maps a result set to a horse entity with number references to parents
+     * @param result Result set given to convert
+     * @param rowNum The number of the row
+     * @return A horse entity with parents referenced by ids
+     * @throws SQLException if some unexpected error occurs getting column values from the result set
+     */
     private HorseIdReferences mapHorseJoinedWithOwnerRow(ResultSet result, int rowNum) throws SQLException {
         LOGGER.trace("mapHorseRow() called");
         HorseIdReferences horse = new HorseIdReferences();
@@ -349,6 +318,55 @@ public class HorseJdbcDao implements HorseDao {
 
         return horse;
     }
+
+    /**
+     * Turns a list of horse entities with parents as ids into recursive entities.
+     * All parents must already be in the list.
+     * @param horsesIdReferences A list of horse entities with parents as ids
+     * @param idToGet The id of the horse of interest, null if every horse is needed
+     * @return A list of horses of interest as recursive entities
+     */
+    private List<Horse> constructRecursiveEntities(List<HorseIdReferences> horsesIdReferences, Long idToGet) {
+        HashMap<Long, HorseIdReferences> horsesIdRefMap = new HashMap<>();
+        for (HorseIdReferences horseIdRef : horsesIdReferences) {
+            horsesIdRefMap.put(horseIdRef.getId(), horseIdRef);
+        }
+        HashMap<Long, Horse> prevConstructed = new HashMap<>();
+        for (HorseIdReferences horseIdRef : horsesIdReferences) {
+            recHelper(horseIdRef.getId(), horsesIdRefMap, prevConstructed);
+        }
+        if ((idToGet) == null){
+            return new ArrayList<Horse>(prevConstructed.values());
+        } else{
+            return Arrays.asList(prevConstructed.get(idToGet));
+        }
+
+    }
+
+    /**
+     * A helper function for converting horse entities with parent ids to recursive entities.
+     * @param horseIdToConvert ID of the horse which is to be converted
+     * @param horsesIdRefMap A mapping of ID -> horseWithParentIDs
+     * @param prevConstructed A mapping of ID -> recursiveHorseEntities (that have already been constructed in this method previously)
+     */
+    private void recHelper(Long horseIdToConvert, HashMap<Long, HorseIdReferences> horsesIdRefMap, HashMap<Long, Horse> prevConstructed) {
+        if (!horsesIdRefMap.containsKey(horseIdToConvert)) {
+            prevConstructed.put(horseIdToConvert, null);
+        } else {
+            HorseIdReferences horseWithIdReferences = horsesIdRefMap.get(horseIdToConvert);
+            Horse horse = mapper.referenceEntityToRecurisve(horseWithIdReferences);
+            if (horseWithIdReferences.getMotherId() != null) {
+                recHelper(horseWithIdReferences.getMotherId(), horsesIdRefMap, prevConstructed);
+                horse.setMother(prevConstructed.get(horseWithIdReferences.getMotherId()));
+            }
+            if (horseWithIdReferences.getFatherId() != null) {
+                recHelper(horseWithIdReferences.getFatherId(), horsesIdRefMap, prevConstructed);
+                horse.setFather(prevConstructed.get(horseWithIdReferences.getFatherId()));
+            }
+            prevConstructed.put(horseIdToConvert, horse);
+        }
+    }
+
 
 
     /**

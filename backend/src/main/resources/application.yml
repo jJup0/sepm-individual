@@ -1,6 +1,6 @@
 logging:
   level:
-    root: DEBUG
+    root: INFO
   file:
     name: ./log/wendys-friends.log
 spring:

@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.assignment.individual.persistence;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseDtoIdReferences;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
@@ -70,7 +71,7 @@ public interface HorseDao {
      * @return An entity representation of the horse DTO including an ID
      * @throws PersistenceException if some internal error occurs in the database
      */
-    Horse addHorse(HorseDto horseDto) throws PersistenceException;
+    Horse addHorse(HorseDtoIdReferences horseDto) throws PersistenceException;
 
     /**
      * Edits a horse according to the ID given in the horseDto.
@@ -81,7 +82,7 @@ public interface HorseDao {
      * @throws PersistenceException if some internal error occurs in the database
      * @throws NotFoundException    if the ID could not be found in the database
      */
-    Horse editHorse(HorseDto horseDto) throws PersistenceException, NotFoundException;
+    Horse editHorse(HorseDtoIdReferences horseDto) throws PersistenceException, NotFoundException;
 
     /**
      * Deletes a horse from the database. If horse not in the database, nothing happens.

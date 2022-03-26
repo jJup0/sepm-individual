@@ -5,6 +5,7 @@ import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { Horse } from "../dto/horse";
 import { HorseSearchDto } from "../dto/horseSearchDto";
+import { HorseIdReferences } from "../dto/horseIdReferences";
 
 const baseUri = environment.backendUrl + "/horses";
 
@@ -36,11 +37,11 @@ export class HorseService {
     return this.http.get<Horse>(baseUri + `/familytree/${id}?d=${generations}`);
   }
 
-  updateHorse(horse: Horse): Observable<Horse> {
+  updateHorse(horse: HorseIdReferences): Observable<Horse> {
     return this.http.put<Horse>(baseUri, horse, this.httpOptions);
   }
 
-  addHorse(horse: Horse): Observable<Horse> {
+  addHorse(horse: HorseIdReferences): Observable<Horse> {
     return this.http.post<Horse>(baseUri, horse, this.httpOptions);
   }
 

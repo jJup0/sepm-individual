@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.assignment.individual.persistence;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseDtoIdReferences;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 
 import java.time.LocalDate;
@@ -42,7 +43,7 @@ public class HorseDaoTest {
 
     @Test
     public void addHorseValid() throws Exception{
-        HorseDto newHorseDto = new HorseDto(null, "test horse 1", "test description 1", LocalDate.now(), HorseBiologicalGender.male, null, null, null);
+        HorseDtoIdReferences newHorseDto = new HorseDtoIdReferences(null, "test horse 1", "test description 1", LocalDate.now(), HorseBiologicalGender.male, null, null, null);
         Horse addedHorse = horseDao.addHorse(newHorseDto);
         assertThat(addedHorse.getId()).isGreaterThan(0);
 
@@ -56,17 +57,17 @@ public class HorseDaoTest {
     public void editHorseValid() throws Exception {
         Horse wendy = horseDao.getHorse(-1);
         assertThat(wendy.getName()).isEqualTo("Wendy");
-        HorseDto newWendyDto = new HorseDto(-1L, "not wendy", "test description 1", LocalDate.now(), HorseBiologicalGender.female, null, null, null);
+        HorseDtoIdReferences newWendyDto = new HorseDtoIdReferences(-1L, "not wendy", "test description 1", LocalDate.now(), HorseBiologicalGender.female, null, null, null);
         Horse newWendy = horseDao.editHorse(newWendyDto);
         assertThat(newWendy.getName()).isEqualTo("not wendy");
 
         // Clean up
-        horseDao.editHorse(mapper.entityToDto(wendy));
+        horseDao.editHorse(mapper.recursiveDtoToReferenceIdDto(mapper.entityToDto(wendy)));
     }
 
     @Test
     public void editHorseNonExistent() throws Exception {
-        HorseDto newWendyDto = new HorseDto(-101L, "not wendy", "test description 1", LocalDate.now(), HorseBiologicalGender.female, null, null, null);
+        HorseDtoIdReferences newWendyDto = new HorseDtoIdReferences(-101L, "not wendy", "test description 1", LocalDate.now(), HorseBiologicalGender.female, null, null, null);
         assertThatThrownBy(() -> {
             Horse newWendy = horseDao.editHorse(newWendyDto);
         }).isInstanceOf(NotFoundException.class);

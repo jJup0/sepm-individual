@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.assignment.individual.service.impl;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.DirtyHorseSearchDto;
+import at.ac.tuwien.sepm.assignment.individual.dto.HorseDtoIdReferences;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
 import at.ac.tuwien.sepm.assignment.individual.enums.HorseBiologicalGender;
@@ -41,7 +42,7 @@ public class HorseServiceImpl implements HorseService {
     }
 
     @Override
-    public Horse addHorse(HorseDto horseDto) throws MissingAttributeException, ServiceException, ConstraintViolation, NotFoundException {
+    public Horse addHorse(HorseDtoIdReferences horseDto) throws MissingAttributeException, ServiceException, ConstraintViolation, NotFoundException {
         LOGGER.trace("addHorse({}) called", horseDto);
 
         try {
@@ -70,7 +71,7 @@ public class HorseServiceImpl implements HorseService {
     }
 
     @Override
-    public Horse editHorse(HorseDto horseDto) throws MissingAttributeException, ConstraintViolation, NotFoundException, ServiceException {
+    public Horse editHorse(HorseDtoIdReferences horseDto) throws MissingAttributeException, ConstraintViolation, NotFoundException, ServiceException {
         LOGGER.trace("editHorse({}) called", horseDto);
 
         try {

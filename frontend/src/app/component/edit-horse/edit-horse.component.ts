@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
 import { Horse } from "src/app/dto/horse";
+import { dtoToIdReferences } from "src/app/dto/horseDTOmapper";
 import { HorseService } from "src/app/service/horse.service";
 import { UserNotificationService } from "src/app/service/user-notification.service";
 import { HorseFormType } from "src/app/types/horseFormTypeEnum";
@@ -47,6 +48,6 @@ export class EditHorseComponent implements OnInit {
 
   save(horse: Horse): void {
     this.horse = horse;
-    this.horseService.updateHorse(this.horse).subscribe();
+    this.horseService.updateHorse(dtoToIdReferences(this.horse)).subscribe();
   }
 }

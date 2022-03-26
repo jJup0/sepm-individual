@@ -6,6 +6,7 @@ import { HorseFormType } from "src/app/types/horseFormTypeEnum";
 import { Subject } from "rxjs";
 import { UserNotificationService } from "src/app/service/user-notification.service";
 import { UserNotification } from "src/app/types/responseMessage";
+import { dtoToIdReferences } from "src/app/dto/horseDTOmapper";
 
 @Component({
   selector: "app-add-horse",
@@ -44,7 +45,7 @@ export class AddHorseComponent implements OnInit {
   }
 
   postHorse(): void {
-    this.service.addHorse(this.horse).subscribe({
+    this.service.addHorse(dtoToIdReferences(this.horse)).subscribe({
       next: (horse) => {
         this.userNotificationService.addNotification({
           message: 'Horse "' + horse.name + '" successfully added',

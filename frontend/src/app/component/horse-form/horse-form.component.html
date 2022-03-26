@@ -1,7 +1,7 @@
 <p *ngIf="!horse">loading horse...</p>
 <form #horseForm="ngForm" *ngIf="horse">
   <fieldset [disabled]="formType === 'detail'">
-    <label for="name">Name {{ formType === "search" ? "" : "(required)" }}</label>
+    <label for="name">Name {{ formType === "edit" || formType === "add" ? "(required)": "" }}</label>
     <input type="text" class="form-control" id="name2" [required]="formType !== 'search'" [(ngModel)]="horse.name"
       name="name" #name="ngModel" placeholder="Name" />
     <!-- <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
@@ -15,7 +15,7 @@
     </div>
 
     <div class="form-group">
-      <label for="birthdate">Birthdate {{ formType === "search" ? "(born after)" : "(required)" }}</label>
+      <label for="birthdate">Birthdate  {{ formType === "edit" || formType === "add" ? "(required)": (formType === "search" ? "(born after)" : "" )}}</label>
       <input #birthdateIdentifier type="date" class="form-control" id="birthdate" name="birthdate"
         [(ngModel)]="horse.birthdate" [max]="todaysDateISO()" [required]="formType !== 'search'" />
     </div>
