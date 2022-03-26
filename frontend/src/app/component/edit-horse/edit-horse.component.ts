@@ -28,6 +28,10 @@ export class EditHorseComponent implements OnInit {
     const id = Number(this.route.snapshot.paramMap.get("id"));
     this.horseService.getHorse(id).subscribe({
       next: (horse) => {
+        this.userNotificationService.addNotification({
+          message: "Succesfully updated horse!",
+          type: "success",
+        });
         this.horse = horse;
       },
       error: (error) => {

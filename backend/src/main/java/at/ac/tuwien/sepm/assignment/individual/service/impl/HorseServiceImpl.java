@@ -97,12 +97,11 @@ public class HorseServiceImpl implements HorseService {
         LOGGER.trace("searchHorses({}) called", dirtyHorseSearchDto);
 
         // Spring can somehow not convert to LocalDate when parameters are passed directly to DTO in the endpoint so validate them here:
-
         LocalDate cleanBornBefore = validator.validateDate(dirtyHorseSearchDto.bornBefore());
         LocalDate cleanBornAfter = validator.validateDate(dirtyHorseSearchDto.bornAfter());
         HorseBiologicalGender cleanHorseSex = validator.validateSex(dirtyHorseSearchDto.sex());
 
-        HorseSearchDto cleanSearchDto = new HorseSearchDto(dirtyHorseSearchDto.name(), dirtyHorseSearchDto.description(), cleanBornAfter, cleanBornBefore, cleanHorseSex, dirtyHorseSearchDto.ownerId(), 5 );
+        HorseSearchDto cleanSearchDto = new HorseSearchDto(dirtyHorseSearchDto.name(), dirtyHorseSearchDto.description(), cleanBornAfter, cleanBornBefore, cleanHorseSex, dirtyHorseSearchDto.ownerId(), dirtyHorseSearchDto.limit());
 
         try {
             return dao.searchHorses(cleanSearchDto);

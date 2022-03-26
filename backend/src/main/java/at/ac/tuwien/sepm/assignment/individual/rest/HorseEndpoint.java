@@ -72,11 +72,11 @@ public class HorseEndpoint {
         } catch (NotFoundException e) {
             LOGGER.error("Could not find horse with id(" + id + ")\n" + e.getMessage(), e);
 
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find horse with id(" + id + ")");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (ServiceException e) {
             LOGGER.error("Internal server error:\n" + e.getMessage(), e);
 
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error fetching horses with id(" + id + ")", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
 
@@ -100,11 +100,11 @@ public class HorseEndpoint {
         } catch (NotFoundException e) {
             LOGGER.error("Could not find horse with id(" + id + ")\n" + e.getMessage(), e);
 
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find horse with id(" + id + ")");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (ServiceException e) {
             LOGGER.error("getHorseFamilyTree() Internal server error:\n" + e.getMessage(), e);
 
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error fetching horse family tree with id(" + id + ")", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
 
@@ -121,15 +121,14 @@ public class HorseEndpoint {
 
         try {
             return service.searchHorses(dirtyHorseSearchDto).stream().map(mapper::entityToDto);
-        } catch (ServiceException e) {
-            LOGGER.error("searchHorses() Internal server error:\n" + e.getMessage(), e);
-
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error searching for horses", e);
         } catch (NotParsableValueException e) {
             LOGGER.error("searchHorses() Could not parse date:\n" + e.getMessage(), e);
 
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Error with date format", e);
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+        }catch (ServiceException e) {
+            LOGGER.error("searchHorses() Internal server error:\n" + e.getMessage(), e);
 
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
 
@@ -149,19 +148,19 @@ public class HorseEndpoint {
         } catch (MissingAttributeException e) {
             LOGGER.error("Horse missing required property: \n" + e.getMessage(), e);
 
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Horse missing required property", e);
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         } catch (ConstraintViolation e) {
             LOGGER.error("Horse parents or birthday violating constraints: \n" + e.getMessage(), e);
 
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Horse violating constraints", e);
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         } catch (NotFoundException e) {
             LOGGER.error("Horse parents not found: \n" + e.getMessage(), e);
 
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Horse parents not found", e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         } catch (ServiceException e) {
             LOGGER.error("addHorse() Internal server error:\n" + e.getMessage(), e);
 
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error searching for horses", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
 
@@ -184,19 +183,19 @@ public class HorseEndpoint {
         } catch (MissingAttributeException e) {
             LOGGER.error("Horse missing required property\n" + e.getMessage(), e);
 
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Horse missing required property", e);
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         } catch (ConstraintViolation e) {
             LOGGER.error("Illegal edit on horse sex, birthdate or parents\n" + e.getMessage(), e);
 
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Illegal edit on horse sex, birthdate or parents", e);
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         } catch (NotFoundException e) {
             LOGGER.error("Could not find horse with id(" + horseDto.id() + ")\n" + e.getMessage(), e);
 
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find horse with id(" + horseDto.id() + ")", e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         } catch (ServiceException e) {
             LOGGER.error("editHorse() Internal server error:\n" + e.getMessage(), e);
 
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error editing horse", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
 
