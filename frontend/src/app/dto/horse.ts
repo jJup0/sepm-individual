@@ -1,4 +1,4 @@
-import { HorseSex } from "./horseSexEnum";
+import { HorseSex } from "../types/horseSexEnum";
 import { Owner } from "./owner";
 
 export interface Horse {

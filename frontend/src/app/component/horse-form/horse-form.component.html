@@ -1,35 +1,42 @@
 <p *ngIf="!horse">loading horse...</p>
 <form #horseForm="ngForm" *ngIf="horse">
   <fieldset [disabled]="formType === 'detail'">
-    <label for="name">Name</label>
-    <input type="text" class="form-control" id="name" [required]="formType !== 'search'" [(ngModel)]="horse.name"
-      name="name" #name="ngModel" />
-    <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+    <label for="name">Name {{ formType === "search" ? "" : "(required)" }}</label>
+    <input type="text" class="form-control" id="name2" [required]="formType !== 'search'" [(ngModel)]="horse.name"
+      name="name" #name="ngModel" placeholder="Name" />
+    <!-- <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
       Name is required
-    </div>
+    </div> -->
 
     <div class="form-group">
       <label for="description">Description</label>
-      <input type="text" class="form-control" id="description" [(ngModel)]="horse.description" name="description" />
+      <input type="text" class="form-control" id="description" [(ngModel)]="horse.description" name="description"
+        placeholder="Description" />
     </div>
 
     <div class="form-group">
-      <label for="birthdate">Birthdate{{ formType === "search" ? " (born after)" : "" }}</label>
+      <label for="birthdate">Birthdate {{ formType === "search" ? "(born after)" : "(required)" }}</label>
       <input #birthdateIdentifier type="date" class="form-control" id="birthdate" name="birthdate"
-        [(ngModel)]="horse.birthdate" [max]="todaysDateISO()" required />
+        [(ngModel)]="horse.birthdate" [max]="todaysDateISO()" [required]="formType !== 'search'" />
     </div>
 
-    <label for="sexes-form-group">Sex</label>
+    <label for="sexes-form-group">Sex {{ formType === "search" ? "" : "(required)" }}</label>
     <div id="sexes-form-group" class="form-group radio-toolbar">
       <div *ngFor="let sex of SEXES" class="sexes-radio">
-        <input type="radio" [id]="sex + '-radio'" name="sexesradio" [value]="sex" [(ngModel)]="horse.sex" />
+        <input type="radio" [id]="sex + '-radio'" name="sexesradio" [value]="sex" [(ngModel)]="horse.sex"
+          [required]="formType !== 'search'" />
         <label [for]="sex + '-radio'" class="sexes-label">{{ sex | titlecase }}</label>
+      </div>
+      <div *ngIf="formType === 'search'" class="sexes-radio">
+        <input type="radio" id="either-sex-radio" name="sexesradio" [value]="null" selected="selected"
+          [(ngModel)]="horse.sex" />
+        <label for="either-sex-radio" class="sexes-label">Either</label>
       </div>
     </div>
 
     <app-owner-combo-box [ownedHorse]="horse" [formType]="formType" [currentOwner]="horse.owner"
-    (setOwnerEmitter)="setOwner($event)">
-  </app-owner-combo-box>
+      (setOwnerEmitter)="setOwner($event)">
+    </app-owner-combo-box>
 
     <fieldset id="parents-field-set" [hidden]=" formType === 'search'">
       <app-parent-combo-box parentSex="female" [childHorse]="horse" [formType]="formType" [parentObject]="horse.mother"
@@ -47,9 +54,6 @@
       {{ SUBMIT_BUTTON_TEXT }}
     </button>
 
-    <div *ngIf="horse && SUBMIT_SUCCESS_TEXT" [hidden]="!(submitted && horseForm.form.pristine)"
-      class="alert alert-success">
-      {{ SUBMIT_SUCCESS_TEXT }}
-    </div>
+
   </fieldset>
 </form>

@@ -1,11 +1,10 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { Location } from "@angular/common";
 
 import { Horse } from "src/app/dto/horse";
 import { HorseService } from "src/app/service/horse.service";
-import { sexes as HORSESEXES } from "src/app/dto/horseSexEnum";
-import { HorseFormType } from "src/app/dto/horseFormTypeEnum";
+import { UserNotificationService } from "src/app/service/user-notification.service";
+import { HorseFormType } from "src/app/types/horseFormTypeEnum";
 
 @Component({
   selector: "app-edit-horse",
@@ -18,7 +17,8 @@ export class EditHorseComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private horseService: HorseService
+    private horseService: HorseService,
+    private userNotificationService: UserNotificationService
   ) {}
 
   ngOnInit(): void {
@@ -26,8 +26,16 @@ export class EditHorseComponent implements OnInit {
   }
   getHorse(): void {
     const id = Number(this.route.snapshot.paramMap.get("id"));
-    this.horseService.getHorse(id).subscribe((horse) => {
-      this.horse = horse;
+    this.horseService.getHorse(id).subscribe({
+      next: (horse) => {
+        this.horse = horse;
+      },
+      error: (error) => {
+        this.userNotificationService.addNotification({
+          message: error.error.message,
+          type: "error",
+        });
+      },
     });
   }
 

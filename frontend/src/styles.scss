@@ -48,5 +48,10 @@ div.button-block button {
 
 select {
     min-width: 30%;
-    padding: 0.2em;
+    padding: 0.4em;
+    font-size: 1.15em;
+}
+
+select option, .form-group select{
+    font-size: 1.15em;
 }

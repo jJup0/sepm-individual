@@ -19,6 +19,7 @@ import { HorseFamilytreeComponent } from "./component/horse-familytree/horse-fam
 import { HorseFamilytreeRowComponent } from "./component/horse-familytree/horse-familytree-row/horse-familytree-row.component";
 import { ParentComboBoxComponent } from './component/horse-form/parent-combo-box/parent-combo-box.component';
 import { OwnerComboBoxComponent } from './component/horse-form/owner-combo-box/owner-combo-box.component';
+import { UserNotificationComponent } from './component/user-notification/user-notification.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { OwnerComboBoxComponent } from './component/horse-form/owner-combo-box/o
     HorseFamilytreeRowComponent,
     ParentComboBoxComponent,
     OwnerComboBoxComponent,
+    UserNotificationComponent,
   ],
   imports: [
     BrowserModule,

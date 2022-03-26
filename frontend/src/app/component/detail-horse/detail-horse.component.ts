@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Horse } from "src/app/dto/horse";
-import { HorseFormType } from "src/app/dto/horseFormTypeEnum";
+import { HorseFormType } from "src/app/types/horseFormTypeEnum";
 import { HorseService } from "src/app/service/horse.service";
+import { UserNotificationService } from "src/app/service/user-notification.service";
 
 @Component({
   selector: "app-detail-horse",
@@ -17,7 +18,8 @@ export class DetailHorseComponent implements OnInit {
   constructor(
     private service: HorseService,
     private route: ActivatedRoute,
-    private horseService: HorseService
+    private horseService: HorseService,
+    private userNotificationService: UserNotificationService
   ) {}
 
   ngOnInit(): void {
@@ -31,6 +33,12 @@ export class DetailHorseComponent implements OnInit {
           next: (horse) => {
             this.horse = horse;
           },
+        });
+      },
+      error: (error) => {
+        this.userNotificationService.addNotification({
+          message: error.error.message,
+          type: "error",
         });
       },
     });

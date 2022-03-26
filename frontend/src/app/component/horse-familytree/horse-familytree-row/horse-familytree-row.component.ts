@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Horse } from "src/app/dto/horse";
 import { HorseService } from "src/app/service/horse.service";
+import { UserNotificationService } from "src/app/service/user-notification.service";
 
 type ParentType = "mother" | "father";
 
@@ -18,7 +19,7 @@ export class HorseFamilytreeRowComponent implements OnInit {
 
   opened = false;
 
-  constructor(private service: HorseService) {}
+  constructor(private service: HorseService, private userNotificationService: UserNotificationService) {}
 
   ngOnInit(): void {}
 
@@ -27,7 +28,20 @@ export class HorseFamilytreeRowComponent implements OnInit {
   }
   deleteHorse() {
     if (this.horse) {
-      this.service.deleteHorse(this.horse.id).subscribe();
+      this.service.deleteHorse(this.horse.id).subscribe({
+        next: () => {
+          this.userNotificationService.addNotification({
+            message: 'Horse "' + this.horse.name + '" successfully deleted',
+            type: "success",
+          });
+        },
+        error: (error) => {
+          this.userNotificationService.addNotification({
+            message: error.error.message,
+            type: "error",
+          });
+        },
+      });
     }
     this.deletedParent.emit(this.horse);
     console.log("deleted " + this.horse.name);
@@ -38,10 +52,8 @@ export class HorseFamilytreeRowComponent implements OnInit {
     if (this.horse) {
       if (parentType === "mother") {
         this.horse.mother = null;
-      } else if (parentType === "father") {
+      } else  {
         this.horse.father = null;
-      } else {
-        // TODO gone completely wrong
       }
     }
   }

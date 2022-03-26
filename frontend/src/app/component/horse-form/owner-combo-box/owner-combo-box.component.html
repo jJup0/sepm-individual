@@ -15,7 +15,7 @@
     (input)="setOwner(ownerSelect.value)"
     *ngIf="formType !== 'detail'"
   >
-  <option [value]="null" selected>No Owner</option>
+  <option [value]="null" selected>{{formType === 'search' ? 'Any': 'No'}} Owner</option>
   <option *ngIf="currentOwner && searched === false" [value]="currentOwner | json" selected>
     {{ currentOwner.name }}
   </option>

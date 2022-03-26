@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Horse } from "src/app/dto/horse";
 import { HorseService } from "src/app/service/horse.service";
+import { UserNotificationService } from "src/app/service/user-notification.service";
 
 @Component({
   selector: "app-horse-familytree",
@@ -14,7 +15,8 @@ export class HorseFamilytreeComponent implements OnInit {
   generationsToLoad = 3;
   constructor(
     private route: ActivatedRoute,
-    private horseService: HorseService
+    private horseService: HorseService,
+    private userNotificationService: UserNotificationService
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +39,12 @@ export class HorseFamilytreeComponent implements OnInit {
               if (fromButton) {
                 this.reloaded = true;
               }
+            },
+            error: (error) => {
+              this.userNotificationService.addNotification({
+                message: error.error.message,
+                type: "error",
+              });
             },
           });
       },

@@ -7,9 +7,9 @@ import {
   switchMap,
 } from "rxjs";
 import { Horse } from "src/app/dto/horse";
-import { HorseFormType } from "src/app/dto/horseFormTypeEnum";
+import { HorseFormType } from "src/app/types/horseFormTypeEnum";
 import { HorseSearchDto } from "src/app/dto/horseSearchDto";
-import { HorseSex } from "src/app/dto/horseSexEnum";
+import { HorseSex } from "src/app/types/horseSexEnum";
 import { HorseService } from "src/app/service/horse.service";
 
 @Component({

@@ -7,7 +7,7 @@ import {
   switchMap,
 } from "rxjs";
 import { Horse } from "src/app/dto/horse";
-import { HorseFormType } from "src/app/dto/horseFormTypeEnum";
+import { HorseFormType } from "src/app/types/horseFormTypeEnum";
 import { HorseSearchDto } from "src/app/dto/horseSearchDto";
 import { Owner } from "src/app/dto/owner";
 import { OwnerSearchDto } from "src/app/dto/ownerSearchDto";

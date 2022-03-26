@@ -1,8 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { Horse } from "src/app/dto/horse";
-import { HorseFormType } from "src/app/dto/horseFormTypeEnum";
+import { HorseFormType } from "src/app/types/horseFormTypeEnum";
 import { HorseSearchDto } from "src/app/dto/horseSearchDto";
 import { HorseService } from "src/app/service/horse.service";
+import { UserNotificationService } from "src/app/service/user-notification.service";
 
 @Component({
   selector: "app-search-horse",
@@ -19,9 +20,11 @@ export class SearchHorseComponent implements OnInit {
     owner: null,
   };
   matchedHorses: Horse[] = [];
-  gotHorses = false;
 
-  constructor(private service: HorseService) {}
+  constructor(
+    private service: HorseService,
+    private userNotificationService: UserNotificationService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -36,13 +39,20 @@ export class SearchHorseComponent implements OnInit {
     };
 
     this.service.search(horseSearchDto).subscribe({
-      next: (data) => {
-        console.log("received horses", data);
-        this.matchedHorses = data;
-        this.gotHorses = true;
+      next: (horses) => {
+        if (horses.length === 0) {
+          this.userNotificationService.addNotification({
+            message: "Could not find any horses",
+            type: "warning",
+          });
+        }
+        this.matchedHorses = horses;
       },
       error: (error) => {
-        console.error("Error fetching horses", error.message);
+        this.userNotificationService.addNotification({
+          message: error.error.message,
+          type: "error",
+        });
       },
     });
   }

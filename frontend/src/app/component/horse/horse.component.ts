@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Horse } from "../../dto/horse";
 import { HorseService } from "src/app/service/horse.service";
+import { UserNotificationService } from "src/app/service/user-notification.service";
 
 @Component({
   selector: "app-horse",
@@ -10,9 +11,11 @@ import { HorseService } from "src/app/service/horse.service";
 export class HorseComponent implements OnInit {
   search = false;
   horses: Horse[];
-  error: string = null;
 
-  constructor(private service: HorseService) {}
+  constructor(
+    private service: HorseService,
+    private userNotificationService: UserNotificationService
+  ) {}
 
   ngOnInit(): void {
     this.reloadHorses();
@@ -25,17 +28,11 @@ export class HorseComponent implements OnInit {
         this.horses = data;
       },
       error: (error) => {
-        console.error("Error fetching horses", error.message);
-        this.showError("Could not fetch horses: " + error.message);
+        this.userNotificationService.addNotification({
+          message: error.error.message,
+          type: "error",
+        });
       },
     });
-  }
-
-  public vanishError(): void {
-    this.error = null;
-  }
-
-  private showError(msg: string) {
-    this.error = msg;
   }
 }

@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
 import { Horse } from "src/app/dto/horse";
-import { sexes } from "../../dto/horseSexEnum";
-import { HorseFormType } from "src/app/dto/horseFormTypeEnum";
+import { sexes } from "../../types/horseSexEnum";
+import { HorseFormType } from "src/app/types/horseFormTypeEnum";
 import {
   debounceTime,
   distinctUntilChanged,
@@ -37,21 +37,15 @@ export class HorseFormComponent implements OnInit {
   SUBMIT_BUTTON_TEXT: string;
   SUBMIT_SUCCESS_TEXT: string;
   submitted = false;
-  loadedMothers$!: Observable<Horse[]>;
-  loadedFathers$!: Observable<Horse[]>;
 
-  searchTerm: HorseSearchDto = {
+  parentSearchParameters: HorseSearchDto = {
     name: null,
     sex: null,
     bornBefore: null,
   };
 
-  private motherSearchTerms = new Subject<HorseSearchDto>();
-  private fatherSearchTerms = new Subject<HorseSearchDto>();
 
   constructor(
-    private route: ActivatedRoute,
-    private horseService: HorseService
   ) {}
 
   ngOnInit(): void {
@@ -74,26 +68,6 @@ export class HorseFormComponent implements OnInit {
         break;
     }
 
-    this.loadedMothers$ = this.motherSearchTerms.pipe(
-      // wait 300ms after each keystroke before considering the term
-      debounceTime(300),
-
-      // ignore new term if same as previous term
-      distinctUntilChanged(),
-
-      // switch to new search observable each time the term changes
-      switchMap((term: HorseSearchDto) => this.horseService.search(term))
-    );
-    this.loadedFathers$ = this.fatherSearchTerms.pipe(
-      // wait 300ms after each keystroke before considering the term
-      debounceTime(300),
-
-      // ignore new term if same as previous term
-      distinctUntilChanged(),
-
-      // switch to new search observable each time the term changes
-      switchMap((term: HorseSearchDto) => this.horseService.search(term))
-    );
   }
 
   submit() {

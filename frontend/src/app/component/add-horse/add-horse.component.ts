@@ -2,7 +2,10 @@ import { Component, OnInit } from "@angular/core";
 
 import { Horse } from "../../dto/horse";
 import { HorseService } from "src/app/service/horse.service";
-import { HorseFormType } from "src/app/dto/horseFormTypeEnum";
+import { HorseFormType } from "src/app/types/horseFormTypeEnum";
+import { Subject } from "rxjs";
+import { UserNotificationService } from "src/app/service/user-notification.service";
+import { UserNotification } from "src/app/types/responseMessage";
 
 @Component({
   selector: "app-add-horse",
@@ -13,18 +16,22 @@ export class AddHorseComponent implements OnInit {
   FORMTYPE: HorseFormType = "add";
   horse?: Horse;
 
-  constructor(private service: HorseService) {}
+  messagesSubject = new Subject<UserNotification>();
+
+  constructor(private service: HorseService, private userNotificationService: UserNotificationService) {}
 
   ngOnInit(): void {
     this.resetHorse();
   }
 
+  emitEventToChild() {}
+
   resetHorse() {
     this.horse = {
-      name: "Horse",
+      name: "",
       description: "",
-      birthdate: new Date().toISOString().slice(0,10),
-      sex: "female",
+      birthdate: new Date().toISOString().slice(0, 10),
+      sex: null,
       owner: null,
       mother: null,
       father: null,
@@ -34,17 +41,22 @@ export class AddHorseComponent implements OnInit {
   submit(horse: Horse): void {
     this.horse = horse;
     this.postHorse();
-    this.resetHorse();
   }
 
   postHorse(): void {
     this.service.addHorse(this.horse).subscribe({
-      next: (data) => {
-        console.log("added horse", data);
+      next: (horse) => {
+        this.userNotificationService.addNotification({
+          message: 'Horse "' + horse.name + '" successfully added',
+          type: "success",
+        });
+        this.resetHorse();
       },
       error: (error) => {
-        console.error("Error adding horse", error.message);
-        // TODO: show user
+        this.userNotificationService.addNotification({
+          message: error.error.message,
+          type: "error",
+        });
       },
     });
   }
