@@ -3,6 +3,8 @@ package at.ac.tuwien.sepm.assignment.individual.persistence.impl;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseSearchDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
+import at.ac.tuwien.sepm.assignment.individual.entity.HorseIdReferences;
+import at.ac.tuwien.sepm.assignment.individual.entity.Owner;
 import at.ac.tuwien.sepm.assignment.individual.enums.HorseBiologicalGender;
 import at.ac.tuwien.sepm.assignment.individual.exception.NotFoundException;
 import at.ac.tuwien.sepm.assignment.individual.exception.PersistenceException;
@@ -20,22 +22,29 @@ import org.springframework.stereotype.Repository;
 import java.lang.invoke.MethodHandles;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
-import static java.lang.Math.min;
 
 @Repository
 public class HorseJdbcDao implements HorseDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final String TABLE_NAME = "horse";
-    private static final String SQL_SELECT_ALL = "SELECT * FROM " + TABLE_NAME;
     private static final String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (name, description, birthdate, sex, owner, mother, father) VALUES (?, ?, ?, ?, ?, ?, ?);";
-    private static final String SQL_SELECT_ONE = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?;";
     private static final String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET name = ?, description = ?, birthdate = ?, sex = ?, owner = ?, mother = ?, father = ? WHERE id = ?";
     private static final String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
-    private static final String SQL_SEARCH_BASE = "SELECT * FROM " + TABLE_NAME + " WHERE ";
-    private static final String SQL_GET_CHILDREN = "SELECT * FROM " + TABLE_NAME + " WHERE mother = ? OR father = ?";
+    private static final String SQL_GET_RECURSIVE_BASE = "" +
+            "WITH RECURSIVE hft(gen, id, name, description, birthdate, sex, ownerId, ownerFn, ownerLn, ownerE, mother, father) AS (\n" +
+            "        SELECT ?, h.id, h.name, h.description, h.birthdate, h.sex, o.id, o.firstName, o.lastName, o.email, h.mother, h.father\n" +
+            "        FROM " + TABLE_NAME + " h LEFT JOIN Owner o\n ON h.owner = o.id" +
+            "        %s\n" +
+            "    UNION ALL\n" +
+            "        SELECT hft.gen - 1, h.id, h.name, h.description, h.birthdate, h.sex, o.id, o.firstName, o.lastName, o.email, h.mother, h.father\n" +
+            "        FROM (Horse h LEFT JOIN Owner o\n ON h.owner = o.id) JOIN hft ON (hft.mother = h.id OR hft.father = h.id)\n" +
+            "        WHERE hft.gen > 0\n" +
+            ") SELECT * FROM hft;";
 
     private static final String ESCAPE_CHAR = "!";
 
@@ -54,16 +63,56 @@ public class HorseJdbcDao implements HorseDao {
     @Override
     public List<Horse> getAll() throws PersistenceException {
         LOGGER.trace("getAll() called");
+        List<HorseIdReferences> horsesIdReferences;
         try {
-            return jdbcTemplate.query(SQL_SELECT_ALL, (resultSet, rowNum) ->
-                    mapHorsesRowParentDepth(resultSet, 1));
+            horsesIdReferences = jdbcTemplate.query(connection -> {
+                PreparedStatement ps = connection.prepareStatement(SQL_GET_RECURSIVE_BASE.formatted(""),
+                        Statement.RETURN_GENERATED_KEYS);
+                ps.setLong(1, 0);
+                return ps;
+            }, this::mapHorseJoinedWithOwnerRow);
+
         } catch (DataAccessException e) {
-            try {
-                handleDataAccessException(e, "error getting all horses");
-            } catch (NotFoundException ex) {
-                assert (false);
+            throw new PersistenceException("Error getting all horses", e);
+        }
+
+        return constructRecursiveEntities(horsesIdReferences, null);
+    }
+
+    // TODO javadoc
+    private List<Horse> constructRecursiveEntities(List<HorseIdReferences> horsesIdReferences, Long idToGet) {
+        HashMap<Long, HorseIdReferences> horsesIdRefMap = new HashMap<>();
+        for (HorseIdReferences horseIdRef : horsesIdReferences) {
+            horsesIdRefMap.put(horseIdRef.getId(), horseIdRef);
+        }
+        HashMap<Long, Horse> prevConstructed = new HashMap<>();
+        for (HorseIdReferences horseIdRef : horsesIdReferences) {
+            recHelper(horseIdRef.getId(), horsesIdRefMap, prevConstructed);
+        }
+        if ((idToGet) == null){
+            return new ArrayList<Horse>(prevConstructed.values());
+        } else{
+            return Arrays.asList(prevConstructed.get(idToGet));
+        }
+
+    }
+
+    // TODO javaDoc
+    private void recHelper(Long horseIdToConvert, HashMap<Long, HorseIdReferences> horsesIdRefMap, HashMap<Long, Horse> prevConstructed) {
+        if (!horsesIdRefMap.containsKey(horseIdToConvert)) {
+            prevConstructed.put(horseIdToConvert, null);
+        } else {
+            HorseIdReferences horseWithIdReferences = horsesIdRefMap.get(horseIdToConvert);
+            Horse horse = mapper.referenceEntityToRecurisve(horseWithIdReferences);
+            if (horseWithIdReferences.getMotherId() != null) {
+                recHelper(horseWithIdReferences.getMotherId(), horsesIdRefMap, prevConstructed);
+                horse.setMother(prevConstructed.get(horseWithIdReferences.getMotherId()));
             }
-            return null;
+            if (horseWithIdReferences.getFatherId() != null) {
+                recHelper(horseWithIdReferences.getFatherId(), horsesIdRefMap, prevConstructed);
+                horse.setFather(prevConstructed.get(horseWithIdReferences.getFatherId()));
+            }
+            prevConstructed.put(horseIdToConvert, horse);
         }
     }
 
@@ -71,27 +120,47 @@ public class HorseJdbcDao implements HorseDao {
     @Override
     public Horse getHorse(long id) throws PersistenceException, NotFoundException {
         LOGGER.trace("getHorse({}) called", id);
-        return getFamilyTreeOfHorse(id, 1);
+
+        List<HorseIdReferences> horsesIdReferences;
+        try {
+            horsesIdReferences = jdbcTemplate.query(connection -> {
+                PreparedStatement ps = connection.prepareStatement(SQL_GET_RECURSIVE_BASE.formatted("WHERE h.id = ?"),
+                        Statement.RETURN_GENERATED_KEYS);
+                ps.setLong(1, 1);
+                ps.setLong(2, id);
+                return ps;
+            }, this::mapHorseJoinedWithOwnerRow);
+
+        } catch (DataAccessException e) {
+            throw new PersistenceException("Error getting all horses", e);
+        }
+
+        List<Horse> result = constructRecursiveEntities(horsesIdReferences, id);
+        if (result.size() == 0) {
+            throw new NotFoundException("Could not find horse with id(" + id + ")");
+        }
+        return result.get(0);
     }
 
     @Override
     public List<Horse> getChildren(long id) throws PersistenceException, NotFoundException {
         LOGGER.trace("getChildren({}) called", id);
 
+        List<HorseIdReferences> horsesIdReferences;
         try {
-            return jdbcTemplate.query(connection -> {
-                PreparedStatement ps = connection.prepareStatement(SQL_GET_CHILDREN,
+            horsesIdReferences = jdbcTemplate.query(connection -> {
+                PreparedStatement ps = connection.prepareStatement(SQL_GET_RECURSIVE_BASE.formatted("WHERE mother = ? OR father = ?"),
                         Statement.RETURN_GENERATED_KEYS);
-                ps.setLong(1, id);
+                ps.setLong(1, 0);
                 ps.setLong(2, id);
+                ps.setLong(3, id);
                 return ps;
-            }, (resultSet, rowNum) ->
-                    mapHorsesRowParentDepth(resultSet, 0));
+            }, this::mapHorseJoinedWithOwnerRow);
         } catch (DataAccessException e) {
-            handleDataAccessException(e, "error getting all children");
-            assert (false);
-            return null;
+            throw new PersistenceException("Error getting all children", e);
         }
+        return constructRecursiveEntities(horsesIdReferences, null);
+
     }
 
     @Override
@@ -107,11 +176,12 @@ public class HorseJdbcDao implements HorseDao {
                 return ps;
             }, keyHolder);
         } catch (DataAccessException e) {
-            throw new PersistenceException("error adding horse", e);
+            throw new PersistenceException("Error adding horse", e);
         }
 
         Horse addedHorse = mapper.dtoToEntity(horseDto);
         assert (keyHolder.getKeys() != null);
+
         addedHorse.setId((long) keyHolder.getKeys().get("id"));
         return addedHorse;
     }
@@ -133,22 +203,24 @@ public class HorseJdbcDao implements HorseDao {
             throw new PersistenceException("error editing horse", e);
         }
         if (affectedRows != 1) {
-            throw new NotFoundException("Could not edit horse, id(" + horseDto.id() + ") not found");
+            throw new NotFoundException("Could not edit horse id(" + horseDto.id() + "), not found");
         }
         return mapper.dtoToEntity(horseDto);
 
     }
 
-    // TODO key not present?
     @Override
     public void deleteHorse(long id) {
         LOGGER.trace("deleteHorse({}) called", id);
 
-        jdbcTemplate.update(connection -> {
+        final int affectedRows = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(SQL_DELETE);
             ps.setLong(1, id);
             return ps;
         });
+        if (affectedRows == 0) {
+            LOGGER.info("No horse deleted, horse with id(" + id + ") not found");
+        }
     }
 
     @Override
@@ -182,19 +254,20 @@ public class HorseJdbcDao implements HorseDao {
                 throw new PersistenceException("error searching for horses without parameters", e);
             }
         }
+
+        List<HorseIdReferences> horsesIdReferences;
+        // Bulky code because SQL_SEARCH_QUERY has to be final in lambda
+        String limitStr = "";
+        if (horseSearchDto.limit() != null) {
+            limitStr = " LIMIT + " + horseSearchDto.limit() + ";";
+        }
+        String SQL_SEARCH_QUERY = SQL_GET_RECURSIVE_BASE.formatted("WHERE " + String.join(" AND ", sqlSearchParams) + limitStr);
+
         try {
-
-            // Bulky code because SQL_SEARCH_QUERY has to be final in lambda
-            String limitStr = "";
-            if (horseSearchDto.limit() != null) {
-                limitStr = " LIMIT + " + horseSearchDto.limit() + ";";
-            }
-            String SQL_SEARCH_QUERY = SQL_SEARCH_BASE + String.join(" AND ", sqlSearchParams) + limitStr;
-
-
-            return jdbcTemplate.query(connection -> {
+            horsesIdReferences = jdbcTemplate.query(connection -> {
                 PreparedStatement ps = connection.prepareStatement(SQL_SEARCH_QUERY);
-                int parameterIndex = 1;
+                ps.setLong(1, 1);
+                int parameterIndex = 2;
                 if (horseSearchDto.name() != null) {
                     ps.setString(parameterIndex++, globalMatchToLowerEscapeBang(horseSearchDto.name()));
                 }
@@ -215,46 +288,44 @@ public class HorseJdbcDao implements HorseDao {
                 }
                 LOGGER.debug("searching horses with prepared statement: " + ps.toString());
                 return ps;
-            }, (resultSet, rowNum) ->
-                    mapHorsesRowParentDepth(resultSet, 1));
+            }, this::mapHorseJoinedWithOwnerRow);
 
 
         } catch (DataAccessException e) {
-            throw new PersistenceException("error searching for horses", e);
+            throw new PersistenceException("Error searching for horses", e);
         }
+        return constructRecursiveEntities(horsesIdReferences, null);
     }
 
     @Override
     public Horse getFamilyTreeOfHorse(long id, int ancestorDepth) throws PersistenceException, NotFoundException {
         LOGGER.trace("getFamilyTreeOfHorse({}, {}) called", id, ancestorDepth);
-        if (ancestorDepth < 0) {
-            return null;
-        }
+
         // prevent user from retrieving very large family tree
-        List<Horse> horses;
+        List<HorseIdReferences> horsesIdReferences;
         try {
-            horses = jdbcTemplate.query(connection -> {
-                        PreparedStatement ps = connection.prepareStatement(SQL_SELECT_ONE);
-                        ps.setLong(1, id);
-                        return ps;
-                    }, (resultSet, rowNum) ->
-                            mapHorsesRowParentDepth(resultSet, ancestorDepth)
-            );
+            horsesIdReferences = jdbcTemplate.query(connection -> {
+                PreparedStatement ps = connection.prepareStatement(SQL_GET_RECURSIVE_BASE.formatted("WHERE h.id = ?"));
+                ps.setLong(1, ancestorDepth);
+                ps.setLong(2, id);
+                LOGGER.debug("Getting family tree of horse with id(" + id + "): " + ps.toString());
+                return ps;
+            }, this::mapHorseJoinedWithOwnerRow);
         } catch (DataAccessException e) {
-            throw new PersistenceException("Could not query all horse with id (" + id + ")", e);
+            throw new PersistenceException("Could not get family tree of horse with id(" + id + ")", e);
         }
+
+        List<Horse> horses = constructRecursiveEntities(horsesIdReferences, id);
         if (horses.size() == 0) {
             throw new NotFoundException("Could not find horse with id (" + id + ")");
         }
         return horses.get(0);
     }
 
-
-    // TODO javaDoc and make recursive request to DB
-    private Horse mapHorsesRowParentDepth(ResultSet result, int depthRemaining) throws SQLException {
-        LOGGER.trace("mapHorsesRowParentDepth called with remaining depth {}", depthRemaining);
-
-        Horse horse = new Horse();
+    // TODO javaDoc
+    private HorseIdReferences mapHorseJoinedWithOwnerRow(ResultSet result, int rowNum) throws SQLException {
+        LOGGER.trace("mapHorseRow() called");
+        HorseIdReferences horse = new HorseIdReferences();
 
         horse.setId(result.getLong("id"));
         horse.setName(result.getString("name"));
@@ -262,30 +333,23 @@ public class HorseJdbcDao implements HorseDao {
         horse.setBirthdate(result.getDate("birthdate").toLocalDate());
         horse.setSex(HorseBiologicalGender.valueOf(result.getString("sex")));
 
-
-        long ownerId = result.getLong("owner");
-        try {
-            horse.setOwner(result.wasNull() ? null : ownerDao.getOwner(ownerId));
-        } catch (PersistenceException e) {
-            throw new SQLException("error getting owner of horse with id(" + horse.getId() + ")", e);
-        } catch (NotFoundException e) {
-            throw new SQLException("error finding owner of horse with id(" + horse.getId() + ")", e);
+        long ownerId = result.getLong("ownerId");
+        if (!result.wasNull()) {
+            Owner owner = new Owner();
+            owner.setId(ownerId);
+            owner.setFirstName(result.getString("ownerFn"));
+            owner.setLastName(result.getString("ownerLn"));
+            owner.setEmail(result.getString("ownerE"));
+            horse.setOwner(owner);
         }
-        try {
-            long motherId = result.getLong("mother");
-            horse.setMother(result.wasNull() ? null : getFamilyTreeOfHorse(motherId, depthRemaining - 1));
-            long fatherId = result.getLong("father");
-            horse.setFather(result.wasNull() ? null : getFamilyTreeOfHorse(fatherId, depthRemaining - 1));
-        } catch (PersistenceException e) {
-            throw new SQLException("error getting family tree of mother/father", e);
-        } catch (NotFoundException e) {
-            // would be a foreign key violation
-            assert (false);
-        }
-
+        long motherId = result.getLong("mother");
+        horse.setMotherId(result.wasNull() ? null : motherId);
+        long fatherId = result.getLong("father");
+        horse.setFatherId(result.wasNull() ? null : fatherId);
 
         return horse;
     }
+
 
     /**
      * Escapes special characters in a search term and pads the string with '%', so that it will be globally matched in an SQL query
@@ -332,27 +396,5 @@ public class HorseJdbcDao implements HorseDao {
         } else {
             ps.setLong(7, horseDto.father().id());
         }
-    }
-
-    /**
-     * General exception handler for different type of exceptions that can occur from jdbcTemplate methods
-     * @param dataAccessException The exception for which the cause should be checked
-     * @param message The message that should be added in the new wrapped exception
-     * @throws PersistenceException if the given exception was thrown by the jdbcTemplate itself
-     * @throws NotFoundException if the given was thrown manually due to an id not being found in the database
-     */
-    private void handleDataAccessException(DataAccessException dataAccessException, String message) throws PersistenceException, NotFoundException {
-        LOGGER.trace("handleDataAccessException(_, {}) called", message);
-
-        Throwable cause = dataAccessException.getCause();
-        // wrapped SQLException
-        if (cause.getClass() == PersistenceException.class) {
-            throw new PersistenceException(message, cause);
-        }
-        if (cause.getClass() == NotFoundException.class) {
-            throw new NotFoundException(message, cause);
-        }
-        // true SQLException
-        throw new PersistenceException("FRAMEWORK SQL EXCEPTION" + message, dataAccessException);
     }
 }

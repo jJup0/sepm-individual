@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.assignment.individual.mapper;
 
 import at.ac.tuwien.sepm.assignment.individual.dto.HorseDto;
 import at.ac.tuwien.sepm.assignment.individual.entity.Horse;
+import at.ac.tuwien.sepm.assignment.individual.entity.HorseIdReferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -62,6 +63,27 @@ public class HorseMapper {
         newHorse.setOwner(ownerMapper.dtoToEntity(horseDto.owner()));
         newHorse.setMother(dtoToEntity(horseDto.mother()));
         newHorse.setFather(dtoToEntity(horseDto.father()));
+        return newHorse;
+    }
+
+    /**
+     * Maps a horse entity with id references to an entity, sets parents null
+     *
+     * @param horseIdReferences The horse with ids as parent references
+     * @return A horse entity matching the given id reference entity
+     */
+    public Horse referenceEntityToRecurisve(HorseIdReferences horseIdReferences){
+        LOGGER.trace("dtoToEntity() called on {}", horseIdReferences);
+        if (horseIdReferences == null) {
+            return null;
+        }
+        Horse newHorse = new Horse();
+        newHorse.setId(horseIdReferences.getId());
+        newHorse.setName(horseIdReferences.getName());
+        newHorse.setDescription(horseIdReferences.getDescription());
+        newHorse.setBirthdate(horseIdReferences.getBirthdate());
+        newHorse.setSex(horseIdReferences.getSex());
+        newHorse.setOwner(horseIdReferences.getOwner());
         return newHorse;
     }
 }

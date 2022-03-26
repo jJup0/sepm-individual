@@ -5,18 +5,18 @@ import at.ac.tuwien.sepm.assignment.individual.enums.HorseBiologicalGender;
 import java.time.LocalDate;
 
 /**
- * Class for Horse Entities with owner, mother and father as entities
+ * Class for Horse Entities with mother and father as ids
  * Contains all common properties
  */
-public class Horse {
+public class HorseIdReferences {
     private Long id;
     private String name;
     private String description;
     private LocalDate birthdate;
     private HorseBiologicalGender sex;
     private Owner owner;
-    private Horse mother;
-    private Horse father;
+    private Long motherId;
+    private Long fatherId;
 
     public Long getId() {
         return id;
@@ -66,19 +66,19 @@ public class Horse {
         this.owner = owner;
     }
 
-    public Horse getMother() {
-        return mother;
+    public Long getMotherId() {
+        return motherId;
     }
 
-    public void setMother(Horse mother) {
-        this.mother = mother;
+    public void setMotherId(Long motherId) {
+        this.motherId = motherId;
     }
 
-    public Horse getFather() {
-        return father;
+    public Long getFatherId() {
+        return fatherId;
     }
 
-    public void setFather(Horse father) {
-        this.father = father;
+    public void setFatherId(Long fatherId) {
+        this.fatherId = fatherId;
     }
 }
