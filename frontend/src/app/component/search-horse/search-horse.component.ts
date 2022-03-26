@@ -35,7 +35,7 @@ export class SearchHorseComponent implements OnInit {
       bornAfter: horse.birthdate,
       sex: horse.sex,
       bornBefore: null,
-      owner: horse.owner,
+      owner: horse.owner.id,
     };
 
     this.service.search(horseSearchDto).subscribe({

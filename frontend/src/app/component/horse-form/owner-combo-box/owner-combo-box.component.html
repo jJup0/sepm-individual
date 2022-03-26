@@ -7,7 +7,7 @@
     class="form-control "
     name="owner-input"
     id="owner-input-search-box"
-    [value]="currentOwner ? currentOwner.name : null" 
+    [value]="currentOwner ? currentOwner.firstName + ' ' + currentOwner.lastName : null" 
     (input)="search(ownerSearchBox.value)"
   />
   <select
@@ -17,7 +17,7 @@
   >
   <option [value]="null" selected>{{formType === 'search' ? 'Any': 'No'}} Owner</option>
   <option *ngIf="currentOwner && searched === false" [value]="currentOwner | json" selected>
-    {{ currentOwner.name }}
+    {{ currentOwner.firstName + " " + currentOwner.lastName }}
   </option>
 
     <option

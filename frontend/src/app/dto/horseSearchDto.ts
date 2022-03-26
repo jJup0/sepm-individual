@@ -7,6 +7,6 @@ export interface HorseSearchDto {
   bornAfter?: string;
   sex?: HorseSex;
   bornBefore?: string;
-  owner?: Owner;
+  owner?: number;
   limit?: number;
 }

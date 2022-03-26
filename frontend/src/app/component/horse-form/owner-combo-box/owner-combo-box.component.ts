@@ -26,7 +26,7 @@ export class OwnerComboBoxComponent implements OnInit {
   formType: HorseFormType;
 
   @Input()
-  currentOwner: Horse;
+  currentOwner: Owner;
 
   @Output()
   setOwnerEmitter = new EventEmitter<Owner>();
